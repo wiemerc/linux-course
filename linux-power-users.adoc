@@ -1,0 +1,225 @@
+// cSpell:dictionaries: de-de
+= Linux für Power User
+:imagesdir: images
+// To turn off figure numbering
+:figure-caption!:
+:revealjsdir: https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.9.2
+:revealjs_theme: white
+:revealjs_width: 1800
+:revealjs_height: 1000
+:revealjs_margin: 0
+:revealjs_hash: true
+:revealjs_center: false
+:revealjs_pdfseparatefragments: false
+:source-highlighter: highlight.js
+:highlightjs-theme: https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css
+:icons: font
+:stem:
+
+
+// TODO: Bildunterschriften sind in der Präsi immer noch nicht kleiner, im PDF schon.
+// TODO: Bilder ohne Rahmen
+// TODO: Bilder / Screenshots auf Folien mit den Kapitelüberschriften / Übungen
+// Fragen für Gespräch:
+// Linux-Kenntnisse notwendig? Siehe z. B. https://academy.hackthebox.com/course/preview/linux-fundamentals oder https://www.redhat.com/en/services/training/getting-started-with-linux-fundamentals
+// Soll ich auch macOS abdecken?
+// Programmierkenntnisse notwendig für Shell Scripts?
+// Titel?
+<<<
+== 0. Allgemeines
+
+
+<<<
+== Aufbau des Kurses / Vorkenntnisse
+[.step]
+* Kurs für alle, die zum Linux "Power User" werden wollen
+* Theorie und praktische Übungen mit einer virtuellen Maschine (WSL)
+* mehr Anwender- und weniger Administratorsicht
+* Kurs behandelt Linux, die meisten Inhalte sind aber auch für macOS (oder andere Unix-Varianten) anwendbar.
+* Unterlagen decken mehr Inhalte ab als der Kurs.
+* Voraussetzungen:
+[.step]
+** Sicherer Umgang mit einem Windows-PC
+** Erste Erfahrungen mit Linux wünschenswert
+
+
+<<<
+== Inhalte
+[.step]
+* Arbeiten mit der Shell (bash)
+* Arbeiten mit Dateien und Verzeichnissen
+* Arbeiten mit Textdateien (also mit Befehlen wie grep, sed und awk)
+* Schreiben von (einfachen) Shell Scripts
+* Grundlagen der Systemadministration
+* Container und Docker
+
+
+<<<
+== Über mich
+[.step]
+* Ausbildung zum Kommunikationselektroniker und Nachrichtentechnik-Studium
+* IT-Allrounder mit 30 Jahren Berufserfahrung
+* sehr viel Erfahrung mit Unix und Linux
+* arbeite bei der Allianz Technology im Bereich Cloud-Infrastruktur
+// TODO: Andere Kurse erwähnen?
+
+
+<<<
+== Was ist Unix?
+image::unix-license-plate.jpg[width=500, align="center"]
+[.small]#Quelle: Wikipedia (https://en.wikipedia.org/wiki/Live_Free_or_Die)#
+
+[.step]
+* eine Familie von Betriebssystemen mit ähnlicher Architektur und ähnlichen Eigenschaften
+* auch eine Spezifikation für Betriebssysteme (Single UNIX Specification und POSIX)
+* und eine eigene Kultur :-)
+* Viele Technologien in der IT haben ihren Ursprung in Unix oder sind durch Unix verbreitet worden: TCP/IP, C/C++, reguläre Ausdrücke, Pipes, hierarchische Dateisysteme.
+
+
+<<<
+== (Kurze) Geschichte von Unix (1)
+image::thompson-ritchie.jpg[width=500, align="center"]
+[.small]#Quelle: Wikipedia (https://en.wikipedia.org/wiki/Unix)#
+
+[.step]
+* 1969: In den Bells Labs (Forschungsabteilung von AT&T) entsteht die erste Version von Unix (entwickelt von Ken Thompson und Dennis Ritchie) => System V Unix (**Linux**, Solaris, HP-UX...)
+* 1975: Die University of Berkeley entwickelt ihre eigene Version (auf der Basis der AT&T-Version) => BSD Unix (**macOS**, FreeBSD...)
+* 1983: GNU-Projekt wird gestartet.
+
+
+<<<
+== (Kurze) Geschichte von Unix (2)
+[.step]
+* 1980er: Entstehung von vielen kommerziellen Unix-Varianten (z. B. SunOS / Solaris von Sun Microsystems, HP-UX von HP, AIX von IBM, SINIX von Siemens, Xenix von Microsoft, NeXTSTEP von NeXT) und kommerzielle Verbreitung von Unix
+* 1991: Linus Torvalds veröffentlicht die erste Version von Linux
+* 1990er: Verbreitung von Linux und Entstehung der unterschiedlichen Linux-Distributionen (Redhat, SUSE, Debian...)
+* 2001: Apple veröffentlicht die erste Version von macOS (auf der Basis von NeXTSTEP und FreeBSD)
+* 2007: Apple veröffentlicht die erste Version von iOS
+* seit den 2000ern: Konsolidierung der kommerziellen Unix-Varianten / Ablösung durch Linux
+
+
+<<<
+== Was ist Linux?
+[.step]
+* ein freies und quelloffenes Unix-ähnliches Betriebssystem für Desktops, Server und Smartphones (Android)
+* ursprünglich von Linus Torvalds entwickelt, erste Version erschien 1991
+* wird üblicherweise als Distribution vertrieben, bestehend aus
+[.step]
+** dem Linux-Kernel
+** Systemsoftware wie Daemons, Shells, Bibliotheken und Tools, zum Teil aus dem https://de.wikipedia.org/wiki/GNU[GNU]-Projekt
+** einem Paketmanager (TODO)
+** einem Fenstersystem (X11, Wayland)
+** einer Desktop-Umgebung (Gnome, KDE...)
+** Anwendungsprogrammen wie Office-Pakete, Browser...
+
+
+<<<
+== Philosophie von Unix / Linux
+[.step]
+* "System von Programmierern für Programmierer"
+* Shell ist wichtige Benutzerschnittstelle.
+* Kleine Tools können kombiniert werden, um grössere Aufgaben zu lösen => Filter und Pipelines
+* Verwendung von ASCII-Text als universelles Datenformat (in Dateien, Netzwerkprotokollen und als Schnittstelle zwischen Programmen)
+* Aufgaben können durch Scripts automatisiert werden.
+* Ressourcen (wie zum Beispiel angeschlossene Hardware und Netzwerkverbindungen) können als Datei angesprochen werden.
+
+
+<<<
+== Architektur von Linux
+TODO
+
+
+<<<
+== Dateisystem
+[.step]
+* Alle Dateien und Verzeichnisse sind in einem Baum angeordnet, der mit / (Root-Verzeichnis) beginnt.
+* Es können sich mehrere Dateisysteme (auf verschiedenen Datenträgern) an verschiedenen Stellen als Unterverzeichnisse in dem Baum befinden (_gemountet_).
+* Neben normalen Dateien gibt es auch noch spezielle Pseudo-Dateien: Links, Pipes, Devices, Sockets 
+* Alle Dateien und Verzeichnisse sind einem Benutzer und einer Gruppe zugeordnet und besitzen Zugriffsrechte (die nicht für Root-Benutzer gelten).
+* Standard für die Baumstruktur: https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard[_Filesystem_Hierarchy_Standard]
+
+
+<<<
+== Dateisystem -  wichtige Verzeichnisse
+// @startmindmap
+// !theme reddress-lightblue
+// <style>
+// mindmapDiagram {
+//   node {
+//     FontSize 30
+//   }
+//   arrow {
+//       LineThickness 3
+//   }
+// }
+// </style>
+// 
+// legend right
+//   | <#99e6ff>               | persistent, vom Benutzer nicht zu ändern |
+//   | <#00bfff>               | persistent, vom Benutzer zu ändern |
+//   | <#adebad>               | nicht persistent, vom Benutzer nicht zu ändern |
+//   | <#32cd32>               | nicht persistent, vom Benutzer zu ändern |
+// endlegend
+// 
+// + **/**
+// 
+// ++[#99e6ff] **/usr**
+// +++[#99e6ff] **/usr/bin**: Programme für Benutzer (/bin verlinkt darauf)
+// +++[#99e6ff] **/usr/sbin**: Programme für das System (/sbin verlinkt darauf)
+// +++[#99e6ff] **/usr/lib**: Programmbibliotheken (/lib verlinkt darauf)
+// +++[#00bfff] **/usr/local**: gleiche Hierarchie wie unter /usr, nur unabhängig von der Distro
+// 
+// ++[#00bfff] **/etc**: systemweite Konfigurationsdateien
+// 
+// ++[#00bfff] **/opt**: Programmpakete unabhängig von der Distro
+// 
+// ++[#00bfff] **/home**: Heimatverzeichnisse der Benutzer
+// +++[#00bfff] **/home/.local**: gleiche Hierarchie wie unter /usr, nur pro Benutzer
+// +++[#00bfff] **/home/.config**: Konfigurationsdateien pro Benutzer (teilweise)
+// 
+// ++[#00bfff] **/root**: Heimatverzeichnis von root
+// 
+// ++[#99e6ff] **/boot**: Kernel und zugehörige Dateien
+// 
+// ++[#00bfff] **/var**: variable Daten von Programmen
+// +++[#00bfff] **/var/log**: Logdateien
+// +++[#00bfff] **/var/tmp**: temporäre Dateien (werden nicht gelöscht)
+// 
+// ++[#00bfff] **/tmp**: temporäre Dateien (werden möglicherweise beim Booten gelöscht)
+// 
+// ++[#adebad] **/dev**: Gerätedateien
+// 
+// ++[#adebad] **/run**: Laufzeitinformationen des Systems (z. B. Locks oder Sockets von Daemons)
+// 
+// ++[#32cd32] **/proc**: Infos über das System und die Prozesse
+// @endmindmap
+// TODO: Make legend larger
+image::file-system-hierarchy.svg[width=1200, align="center"]
+
+
+<<<
+== Benutzer
+[.step]
+* sind durch eine (normalerweise) eindeutige Nummer bestimmt => _User Identifier_ (UID)
+* besitzen jeweils ein eigenes Unterverzeichnis im Verzeichnisbaum => Heimatverzeichnis (_Home Directory_, normalerweise unter `/home` oder `/Users`)
+* werden entweder in den Dateien `/etc/passwd` und `/etc/shadow` oder in einem Verzeichnisdienst wie LDAP verwaltet
+* sind mindestens Mitglied einer Gruppe => primäre Gruppe
+* können in weiteren Gruppen Mitglied sein (in `/etc/group` konfiguriert)
+* Benutzer mit der UID 0 (normalerweise `root`) haben Vollzugriff auf das System.
+
+
+<<<
+== Benutzer - wichtige Befehle
+// TODO: Evtl. später?
+[.step]
+* Anzeigen von Benutzername, UID und Gruppe(n): `id`
+* Passwort ändern: `passwd`
+* Ausführen von Befehlen als Root / anderer Benutzer: `sudo <Befehl>` / `sudo -u <Benutzer> <Befehl>`
+* Wechseln zu Root / einem anderen Benutzer (in der Shell): `sudo -i` / `sudo -i -u <Benutzer>`
+
+
+<<<
+== Gruppen
+[.step]
+* sind durch eine (normalerweise) eindeutige Nummer bestimmt => _Group Identifier_ (GID)
+* werden entweder in der Datei `/etc/group` oder in einem Verzeichnisdienst wie LDAP verwaltet
