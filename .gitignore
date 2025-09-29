@@ -1,0 +1,6 @@
+*.html
+*.json
+*.svg
+node_modules
+.venv*
+.vscode
