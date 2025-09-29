@@ -223,3 +223,103 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 [.step]
 * sind durch eine (normalerweise) eindeutige Nummer bestimmt => _Group Identifier_ (GID)
 * werden entweder in der Datei `/etc/group` oder in einem Verzeichnisdienst wie LDAP verwaltet
+
+
+<<<
+== 1. Arbeiten mit der Shell
+
+
+<<<
+== Was ist eine Shell?
+[.step]
+* ist das Kommandozeileninterface (_Command Line Interface_ = CLI) von Linux zum Ausführen von Programmen
+* besitzt auch eingebaute Befehle, Kontrollstrukturen und Variablen und stellt eine vollständige Programmiersprache dar (siehe Kapitel über Shell-Programmierung)
+* mehrere Alternativen: sh, ksh, (t)csh, **bash**, **zsh**, fish
+
+
+<<<
+== Shell - Befehlszeile
+[.step]
+* besteht aus einem (oder mehreren => Pipelines) Befehl(en), Optionen und Argumenten
+* Befehle sind entweder in der Shell eingebaut (z. B. `cd`) oder werden im Suchpfad gesucht (Umgebungsvariable `PATH`) und dann als separate Prozesse ausgeführt.
+* Befehle setzen beim Beenden den _Exit Status_ (Erfolg / Fehler) => spezielle Variable `$?`
+* Shell beenden: Ctrl-d (oder `exit`)
+* laufendes Programm beenden: Ctrl-c
+
+
+<<<
+== Shell - Editieren der Befehlszeile
+Eingegebene oder aus der Historie zurückgeholte Befehlszeile lässt sich editieren (angegeben sind die Standard-Tastenkombinationen in bash und zsh, lassen sich ändern):
+
+|===
+| Springen zum Zeilenanfang / Zeilenende | Ctrl-a / Ctrl-e
+| einzelnes Zeichen löschen | Ctrl-d / Backspace
+| Wort löschen (Zeichen, die zu einem Wort gehören, lassen sich in der zsh konfigurieren, Variable `WORDCHARS`) | Ctrl-w
+| Zeile löschen | Ctrl-u
+| gelöschte(s) Zeile / Wort einfügen | Ctrl-y
+|===
+
+
+<<<
+== Shell - Weitere Features (1)
+[.step]
+* Befehle können von einer Datei lesen (mit `<`) und ihre Ausgabe in eine Datei schreiben (mit `>`) bzw. an eine bestehende Datei anhängen (mit `>>`).
+* Befehle können mit `|` zu _Pipelines_ verkettet werden => Ausgabe des ersten Befehls ist Eingabe des zweiten Befehls.
+* Befehle können mit `&` am Ende der Befehlszeile im Hintergrund ausgeführt werden.
+* Ctrl-z unterbricht ein laufendes Programm, `bg` schickt es in den Hintergrund, `fg` holt es wieder in den Vordergrund.
+* Shell kann Befehle durch Drücken der Tab-Taste vervollständigen (Dateien / Verzeichnisse, Programmnamen, Optionen, Variablen).
+* Befehlszeilen können als Aliase abgespeichert werden (mit dem Befehl `alias`).
+
+
+<<<
+== Shell - Weitere Features (2)
+// TODO: Evtl. erst im Kapitel Shell-Programmierung?
+[.step]
+* Befehl mit seiner Ausgabe ersetzen (_Command Substitution_): `$()`
++
+[source,sh]
+----
+echo "Hallo $(whoami)@$(hostname)"
+----
+* Befehl als Datei für Ein- oder Ausgabe nutzen (_Process Substitution_, wenn das mit einer Pipeline nicht möglich ist): `<()` und `>()`
++
+[source,sh]
+----
+diff <(grep bla datei1) <(grep bla datei2)
+----
+
+
+<<<
+== Shell - Historie
+[.step]
+* Shell "merkt" sich ausgeführte Befehlszeilen (optional auch dauerhaft in einer Datei) => _Shell-Historie_
+* Blättern in der Historie: Pfeiltasten nach oben / unten
+* Suchen in der Historie: Ctrl-r
+* Befehlszeile aus der Historie vervollständigen (nur zsh): Anfang eingeben + Pfeiltaste nach oben
+
+
+<<<
+== Konfigurationsdateien
+[.step]
+* Dateien mit einer Standard-Konfiguration liegen in `/etc`, Dateien mit der benutzerspezifischen Konfiguration liegen im Home-Verzeichnis des Benutzers.
+* zwei verschiedene (relevante) Dateien:
+[.step]
+** `.bash_profile` / `.zprofile` für _Login_-Shells (beim Einloggen in der Desktop-Umgebung oder über SSH / `sudo`): Setzen von Umgebungsvariablen (werden an die interaktiven Shells vererbt) und einmaliges Starten von Programmen beim Einloggen
+** `.bashrc` / `.zshrc` für _interaktive_ Shells: Setzen von Shell-Optionen, Definition von Aliasen und Funktionen
+
+
+<<<
+== Welche Shell soll ich verwenden?
+TODO
+
+
+<<<
+== Wo bekomme ich Hilfe?
+[.step]
+* Hilfetexte der Programme (meistens `-h` oder `--help`)
+* Man(ual) Pages
+[.step]
+** sind (kurze) Hilfeseiten zu allen auf einem System vorhandenen Befehlen, Konfigurationsdateien, Bibliotheks- und Systemroutinen
+** sind in verschiedene Kapitel (Sections) aufgeteilt (1: Befehle, 2: Systemroutinen, 3: Bibliotheksroutinen, 5: Konfigurationsdateien)
+** Aufruf mit `man [Kapitel] <Titel>`, Durchsuchen mit `man -k <Begriff>`
+* Google, ChatGPT, GitHub Copilot...
