@@ -1,0 +1,115 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2">
+  <diagram name="Seite-1" id="oRy4siUW87B_alqXdnJ4">
+    <mxGraphModel dx="879" dy="483" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="moHabwYiTDNnecZJW-HE-8" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="480" y="240" width="160" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-35" value="" style="group" vertex="1" connectable="0" parent="moHabwYiTDNnecZJW-HE-8">
+          <mxGeometry x="30" y="-70" width="130" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-28" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=light-dark(#D4D4D4,#D4D4D4);" vertex="1" parent="moHabwYiTDNnecZJW-HE-35">
+          <mxGeometry width="130" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-29" value="2: bla.txt&lt;br&gt;3: blub.txt&lt;br&gt;..." style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-35">
+          <mxGeometry x="10" y="30" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=light-dark(#99E6FF,#99E6FF);" vertex="1" parent="moHabwYiTDNnecZJW-HE-8">
+          <mxGeometry width="130" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-2" value="Typ = Verzeichnis" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-8">
+          <mxGeometry x="10" y="30" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-3" value="Besitzer / Gruppe" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-8">
+          <mxGeometry x="10" y="50" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-4" value="Rechte / Flags" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-8">
+          <mxGeometry x="10" y="70" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-5" value="Zeitstempel" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-8">
+          <mxGeometry x="10" y="90" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-6" value="Grösse" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-8">
+          <mxGeometry x="10" y="110" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-7" value="&lt;b&gt;1&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-8">
+          <mxGeometry x="10" y="10" width="10" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-39" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="760" y="10" width="160" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-37" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=light-dark(#D4D4D4,#D4D4D4);container=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-39">
+          <mxGeometry x="30" width="130" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-18" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=light-dark(#ADEBAD,#ADEBAD);container=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-39">
+          <mxGeometry y="70" width="130" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-19" value="Typ = Datei" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;container=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-39">
+          <mxGeometry x="10" y="100" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-20" value="Besitzer / Gruppe" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;container=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-39">
+          <mxGeometry x="10" y="120" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-21" value="Rechte / Flags" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;container=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-39">
+          <mxGeometry x="10" y="140" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-22" value="Zeitstempel" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;container=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-39">
+          <mxGeometry x="10" y="160" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-23" value="Grösse" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;container=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-39">
+          <mxGeometry x="10" y="180" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-24" value="&lt;b&gt;2&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;container=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-39">
+          <mxGeometry x="10" y="80" width="10" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-38" value="Festgemauert in der Erden" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;container=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-39">
+          <mxGeometry x="40" y="30" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-40" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="760" y="250" width="160" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-41" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=light-dark(#D4D4D4,#D4D4D4);container=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-40">
+          <mxGeometry x="30" width="130" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-42" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=light-dark(#ADEBAD,#ADEBAD);container=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-40">
+          <mxGeometry y="70" width="130" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-43" value="Typ = Datei" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;container=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-40">
+          <mxGeometry x="10" y="100" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-44" value="Besitzer / Gruppe" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;container=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-40">
+          <mxGeometry x="10" y="120" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-45" value="Rechte / Flags" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;container=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-40">
+          <mxGeometry x="10" y="140" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-46" value="Zeitstempel" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;container=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-40">
+          <mxGeometry x="10" y="160" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-47" value="Grösse" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;container=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-40">
+          <mxGeometry x="10" y="180" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-48" value="&lt;b&gt;3&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;container=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-40">
+          <mxGeometry x="10" y="80" width="10" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-49" value="Steht die Form aus Lehm gebrannt" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;container=0;" vertex="1" parent="moHabwYiTDNnecZJW-HE-40">
+          <mxGeometry x="40" y="30" width="110" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-50" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.143;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="moHabwYiTDNnecZJW-HE-18">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="574" y="196" as="sourcePoint" />
+            <mxPoint x="760" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="moHabwYiTDNnecZJW-HE-51" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.143;entryDx=0;entryDy=0;exitX=0.545;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryPerimeter=0;" edge="1" parent="1" source="moHabwYiTDNnecZJW-HE-29" target="moHabwYiTDNnecZJW-HE-42">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="730" y="256" as="sourcePoint" />
+            <mxPoint x="916" y="210" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
