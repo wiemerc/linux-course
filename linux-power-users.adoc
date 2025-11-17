@@ -17,38 +17,58 @@
 :stem:
 
 
+// TODO: Folien mit "coolen" Tools wie ack, rsync...?
 // TODO: Bildunterschriften sind in der Präsi immer noch nicht kleiner, im PDF schon.
 // TODO: Bilder ohne Rahmen
 // TODO: Bilder / Screenshots auf Folien mit den Kapitelüberschriften / Übungen
-// Fragen für Gespräch:
-// Linux-Kenntnisse notwendig? Siehe z. B. https://academy.hackthebox.com/course/preview/linux-fundamentals oder https://www.redhat.com/en/services/training/getting-started-with-linux-fundamentals
-// Soll ich auch macOS abdecken?
-// Programmierkenntnisse notwendig für Shell Scripts?
-// Titel?
+
+// Beschreibung
+// Linux für Power User
+// 
+// Wollten Sie schon immer verstehen, wie Linux wirklich funktioniert? Möchten Sie lernen, effektiver mit Ihrem Computer zu arbeiten, beruflich oder privat, indem Sie die Kommandozeile (Shell) und die entsprechenden Tools verwenden? Möchten Sie Routineaufgaben mit Skripten automatisieren?
+// 
+// All das werden wir in dem Kurs behandeln, sowohl theoretisch als auch praktisch. Auch wenn sich der Kurs auf Linux bezieht ist ein Teil der Inhalte für macOS ebenfalls relevant.
+// 
+// Kursinhalte:
+// - Arbeiten mit der Shell (bash, zsh)
+// - Arbeiten mit Dateien und Verzeichnissen
+// - Arbeiten mit Textdateien (grep, sed und awk)
+// - Schreiben von (einfachen) Shell-Skripten
+// - Grundlagen der Systemadministration
+// - Container und Docker
+// 
+// Voraussetzung:
+// - Sicherer Umgang mit einem PC (Windows, Linux) oder einem Mac
+// - Erste Erfahrungen mit dem Arbeiten auf einer Kommandozeile wünschenswert
+
+// Siehe auch https://academy.hackthebox.com/course/preview/linux-fundamentals oder https://www.redhat.com/en/services/training/getting-started-with-linux-fundamentals
 <<<
-== 0. Allgemeines
+== Linux für Power User
+1. **Allgemeines**
+2. Arbeiten mit der Shell
+3. Arbeiten mit Dateien und Verzeichnissen
 
 
 <<<
 == Aufbau des Kurses / Vorkenntnisse
 [.step]
 * Kurs für alle, die zum Linux "Power User" werden wollen
-* Theorie und praktische Übungen mit einer virtuellen Maschine (WSL)
+* Theorie und praktische Übungen mit einer virtuellen Maschine (https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux[_Windows Subsystem for Linux_]  (WSL))
 * mehr Anwender- und weniger Administratorsicht
-* Kurs behandelt Linux, die meisten Inhalte sind aber auch für macOS (oder andere Unix-Varianten) anwendbar.
+* Kurs behandelt Linux, ein Teil Inhalte sind aber auch für macOS (oder andere Unix-Varianten) anwendbar.
 * Unterlagen decken mehr Inhalte ab als der Kurs.
 * Voraussetzungen:
 [.step]
-** Sicherer Umgang mit einem Windows-PC
+** Sicherer Umgang mit einem PC (Windows, Linux) oder einem Mac
 ** Erste Erfahrungen mit Linux wünschenswert
 
 
 <<<
 == Inhalte
 [.step]
-* Arbeiten mit der Shell (bash)
+* Arbeiten mit der Shell (`bash`, `zsh`)
 * Arbeiten mit Dateien und Verzeichnissen
-* Arbeiten mit Textdateien (also mit Befehlen wie grep, sed und awk)
+* Arbeiten mit Textdateien (also mit Befehlen wie `grep`, `sed` und `awk`)
 * Schreiben von (einfachen) Shell Scripts
 * Grundlagen der Systemadministration
 * Container und Docker
@@ -132,15 +152,19 @@ TODO
 <<<
 == Dateisystem
 [.step]
-* Alle Dateien und Verzeichnisse sind in einem Baum angeordnet, der mit / (Root-Verzeichnis) beginnt.
+* Alle Dateien und Verzeichnisse sind in einem Baum angeordnet, der mit `/` (Root-Verzeichnis) beginnt.
+* Sie sind durch den _Pfad_ = Liste aller übergeordneter Verzeichnisse + der eigene Name eindeutig identifizierbar.
+* _Absoluter_ Pfad: beginnt mit dem Root-Verzeichnis (`/`), _relativer_ Pfad: relativ zum aktuellen Verzeichnis
 * Es können sich mehrere Dateisysteme (auf verschiedenen Datenträgern) an verschiedenen Stellen als Unterverzeichnisse in dem Baum befinden (_gemountet_).
 * Neben normalen Dateien gibt es auch noch spezielle Pseudo-Dateien: Links, Pipes, Devices, Sockets 
 * Alle Dateien und Verzeichnisse sind einem Benutzer und einer Gruppe zugeordnet und besitzen Zugriffsrechte (die nicht für Root-Benutzer gelten).
-* Standard für die Baumstruktur: https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard[_Filesystem_Hierarchy_Standard]
+* Standard für die Baumstruktur: https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard[_Filesystem Hierarchy Standard_]
 
 
 <<<
 == Dateisystem -  wichtige Verzeichnisse
+// TODO: Can / should we use @startfiles / @endfiles?
+// TODO: Make legend larger
 // @startmindmap
 // !theme reddress-lightblue
 // <style>
@@ -193,7 +217,6 @@ TODO
 // 
 // ++[#32cd32] **/proc**: Infos über das System und die Prozesse
 // @endmindmap
-// TODO: Make legend larger
 image::file-system-hierarchy.svg[width=1200, align="center"]
 
 
@@ -226,7 +249,10 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 
 
 <<<
-== 1. Arbeiten mit der Shell
+== Linux für Power User
+1. Allgemeines
+2. **Arbeiten mit der Shell**
+3. Arbeiten mit Dateien und Verzeichnissen
 
 
 <<<
@@ -290,6 +316,33 @@ diff <(grep bla datei1) <(grep bla datei2)
 
 
 <<<
+== Shell - Wildcards (1)
+[.step]
+* In der Shell kann mit unvollständigen Datei- und Verzeichnisnamen gearbeitet werden => Suchmuster oder _Wildcards_ (auch _Globbing_ genannt)
+* werden von der Shell und nicht von den Befehlen ausgewertet
+* icon:exclamation-circle[] Maximale Länge der Befehlszeile (bei Linux 2MB) beachten!
+
+
+<<<
+== Shell - Wildcards (2)
+|===
+| Syntax | Bedeutung
+
+| `?` | ein beliebiges Zeichen
+| `*` | eine beliebige Anzahl von Zeichen
+| `[xyz]` |  eines mehrerer möglicher Zeichen, z. B. die Buchstaben x, y oder z
+| `[a-z]` | Bereich von Zeichen, z. B. die Buchstaben a bis z
+| `*.{jpg,png}` | Alternativen, z. B. alle Dateien, die entweder auf `.jpg` oder auf `.png` enden
+| `!(\*.txt)` (`bash` mit der Option `extglob`) bzw. `^*.txt` (`zsh` mit der Option `extendedglob`) | Negierung, z. B. alle Dateien, die nicht auf `.txt` enden
+|===
+
+
+<<<
+== Shell - Quoting / Escaping
+// TODO
+
+
+<<<
 == Shell - Historie
 [.step]
 * Shell "merkt" sich ausgeführte Befehlszeilen (optional auch dauerhaft in einer Datei) => _Shell-Historie_
@@ -323,3 +376,9 @@ TODO
 ** sind in verschiedene Kapitel (Sections) aufgeteilt (1: Befehle, 2: Systemroutinen, 3: Bibliotheksroutinen, 5: Konfigurationsdateien)
 ** Aufruf mit `man [Kapitel] <Titel>`, Durchsuchen mit `man -k <Begriff>`
 * Google, ChatGPT, GitHub Copilot...
+* Cheat Sheets, z. B. https://cheat.sh/ oder https://tldr.sh/
+
+
+<<<
+== Bücher / Ressourcen
+// TODO
