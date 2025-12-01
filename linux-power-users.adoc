@@ -763,3 +763,101 @@ a|
 | `unzip <Archiv> <Datei(en)>`
 | Datei(en) müssen mit dem (relativen) Pfad angegeben werden und werden auch in diesen Pfad entpackt (Verzeichnisse werden angelegt wenn sie noch nicht existieren).
 |===
+
+
+<<<
+== Linux für Power User
+1. Allgemeines
+2. Arbeiten mit der Shell
+3. Arbeiten mit Dateien und Verzeichnissen
+4. **Prozesse**
+5. Arbeiten mit Textdateien
+6. Schreiben von (einfachen) Shell-Skripten
+7. Grundlagen der Systemadministration
+8. Container und Docker
+
+
+<<<
+== Prozesse (1)
+[.step]
+* sind Programme, die vom System ausgeführt werden oder auf ihre Ausführung oder ein Ereignis warten
+* sind durch Nummern (_Process Identifier_ = PID) gekennzeichnet
+* haben immer einen Eltern-Prozess, von dem sie bestimmte Eigenschaften und Objekte (wie geöffnete Dateien) erben => Baumstruktur
+* Wurzel des Baumes ist der `systemd`-Prozess (oder `init` / `launchd`) mit der PID 1 (wird vom System beim Booten gestartet).
+* Prozesse werden vom _Scheduler_ verwaltet und abwechselnd dem Prozessor / den Prozessoren (bzw. den Prozessorkernen) zugeteilt.
+* sind immer einem Benutzer zugeordnet, dessen Rechte sie bekommen
+
+
+<<<
+== Prozesse (2)
+[.step]
+* besitzen standardmässig drei verschiedene Ein- / Ausgabekanäle, die sie vom Elternprozess erben: Standardeingabe (_stdin_), Standardausgabe (_stdout_), Standardfehlerausgabe (_stderr_)
+* können aus mehreren _Threads_ bestehen
+* Prozesse befinden sich immer in einem der folgenden Zustände:
+[.step]
+** laufend \(R) => Prozess wird gerade ausgeführt oder ist bereit, ausgeführt zu werden (befindet sich in der Warteschlange, Anzahl der Prozesse in der Warteschlange ist die Last des Systems).
+** unterbrechbar schlafend (S) => Prozess wartet auf ein Ereignis (z. B. Benutzereingabe, Netzwerk-IO oder Ablauf eines Timers) und kann durch Signale (siehe unten) aufgeweckt werden.
+** nicht unterbrechbar schlafend (D) => Prozess wartet auf die Beendigung einer Festplatten-IO-Operation.
+** gestoppt (T, t) => Prozess wurde angehalten (durch Ctrl-z in der Shell oder von einem Debugger).
+** _Zombie_ (Z) => Prozess ist beendet aber Informationen werden noch im Kernel gehalten (für den Elternprozess).
+
+
+<<<
+== Prozesse - Speicherverwaltung
+[.step]
+* Jeder Prozess hat seinen eigenen _virtuellen Speicher_ (4GB bei 32-Bit-Systemen, 256TB bei 64-Bit-Systemen).
+* Virtueller Speicher ist viel grösser als der physikalische RAM-Speicher (bei 64-Bit-Systemen) => _Paging_
+[.step]
+** Es werden immer nur die aktuell benötigten Programmteile und Daten im Speicher gehalten.
+** Programmteile und Daten werden erst bei Bedarf = beim ersten Zugriff nachgeladen.
+** Bei Speicherknappheit werden geänderte, aber nicht mehr benötigte Daten in den Swap-Bereich der Festplatte(n) ausgelagert.
+* In dem virtuellen Speicher eines Prozesses befinden sich
+[.step]
+** Programmcode
+** (dynamische) Programmbibliotheken
+** Daten (einschliesslich des Stacks)
+
+
+<<<
+== Prozesse - Dämonen
+[.step]
+* sind Prozesse, die im Hintergrund laufen und Dienste bereitstellen
+* werden üblicherweise beim Booten des Systems gestartet
+* wichtige Dienste / Dämonen:
++
+|===
+
+| `systemd` | Erster Prozess (mit der PID 1), der nach dem Booten eines Systems gestartet wird, startet alle anderen Dämonen / Dienste
+| `journald` / `rsyslogd` / `syslog-ng` | zentrales Logging (Logdateien in `/var/log`)
+| `crond` | zeitgesteuertes Ausführen von Programmen für jeden Benutzer (wird mit dem Befehl `crontab` konfiguriert)
+| `sshd` | Secure Shell Server zum Einloggen über das Netzwerk
+|===
+
+
+<<<
+== Prozesse - Signale
+[.step]
+* sind eine Möglichkeit, bei einem Prozess bestimmte Aktionen auszulösen
+* werden mit `kill -<Signal> <PID>` oder in Fehlerfällen vom Betriebssystem selber an einen Prozess geschickt (bei Hintergrundprozessen kann mit `%<Nummer>` anstelle der PID auch die Nummer verwendet werden, die die Shell vergibt)
+* Verschiedene Signale bewirken unterschiedliche Aktionen:
++
+|===
+| Signal | Aktion
+
+| SIGTERM (15) | beendet einen Prozess geordnet (ist der Default von `kill`, Ctrl-c in der Shell)
+| SIGKILL (9) | beendet einen Prozess zwangsweise
+| SIGSTOP (17) | unterbricht einen Prozess (Ctrl-z in der Shell)
+| SIGHUP  (1) | veranlasst einen Dämonen (meistens) zum erneuten Einlesen seiner Konfiguration
+// TODO: Auch Signale, die vom Betriebssystem kommen, erwähnen?
+|===
+
+
+<<<
+== Prozesse - Wichtige Befehle
+|===
+
+| alle Prozesse mit den wichtigsten Informationen / Attributen auflisten | `ps -ef` | `-e` selektiert alle Prozesse, `-f` gibt die wichtigsten Informationen aus
+| alle Prozesse eines bestimmten Benutzers auflisten | `ps -u <Benutzername oder UID> -f` |
+| alle Prozesse auflisten, die ein bestimmtes Programm ausführen | ps -C <Name des Programms> -f` |
+| alle Prozesse mit bestimmten Attributen auflisten | `ps -e -o <Liste der Attribute>` | Die verfügbaren Attribute sind in der Man Page aufgeführt, lässt sich auch mit `-u` oder `-C` verwenden.
+|===
