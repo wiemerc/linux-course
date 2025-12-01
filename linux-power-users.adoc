@@ -47,6 +47,11 @@
 1. **Allgemeines**
 2. Arbeiten mit der Shell
 3. Arbeiten mit Dateien und Verzeichnissen
+4. Prozesse
+5. Arbeiten mit Textdateien
+6. Schreiben von (einfachen) Shell-Skripten
+7. Grundlagen der Systemadministration
+8. Container und Docker
 
 
 <<<
@@ -253,6 +258,11 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 1. Allgemeines
 2. **Arbeiten mit der Shell**
 3. Arbeiten mit Dateien und Verzeichnissen
+4. Prozesse
+5. Arbeiten mit Textdateien
+6. Schreiben von (einfachen) Shell-Skripten
+7. Grundlagen der Systemadministration
+8. Container und Docker
 
 
 <<<
@@ -389,6 +399,11 @@ TODO
 1. Allgemeines
 2. Arbeiten mit der Shell
 3. **Arbeiten mit Dateien und Verzeichnissen**
+4. Prozesse
+5. Arbeiten mit Textdateien
+6. Schreiben von (einfachen) Shell-Skripten
+7. Grundlagen der Systemadministration
+8. Container und Docker
 
 
 <<<
