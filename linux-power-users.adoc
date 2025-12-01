@@ -85,8 +85,8 @@
 * Ausbildung zum Kommunikationselektroniker und Nachrichtentechnik-Studium
 * IT-Allrounder mit 30 Jahren Berufserfahrung
 * sehr viel Erfahrung mit Unix und Linux
-* arbeite bei der Allianz Technology im Bereich Cloud-Infrastruktur
-// TODO: Andere Kurse erwähnen?
+* arbeite bei der Allianz Technology im Bereich Applikationsmonitoring / Cloud-Infrastruktur
+* Mastodon: https://mastodon.social/@wiemerc0x32 / GitHub: https://wiemerc.github.io/pages/about-me-de.html
 
 
 <<<
