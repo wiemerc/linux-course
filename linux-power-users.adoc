@@ -42,17 +42,6 @@
 // - Erste Erfahrungen mit dem Arbeiten auf einer Kommandozeile wünschenswert
 
 // Siehe auch https://academy.hackthebox.com/course/preview/linux-fundamentals oder https://www.redhat.com/en/services/training/getting-started-with-linux-fundamentals
-<<<
-== Linux für Power User
-1. **Allgemeines**
-2. Arbeiten mit der Shell
-3. Arbeiten mit Dateien und Verzeichnissen
-4. Prozesse
-5. Arbeiten mit Textdateien
-6. Schreiben von (einfachen) Shell-Skripten
-7. Linux im Netzwerk
-8. Grundlagen der Systemadministration
-9. Container und Docker
 
 
 <<<
@@ -72,12 +61,15 @@
 <<<
 == Inhalte
 [.step]
-* Arbeiten mit der Shell (`bash`, `zsh`)
-* Arbeiten mit Dateien und Verzeichnissen
-* Arbeiten mit Textdateien (also mit Befehlen wie `grep`, `sed` und `awk`)
-* Schreiben von (einfachen) Shell Scripts
-* Grundlagen der Systemadministration
-* Container und Docker
+1. Allgemeines
+2. Arbeiten mit der Shell (`bash`, `zsh`)
+3. Arbeiten mit Dateien und Verzeichnissen
+4. Prozesse
+5. Arbeiten mit Textdateien (also mit Befehlen wie `grep`, `sed` und `awk`)
+6. Schreiben von (einfachen) Shell-Skripten
+7. Linux im Netzwerk
+8. Grundlagen der Systemadministration
+9. Container und Docker
 
 
 <<<
@@ -87,7 +79,19 @@
 * IT-Allrounder mit 30 Jahren Berufserfahrung
 * sehr viel Erfahrung mit Unix und Linux
 * arbeite bei der Allianz Technology im Bereich Applikationsmonitoring / Cloud-Infrastruktur
-* Mastodon: https://mastodon.social/@wiemerc0x32 / GitHub: https://wiemerc.github.io/pages/about-me-de.html
+* Mastodon: https://mastodon.social/@wiemerc0x32 / GitHub: https://github.com/wiemerc
+
+
+== Linux für Power User
+1. **Allgemeines**
+2. Arbeiten mit der Shell
+3. Arbeiten mit Dateien und Verzeichnissen
+4. Prozesse
+5. Arbeiten mit Textdateien
+6. Schreiben von (einfachen) Shell-Skripten
+7. Linux im Netzwerk
+8. Grundlagen der Systemadministration
+9. Container und Docker
 
 
 <<<
@@ -132,8 +136,8 @@ image::thompson-ritchie.jpg[width=500, align="center"]
 * wird üblicherweise als Distribution vertrieben, bestehend aus
 [.step]
 ** dem Linux-Kernel
-** Systemsoftware wie Daemons, Shells, Bibliotheken und Tools, zum Teil aus dem https://de.wikipedia.org/wiki/GNU[GNU]-Projekt
-** einem Paketmanager (TODO)
+** Systemsoftware wie Dämonen Shells, Bibliotheken und Tools, zum Teil aus dem https://de.wikipedia.org/wiki/GNU[GNU]-Projekt
+** einem Paketmanager
 ** einem Fenstersystem (X11, Wayland)
 ** einer Desktop-Umgebung (Gnome, KDE...)
 ** Anwendungsprogrammen wie Office-Pakete, Browser...
@@ -146,18 +150,19 @@ image::thompson-ritchie.jpg[width=500, align="center"]
 * Shell ist wichtige Benutzerschnittstelle.
 * Kleine Tools können kombiniert werden, um grössere Aufgaben zu lösen => Filter und Pipelines
 * Verwendung von ASCII-Text als universelles Datenformat (in Dateien, Netzwerkprotokollen und als Schnittstelle zwischen Programmen)
-* Aufgaben können durch Scripts automatisiert werden.
+* Aufgaben können durch Skripte automatisiert werden.
 * Ressourcen (wie zum Beispiel angeschlossene Hardware und Netzwerkverbindungen) können als Datei angesprochen werden.
 
 
 <<<
 == Architektur von Linux
-TODO
+// TODO
 
 
 <<<
 == Dateisystem
 [.step]
+* Dateisystem = Komponente im Kernel + Datenstrukturen auf dem Datenträger
 * Alle Dateien und Verzeichnisse sind in einem Baum angeordnet, der mit `/` (Root-Verzeichnis) beginnt.
 * Sie sind durch den _Pfad_ = Liste aller übergeordneter Verzeichnisse + der eigene Name eindeutig identifizierbar.
 * _Absoluter_ Pfad: beginnt mit dem Root-Verzeichnis (`/`), _relativer_ Pfad: relativ zum aktuellen Verzeichnis
@@ -252,6 +257,16 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 [.step]
 * sind durch eine (normalerweise) eindeutige Nummer bestimmt => _Group Identifier_ (GID)
 * werden entweder in der Datei `/etc/group` oder in einem Verzeichnisdienst wie LDAP verwaltet
+
+
+<<<
+== Getting started - Wie komme ich zu einem Linux-System?
+// TODO: normale Installation, VM, WSL
+
+
+<<<
+== Welche Distribution soll ich verwenden?
+// TODO
 
 
 <<<
@@ -374,8 +389,16 @@ diff <(grep bla datei1) <(grep bla datei2)
 
 
 <<<
+== `sudo`
+[.step]
+* Tool, um Befehle als Root / als anderer Benutzer auszuführen (`sudo [-u <Benutzer>] <Befehl>`)
+* Ohne Befehl aber mit der Option `-i` bekommt man eine Shell mit Root-Rechten bzw. den Rechten des anderen Benutzers.
+* wird über die Datei `/etc/sudoers` konfiguriert (welche Benutzer / Gruppen dürfen `sudo` benutzen, ist ein Passwort erforderlich oder nicht, welche Befehle dürfen ausgeführt werden...)
+
+
+<<<
 == Welche Shell soll ich verwenden?
-TODO
+// TODO
 
 
 <<<
@@ -393,6 +416,9 @@ TODO
 
 <<<
 == Bücher / Ressourcen
+[.step]
+* _Unix Power Tools_
+* _Essential System Administration_
 // TODO
 
 
@@ -602,8 +628,10 @@ zum Beispiel HTML, Bilder...
 |===
 
 | Datei mit dem zugeordneten Programm öffnen (wie mit einem Doppelklick) | `xdg-open <Datei>` / `open <Datei>` (macOS)
+| Dateityp bestimmen | `file <Datei>`
 | Hexdump einer Datei anzeigen (hexadezimale Darstellung der Bytes) | `hexdump -C <Datei>`
 | die ersten / letzten n (Standard: 10) Bytes anzeigen | `head -c <n> <Datei>` / `tail -c <n> <Datei>`
+| nur die enthaltenen Strings ausgeben | `strings <Datei>`
 |===
 
 
@@ -842,7 +870,7 @@ a|
 == Prozesse - Signale
 [.step]
 * sind eine Möglichkeit, bei einem Prozess bestimmte Aktionen auszulösen
-* werden mit `kill -<Signal> <PID>` oder in Fehlerfällen vom Betriebssystem selber an einen Prozess geschickt (bei Hintergrundprozessen kann mit `%<Nummer>` anstelle der PID auch die Nummer verwendet werden, die die Shell vergibt)
+* werden mit `kill -<Signal> <PID>` / `pkill -f <String>` oder in Fehlerfällen vom Betriebssystem selber an einen Prozess geschickt (bei Hintergrundprozessen kann mit `%<Nummer>` anstelle der PID auch die Nummer verwendet werden, die die Shell vergibt)
 * Verschiedene Signale bewirken unterschiedliche Aktionen:
 +
 |===
@@ -862,8 +890,9 @@ a|
 
 | alle Prozesse mit den wichtigsten Informationen / Attributen auflisten | `ps -ef` | `-e` selektiert alle Prozesse, `-f` gibt die wichtigsten Informationen aus
 | alle Prozesse eines bestimmten Benutzers auflisten | `ps -u <Benutzername oder UID> -f` |
-| alle Prozesse auflisten, die ein bestimmtes Programm ausführen | ps -C <Name des Programms> -f` |
+| alle Prozesse auflisten, die ein bestimmtes Programm ausführen | `ps -C <Name des Programms> -f` |
 | alle Prozesse mit bestimmten Attributen auflisten | `ps -e -o <Liste der Attribute>` | Die verfügbaren Attribute sind in der Man Page aufgeführt, lässt sich auch mit `-u` oder `-C` verwenden.
+| alle Prozesse mit einem bestimmten String in der Kommandozeile (Programm + Argumente) auflisten | `pgrep -af <String>` |
 |===
 
 
