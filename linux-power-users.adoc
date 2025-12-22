@@ -974,3 +974,239 @@ a|
 | alle Netzwerkverbindungen und offene Ports auf dem lokalen Rechner mit den zugehörigen Prozessen auflisten | `netstat -pan` oder `ss -pan`
 | IP-Adresse zu einem Host- / Rechnernamen ermitteln ("Namen auflösen") | `host <Hostname>` oder `nslookup <Hostname>`
 |===
+
+
+<<<
+== Linux für Power User
+1. Allgemeines
+2. Arbeiten mit der Shell
+3. Arbeiten mit Dateien und Verzeichnissen
+4. Prozesse
+5. Arbeiten mit Textdateien
+6. Schreiben von (einfachen) Shell-Skripten
+7. Linux im Netzwerk
+8. **Grundlagen der Systemadministration**
+9. Container und Docker
+
+
+<<<
+== Starten und Stoppen eines Systems
+[.step]
+* Ein Linux-System befindet sich zu jedem Zeitpunkt in einem bestimmten Zustand, dem sogenannten _Run Level_ oder _Target_.
+* Mit dem Befehl `reboot` wird ein System gebootet (Run Level 6), mit `poweroff` heruntergefahren (Run Level 0).
+
+
+<<<
+== Starten und Stoppen eines Systems - Run Levels
+[cols="1,1,3"]
+|===
+| Run Level | Name | Beschreibung
+
+| 0 | Halt| System ist angehalten / ausgeschaltet.
+| 1 | Single User Mode | System läuft, aber nur mit den notwendigen Diensten und ohne Netzwerk, für Wartungsarbeiten.
+| 3 | Multi User Mode | System läuft mit allen (konfigurierten) Diensten und dem Netzwerk, aber ohne GUI, Standard für Server.
+| 5 | Graphical Mode | wie 3 + GUI (Desktop-Umgebung), Standard für Arbeitsrechner
+| 6 | Reboot | System wird gebootet.
+|===
+
+
+<<<
+== Starten und Stoppen eines Systems - `systemd` (1)
+[.step]
+* Beim Booten eines Systems wird nach dem Start des Kernels ein Prozess mit der PID 1 gestartet: `systemd` (`launchd` auf macOS). Dieser Prozess
+[.step]
+** konfiguriert das System (Devices, Netzwerk, Namensauflösung)
+** startet die Dienste (Dämonen), die im Verzeichnis `/etc/systemd/system` bzw. `/etc/systemd/user` für jeden Run Level / jedes Target konfiguriert sind (als symbolische Links in einem Verzeichnis `<Name des Targets>.wants/`).
+** stoppt diese Dienste wieder, wenn das zugehörige Run Level / Target verlassen wird
+** startet Dienste im Fehlerfall (Prozess hat sich beendet) automatisch neu
+
+
+<<<
+== Starten und Stoppen eines Systems - `systemd` (2)
+[.step]
+* Vielfältige Konfigurationsmöglichkeiten pro Dienst (in den sogenannten _Unit Files_):
+[.step]
+** Run Level / Target, in dem der Dienst laufen soll
+** Umgebungsvariablen
+** Scripts / Programme, die vor / nach dem Starten / Stoppen ausgeführt werden sollen
+** Limits für Ressourcen (CPU, Speicher, Plattenplatz)
+* Befehl zum Verwalten von Diensten (Starten, Stoppen, Anzeigen des Status...): `systemctl`
+
+
+<<<
+== `systemd` Timers (1)
+[.step]
+* bieten die Möglichkeit, Programme / Skripte periodisch zu bestimmten Zeiten auszuführen, auch wenn der entsprechende Benutzer nicht eingeloggt ist
+* dienen oft dazu, Wartungsarbeiten (z. B. Backups, Löschen von temporären Dateien) automatisch auszuführen
+* werden mit den Rechten des jeweiligen Benutzers ausgeführt
+* ersetzen auf modernen Linux-Systemen die _Cron Jobs_
+
+
+<<<
+== `systemd` Timers (2)
+[.step]
+* zwei Konfigurationsdateien pro Programm / Script:
+[.step]
+** Konfiguration des Programms / Scripts (welches Programm / Script, Optionen, Umgebungsvariablen) => `<Name>.service`
++
+[source,ini]
+----
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/find /tmp -mtime +30 -delete
+----
+** Konfiguration der Zeit(en), zu der / denen das Programm / Script ausgeführt werden soll (in https://man7.org/linux/man-pages/man7/systemd.time.7.html[diesem] Format)=> `<Name>.timer`
++
+[source,ini]
+----
+[Timer]
+OnCalendar=*-*-* 20:00:00
+
+[Install]
+WantedBy=timers.target
+----
+
+
+<<<
+== `systemd` Timers (3)
+[.step]
+* können systemweit (Dateien unter `/usr/lib/systemd/system/`, editieren mit `systemctl edit --full --force <Datei>`) oder für einen Benutzer (Dateien unter `~/.config/systemd/user/`, editieren mit `systemctl --user edit --full --force <Datei>`) angelegt werden
+* Ausgaben (Standardausgabe / Standardfehlerausgabe) werden vom `journald`-Dämonen gesammelt und können mit `journalctl` angeschaut werden.
+* Gute Anleitungen: https://wiki.archlinux.org/title/Systemd/Timers und https://unix.stackexchange.com/a/688512
+
+
+<<<
+== Logging (1)
+[.step]
+* Logmeldungen vom Kernel, von den Diensten und von Benutzern werden vom `journald`-Dämonen gesammelt und (in binärer Form) in Dateien unter `/var/log/journal` geschrieben (TODO: wie lange aufgehoben?).
+* können mit `journalctl` angeschaut / ausgegeben werden (auch als JSON)
+* viele Filtermöglichkeiten, unter anderem
++
+|===
+
+| Zeitraum | `--since` (`-S`) / `--until` (`-U`)
+| Dienst | `--unit` (`-u`)
+| _Facility_ (`kern`, `user`, `auth`, ...) | `--facility`
+| Priorität (von `debug` bis `emerg`) | `--priority` (`-p`)
+|===
+
+
+<<<
+== Logging (2)
+[.step]
+* Benutzer können mit dem Befehl `logger` selber Logmeldungen schreiben (z. B. in Skripten).
+* Unter Umständen gibt es auch noch Logdateien unter `/var/log`.
+
+
+<<<
+== Datenträger und Dateisysteme
+[.step]
+* Datenträger (Festplatten, Disk Arrays, CDs / DVDs, USB-Sticks) werden über Gerätedateien (im Verzeichnis `/dev`) angesprochen.
+* Datenträger müssen ein von Linux unterstütztes Dateisystem verwenden (ext4, FAT32, ISO 9660...).
+* Das _Einhängen_ (_Mount_) macht den Datenträger als Unterverzeichnis (den _Mount Point_) im Verzeichnisbaum sichtbar, der umgekehrte Vorgang ist das _Aushängen_ (_Unmount_).
+* Folgende Möglichkeiten zum Einhängen:
+[.step]
+** beim Booten durch den `systemd`, Gerätedateien und zugehörige Mount Points müssen in der Datei `/etc/fstab` aufgelistet sein
+** automatisch (durch einen Dämonen) beim Einlegen / Anschliessen des Datenträgers (CDs / DVDs, USB-Sticks, Wechselfestplatten), üblicherweise unter `/media` oder `/run/media`
+** manuell mit dem `mount`-Befehl (z. B. `mount /dev/sdb1 /data`), Aushängen mit `umount`
+* Aushängen ist nur möglich wenn niemand mehr auf Dateien / Verzeichnisse auf dem Datenträger zugreift (auch nicht als aktuelles Verzeichnis).
+
+
+<<<
+== Paket-Manager - Allgemeines
+[.step]
+* dienen dazu, auf möglichst einfache Weise und aus einer vertrauenswürdigen Quelle Software zu installieren (und zu deinstallieren)
+* Die einzelnen Linux-Distributionen nutzen (zum Teil) unterschiedliche Paket-Manager, siehe https://www.linode.com/docs/guides/linux-package-management-overview/#comparison-of-package-managers[hier] für einen Vergleich.
+
+
+<<<
+== Paket-Manager - Konzepte
+[.step]
+* Software wird zu einem Paket zusammengefasst (ausführbare Programme, Bibliotheken, Skripte, Konfigurationsdateien) und ggf. für die Distribution angepasst (z. B. Dateipfade).
+* Für jedes Paket werden Abhängigkeiten definiert (welche Pakete zusätzlich benötigt werden), die automatisch mitinstalliert werden (können).
+* Es gibt ein sogenanntes _Repository_ mit allen verfügbaren Paketen (auf einem Installationsmedium wie CD / DVD / USB-Stick oder einem Server).
+* Auf jedem System existiert eine Datenbank mit allen installierten Paketen.
+* Alle installierten Pakete können mit einen Befehl aktualisiert werden, wobei Abhängigkeiten berücksichtigt werden (z. B. wenn eine bestimmte Software nicht mit der neuesten Version einer Bibliothek funktioniert).
+
+
+<<<
+== Troubleshooting (1)
+[.step]
+* Welcher Prozess verwendet am meisten CPU, Speicher, IO-Bandbreite? `csysdig` (Alternativen: `top`, `htop`, `iotop`, `iftop`)
+* Welcher Prozess hat eine bestimmte Datei / Netzwerkverbindung (Port) geöffnet?
++
+[source,shell]
+----
+$ sysdig -c lsof fd.name=/etc/host
+$ lsof /etc/hosts
+$ sysdig -c lsof fd.port=53
+$ lsof -i :53
+----
+* Welche Dateien / Netzwerkverbindungen hat ein bestimmter Prozess geöffnet?
++
+[source,shell]
+----
+$ sysdig -c lsof proc.pid=12345
+$ lsof -p 12345
+$ sysdig -c lsof proc.name=sshd
+----
+
+
+<<<
+== Troubleshooting (2)
+[.step]
+* Wie voll ist ein Datenträger (ein Mount Point)? `df -h <Mount Point>`
+* Wie viel Platz belegt ein (Unter-)Verzeichnis? `du -hs <Verzeichnis>`
+* Welches (Unter-)Verzeichnis belegt den meisten Platz? `du -h --max-depth 1 | sort -rh`
+
+
+<<<
+== Troubleshooting (3)
+[.step]
+* Wer ist momentan eingeloggt? `who`
+* Historie der Logins eines Benutzers: `last <Benutzername>` (greift auf die binäre Datei `/var/log/wtmp` zu)
+* Welche Befehle hat ein Benutzer ausgeführt? Shell-Historie, die Dateien `.bash_history` bzw. `.zsh_history` in dem Heimatverzeichnis des Benutzers
+* Welche Dateien / welche Verzeichnisse wurden zuletzt in einem bestimmten Verzeichnis geändert?
++
+[source,shell]
+----
+$ find . -printf '%T@ %M %u %g %s %p\n' | \
+sort -rn | \
+awk '{print strftime("%Y-%m-%d %H:%M:%S", $1), $2, $3, $4, $5, $6}' | \
+head
+----
+
+
+<<<
+== `/proc`-Dateisystem
+[.step]
+* ist ein _virtuelles_ Dateisystem, das vom Kernel zur Laufzeit des Systems angelegt und aktualisiert wird
+* Inhalte, bereitgestellt in einzelnen Dateien, teilweise in Unterverzeichnissen:
+[.step]
+** Informationen zur Hardware wie CPU und Speicher (`/proc/cpuinfo` und `/proc/meminfo`)
+** Informationen zu den laufenden Prozessen (ein Unterverzeichnis pro Prozess) wie die Befehlszeile, mit der der Prozess gestartet wurde (`/proc/<PID>/cmdline`) und die gesetzen Umgebungsvariablen (`/proc/<PID>/environ`)
+** zur Laufzeit des Systems änderbare Kernel-Parameter wie z. B. Netzwerk-Einstellungen (`/proc/sys/...`)
+* Dateien können mit `cat` gelesen und mit `echo ... > /proc/sys/...` verändert werden.
+* hauptsächlich nützlich für Debugging und Troubleshooting
+
+
+<<<
+== Backup
+[.step]
+* Sichern von Daten auf einen anderen Rechner / Synchronisieren von mehreren Rechnern (über SSH): https://man7.org/linux/man-pages/man1/rsync.1.html[_rsync_]
+* Sichern von Daten in der Cloud (viele unterstützte Anbieter): https://rclone.org/[_rclone_]
+* Sichern von Daten lokal oder in der Cloud, mit Versionierung und Deduplizierung: https://restic.net/[_restic_]
+* Sichern / Klonen von kompletten Datenträgern / Partitionen: https://clonezilla.org/[_Clonezilla_]
+
+
+<<<
+== Weitere Tools für die Administration
+[.step]
+* Grafische Oberflächen: https://webmin.com/[Webmin] oder https://cockpit-project.org/[Cockpit]
+* https://en.wikipedia.org/wiki/Infrastructure_as_code[_Infrastructure as Code_] (eher geeignet für eine grössere Anzahl gleichartiger Rechner): https://www.ansible.com/[Ansible], https://www.chef.io/[Chef], https://www.puppet.com/[Puppet]
+
+
+<<<
+== Anhang A: Übungen
+// Ideen:
+// - systemd Timer anlegen
