@@ -17,6 +17,7 @@
 :stem:
 
 
+// TODO: Folie mit Erklärung der Syntax (<>, [], |)
 // TODO: Folien mit "coolen" Tools wie ack, rsync...?
 // TODO: Bildunterschriften sind in der Präsi immer noch nicht kleiner, im PDF schon.
 // TODO: Bilder ohne Rahmen
@@ -32,7 +33,7 @@
 // Kursinhalte:
 // - Arbeiten mit der Shell (bash, zsh)
 // - Arbeiten mit Dateien und Verzeichnissen
-// - Arbeiten mit Textdateien (grep, sed und awk)
+// - Arbeiten mit Text(dateien) (grep, sed und awk)
 // - Schreiben von (einfachen) Shell-Skripten
 // - Grundlagen der Systemadministration
 // - Container und Docker
@@ -65,7 +66,7 @@
 2. Arbeiten mit der Shell (`bash`, `zsh`)
 3. Arbeiten mit Dateien und Verzeichnissen
 4. Prozesse
-5. Arbeiten mit Textdateien (also mit Befehlen wie `grep`, `sed` und `awk`)
+5. Arbeiten mit Text(dateien) (also mit Befehlen wie `grep`, `sed` und `awk`)
 6. Schreiben von (einfachen) Shell-Skripten
 7. Linux im Netzwerk
 8. Grundlagen der Systemadministration
@@ -87,7 +88,7 @@
 2. Arbeiten mit der Shell
 3. Arbeiten mit Dateien und Verzeichnissen
 4. Prozesse
-5. Arbeiten mit Textdateien
+5. Arbeiten mit Text(dateien)
 6. Schreiben von (einfachen) Shell-Skripten
 7. Linux im Netzwerk
 8. Grundlagen der Systemadministration
@@ -149,7 +150,7 @@ image::thompson-ritchie.jpg[width=500, align="center"]
 * "System von Programmierern für Programmierer"
 * Shell ist wichtige Benutzerschnittstelle.
 * Kleine Tools können kombiniert werden, um grössere Aufgaben zu lösen => Filter und Pipelines
-* Verwendung von ASCII-Text als universelles Datenformat (in Dateien, Netzwerkprotokollen und als Schnittstelle zwischen Programmen)
+* Verwendung von Text als universelles Datenformat (in Dateien, Netzwerkprotokollen und als Schnittstelle zwischen Programmen)
 * Aufgaben können durch Skripte automatisiert werden.
 * Ressourcen (wie zum Beispiel angeschlossene Hardware und Netzwerkverbindungen) können als Datei angesprochen werden.
 
@@ -275,7 +276,7 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 2. **Arbeiten mit der Shell**
 3. Arbeiten mit Dateien und Verzeichnissen
 4. Prozesse
-5. Arbeiten mit Textdateien
+5. Arbeiten mit Text(dateien)
 6. Schreiben von (einfachen) Shell-Skripten
 7. Linux im Netzwerk
 8. Grundlagen der Systemadministration
@@ -338,7 +339,7 @@ echo "Hallo $(whoami)@$(hostname)"
 +
 [source,sh]
 ----
-diff <(grep bla datei1) <(grep bla datei2)
+diff <(grep bla datei1) <(grep blub datei2)
 ----
 
 
@@ -399,6 +400,7 @@ diff <(grep bla datei1) <(grep bla datei2)
 <<<
 == Welche Shell soll ich verwenden?
 // TODO
+// TODO: Powershell und Nushell erwähnen?
 
 
 <<<
@@ -428,7 +430,7 @@ diff <(grep bla datei1) <(grep bla datei2)
 2. Arbeiten mit der Shell
 3. **Arbeiten mit Dateien und Verzeichnissen**
 4. Prozesse
-5. Arbeiten mit Textdateien
+5. Arbeiten mit Text(dateien)
 6. Schreiben von (einfachen) Shell-Skripten
 7. Linux im Netzwerk
 8. Grundlagen der Systemadministration
@@ -802,7 +804,7 @@ a|
 2. Arbeiten mit der Shell
 3. Arbeiten mit Dateien und Verzeichnissen
 4. **Prozesse**
-5. Arbeiten mit Textdateien
+5. Arbeiten mit Text(dateien)
 6. Schreiben von (einfachen) Shell-Skripten
 7. Linux im Netzwerk
 8. Grundlagen der Systemadministration
@@ -902,7 +904,225 @@ a|
 2. Arbeiten mit der Shell
 3. Arbeiten mit Dateien und Verzeichnissen
 4. Prozesse
-5. Arbeiten mit Textdateien
+5. **Arbeiten mit Text(dateien)**
+6. Schreiben von (einfachen) Shell-Skripten
+7. Linux im Netzwerk
+8. Grundlagen der Systemadministration
+9. Container und Docker
+
+
+<<<
+== Warum Text?
+[.step]
+* Sehr viele Daten liegen auch heute noch als Text vor, z. B. Anwendungsdaten (https://en.wikipedia.org/wiki/JSON[JSON], https://en.wikipedia.org/wiki/XML[XML]), Programmcode, Konfiguration (https://en.wikipedia.org/wiki/INI_file[INI-Dateien], https://en.wikipedia.org/wiki/YAML[YAML]), Dokumentation (https://en.wikipedia.org/wiki/Markdown[Markdown], https://en.wikipedia.org/wiki/AsciiDoc[AsciiDoc]).
+* Text ist das universelle Datenformat in Linux (Dateien, Ein- und Ausgabe von Programmen).
+* Arbeiten mit Text(dateien) ist oft einfacher als mit binären Daten oder Datenbanken (und manchmal auch schneller).
+* Linux / Unix hat sehr mächtige Tools zum Arbeiten mit Text, alle Tools können mit Dateien oder in Pipelines (Standardein- / -ausgabe) verwendet werden.
+* oft drei Schritte in einer Pipeline: Filtern - Transformieren - Aggregieren
+
+
+<<<
+== Suchen - `grep`
+[.step]
+* durchsucht Dateien, Verzeichnisse (rekursiv) oder die Standardeingabe (in einer Pipeline) **zeilenweise** nach einem festen String oder einem _regulären Ausdruck_ (siehe Folie unten)
+* oft der Schritt _Filtern_ in einer Pipeline
+* entspricht `WHERE` in SQL
+* Aufruf: `grep [Optionen] <Suchstring|regulärer Ausdruck> [<Datei(en)>|<Verzeichnis(se)>]`
+
+
+<<<
+== `grep` - Wichtige Optionen (1)
+[cols="1,3,3"]
+|===
+
+| `-F` | nach festem String suchen | kann man weglassen wenn Suchstring nur aus Buchstaben und / oder Zahlen besteht
+| `-P` | nach regulärem Ausdruck suchen |
+| `-i` | Gross- / Kleinschreibung nicht beachten |
+| `-r` | Verzeichnis(se) rekursiv durchsuchen |
+| `-c` | nur die Anzahl der Treffer ausgeben |
+|===
+
+
+<<<
+== `grep` - Wichtige Optionen (2)
+[cols="1,3,3"]
+|===
+
+| `-l` | nur Namen der Dateien ausgeben, die mindestens einen Treffer enthalten |
+| `-v` | Zeilen ausgeben, die den Suchstring **nicht** enthalten | Zusammen mit `-l` werden die Namen der Dateien ausgegeben, die mindestens eine Zeile enthalten, die den Suchstring **nicht** enthält.
+| `-A<n>`, `-B<n>` | n Zeilen nach / vor jedem Treffer ausgeben (für den Kontext) |
+|===
+
+
+<<<
+== Reguläre Ausdrücke
+[.step]
+* sind Muster zur Suche nach und Validierung von Strings
+* beschreiben die Struktur eines Strings ohne ihn vollständig anzugeben, ähnlich wie die Wildcards in der Shell
+* Beispiel: Grossbuchstabe, gefolgt von einer beliebigen Zahl von Kleinbuchstaben, gefolgt von einer oder mehreren Ziffern => `^[A-Z][a-z]*\d+$`
+* können in Editoren (Suchen / Ersetzen), Tools wie `grep` und allen modernen Programmiersprachen genutzt werden
+* verschiedene Dialekte, gängigster Dialekt ist _Perl Compatible Regular Expressions_ (PCRE)
+* Tutorials: https://developer.mozilla.org/de/docs/Web/JavaScript/Guide/Regular_expressions[Mozilla], https://perldoc.perl.org/perlretut[Perl], https://docs.python.org/3/library/re.html[Python]
+* https://developer.mozilla.org/de/docs/Web/JavaScript/Guide/Regular_expressions/Cheatsheet[Cheat Sheet]
+
+
+// TODO: reguläre Ausdrücke erklären?
+
+
+// TODO: überall Tabellen verwenden?
+<<<
+== Suchen und Ersetzen - `sed` / `perl`
+[.step]
+* oft der Schritt _Transformieren_ in einer Pipeline
+* `sed` ist geeignet für einfache Fälle, nämlich zeilenweise Verarbeitung und feste Strings: `sed -e 's/<von>/<nach>/g'`
+* Mit der Option `-i` wird in einer Datei "in-place" ersetzt (gilt für `sed` und `perl`): `sed -i -e 's/<von>/<nach>/g' <Datei>`
+* `perl` kann nach regulären Ausdrücken suchen, auch über mehrere Zeilen hinweg.
+[.step]
+** Suchen / Ersetzen mit regulärem Ausdruck: `perl -pe 's/<von>/<nach>/g'`
+** Suchen / Ersetzen über mehrere Zeilen hinweg: `perl -0777 -pe 's/<von>/<nach>/gs', <Datei>`, `-0777` bewirkt, dass die Datei nicht zeilenweise sondern "in einem Rutsch" eingelesen wird, mit dem Flag `s` werden mit `.` im regulären Ausdruck auch Zeilenumbrüche getroffen
+
+
+<<<
+== Strings aus Zeilen ausschneiden - `cut` / `awk` / `perl`
+[.step]
+* oft der Schritt _Transformieren_ in einer Pipeline
+* einzelne Spalte(n), mit festem Trennzeichen: `cut -d<Trennzeichen> -f<n>` oder `awk -F<Trennzeichen> '{print $<n>}'`, Spalten-Index `n` startet mit 1, mehrere Spalten durch Komma trennen, Default-Trennzeichen ist bei `cut` der Tabulator bzw. sind bei `awk` _Whitespaces_ (Leerzeichen, Tabulatoren, Zeilenumbrüche)
+* einzelne Spalte(n), getrennt durch einen regulären Ausdruck: `perl -F<regulärer Ausdruck> -le 'BEGIN{$, = " "} print $F[<n>]'`, Spalten-Index `n` startet mit 0, mehrere Spalten durch Komma trennen
+* regulärer Ausdruck: `perl -nle '/(<regulärer Ausdruck>)/; print $1'`, durch die runden Klammern um den Ausdruck wird der gefundenen String der Variablen `$1` zugewiesen
+* Man kann Zeilen auch nach dem ausgeschnittenen String filtern: `perl -F<regulärer Ausdruck> -le 'print if $F[<n>] =~ /<regulärer Ausdruck>/'` oder `perl -nle '/(<regulärer Ausdruck>)/; print if $1 > <n>'`
+* entspricht `SELECT` bzw. `WHERE` in SQL
+
+
+<<<
+== Sortieren - `sort`
+[.step]
+* sortiert die angegebene Datei oder die Standardeingabe, mit der kompletten Zeile als Schlüssel
+* oft der letzte Schritt in einer Pipeline
+* Aufruf: `sort [Optionen] [Datei]`
+* Wichtige Optionen
++
+[cols="1,3"]
+|===
+
+| `-u` | nur unterschiedliche Zeilen / Werte ausgeben
+| `-r` | absteigend sortieren
+| `-n` | numerisch sortieren
+| `t<Trennzeichen> -k<n>` | nach Spalte `n` sortieren, Spalten getrennt durch das angegebene Trennzeichen (Default: Whitespaces)
+|===
+* entspricht `ORDER BY`, ggf. mit `DISTINCT` in SQL
+
+
+<<<
+== Aggregieren
+[.step]
+* oft der letzte Schritt in einer Pipeline
+* verschiedene Möglichkeiten:
+[.step]
+** Zeilen zählen: (`COUNT()` in SQL): `wc -l`
+** nur unterschiedliche Zeilen zusammen mit ihrer Häufigkeit ausgeben (`GROUP BY` mit `COUNT()` in SQL): `uniq -c`, Zeilen müssen bereits sortiert sein
+** Zeilen aufsummieren (`SUM() in SQL`): `awk '{sum += $0} END{print sum}'`, Zeilen dürfen nur aus Zahlen bestehen
+
+
+<<<
+== Dateien / Verzeichnisse vergleichen - `diff` / `comm`
+[.step]
+* Dateien vergleichen: `diff <Datei 1> <Datei 2>` (mit der Option `-w` werden Unterschiede in den _Whitespaces_ (Leerzeichen, Tabulatoren, Zeilenumbrüche) ignoriert)
+* Ausgabe von zwei Befehlen vergleichen (mit Process Substitution): `diff <(<Befehl 1>) <(Befehl 2)>`
+* Verzeichnisse (rekursiv) vergleichen: `diff -r <Verzeichnis 1> <Verzeichnis 2>`
+* Zeilen ausgeben, die nur in der ersten / zweiten Datei vorkommen (Dateien müssen sortiert sein): `comm -23 <Datei 1> <Datei 2>` / `comm -13 <Datei 1> <Datei 2>`
+* Alternative zu `diff` mit schönerer Ausgabe: https://terminaltrove.com/delta/[`delta`]
+* entspricht `MINUS` in SQL (mehr oder weniger)
+
+
+// TODO: split?
+// TODO: join?
+
+
+<<<
+== _Optional_: JSON (1)
+[.step]
+* ist ein einfaches, textbasiertes, heute sehr häufig genutztes Datenformat
+* wird verwendet für
+[.step]
+** das Speichern von Anwendungsdaten, z. B. TODO
+** Konfigurationsdateien, z. B. Visual Studio Code
+** den Datenaustausch zwischen Web-Anwendungen (die im Browser laufen) und Web-Servern
+** Logdateien
+* Gute Beschreibung der Syntax: https://en.wikipedia.org/wiki/JSON#Syntax[hier] und https://stackoverflow.blog/2022/06/02/a-beginners-guide-to-json-the-data-format-for-the-internet/[hier]
+
+
+<<<
+== _Optional_: JSON (2)
+[.step]
+* JSON-Daten können mit Tools wie https://jqlang.org/[_jq_], https://www.duckdb.org/[_DuckDB_] und https://de.wikipedia.org/wiki/PowerShell[_Microsoft Powershell_] sowie mit allen gängigen Programmiersprachen gefiltert, umgewandelt und verarbeitet werden.
+* Linux-Tools bieten zum Teil die Möglichkeit, ihre Ausgabe als JSON zu formatieren, die Ausgabe von vielen anderen Tools kann mit https://github.com/kellyjonbrazil/jc[`jc`] in JSON umgewandelt werden (auch bestimmte Dateien wie `/etc/passwd` werden unterstützt).
+* JSON + entsprechende Tools sind teilweise einfacher, lesbarer und robuster zu verwenden als unstrukturierter Text + Tools wie `grep`, `sed`, `awk` und `perl`.
+
+
+<<<
+== _Optional_: Struktur von JSON
+[source,json]
+----
+[ <1>
+    { <2>
+        "vorname": "Hansi", <3>
+        "nachname": "Müller",
+        "telefonnummern": [ <4>
+            {
+                "typ": "Arbeit",
+                "nummer": "+49 89 123456"
+            },
+            {
+                "typ": "Handy",
+                "nummer": "+49 176 123456"
+            }
+        ]
+    }
+]
+----
+<1> Listen in eckigen Klammern, die einzelnen Elemente sind durch Komma getrennt
+<2> Objekte = Listen von Schlüssel-Wert-Paaren in geschweiften Klammern, die Paare sind wieder durch Komma getrennt
+<3> Schlüssel und Wert sind durch einen Doppelpunkt getrennt.
+<4> Listen und Objekte können verschachtelt werden => hierarchische Datenstruktur
+
+
+<<<
+== _Optional_: JSON - Beispiele
+[.step]
+* Beispiel für `jq`: Ausgeben des Zeitstempels aller Dateien in einem Verzeichnis
++
+[source,sh]
+----
+jc ls -l | jq '.[] | .date'
+----
+* Beispiel für DuckDB / SQL: Aufsummieren der Grösse aller Dateien in einem Verzeichnis, die mit z beginnen:
++
+[source,sh]
+----
+jc ls -l /usr/bin | duckdb -c "select sum(size) from read_json('/dev/stdin') where filename like 'z%';"
+----
+
+
+<<<
+== Linux für Power User
+1. Allgemeines
+2. Arbeiten mit der Shell
+3. Arbeiten mit Dateien und Verzeichnissen
+4. Prozesse
+5. Arbeiten mit Text(dateien)
+6. **Schreiben von (einfachen) Shell-Skripten**
+7. Linux im Netzwerk
+8. Grundlagen der Systemadministration
+9. Container und Docker
+
+
+<<<
+== Linux für Power User
+1. Allgemeines
+2. Arbeiten mit der Shell
+3. Arbeiten mit Dateien und Verzeichnissen
+4. Prozesse
+5. Arbeiten mit Text(dateien)
 6. Schreiben von (einfachen) Shell-Skripten
 7. **Linux im Netzwerk**
 8. Grundlagen der Systemadministration
@@ -982,7 +1202,7 @@ a|
 2. Arbeiten mit der Shell
 3. Arbeiten mit Dateien und Verzeichnissen
 4. Prozesse
-5. Arbeiten mit Textdateien
+5. Arbeiten mit Text(dateien)
 6. Schreiben von (einfachen) Shell-Skripten
 7. Linux im Netzwerk
 8. **Grundlagen der Systemadministration**
@@ -1208,5 +1428,84 @@ head
 
 <<<
 == Anhang A: Übungen
+// TODO: Aufgaben in die Folien an der entsprechenden Stelle einfügen
+// TODO: Sind Beispiele für Arbeiten mit Text zu kompliziert? Evtl. doch CSV-Dateien mit MSISDNs verwenden?
 // Ideen:
 // - systemd Timer anlegen
+
+
+<<<
+== Arbeiten mit Text - Suchen / Filtern (1)
+* **Aufgabe**: Die Ausgabe von `journalctl` soll nach Logmeldungen von `systemd` gefiltert werden und die Anzahl dieser Meldungen soll gezählt werden.
+* **Lösung**:
+** mit `grep`, naiver Ansatz. Die ganze Zeile wird nach dem String `systemd` durchsucht, was zu falschen Treffern führen kann. Mit der Option `-c` bekommt man die Anzahl.
++
+[source,shell]
+----
+$ sudo journalctl -S today | grep systemd
+----
+
+** mit `grep` und regulärem Ausdruck. Dadurch wird der String `systemd` nur gefunden wenn er als Programmname vorkommt.
++
+[source,shell]
+----
+$ sudo journalctl -S today | grep -P 'systemd\[\d+\]'
+----
+
+
+<<<
+== Arbeiten mit Text - Suchen / Filtern (2)
+* **Lösung**:
+** mit Perl. Nur die 5. Spalte, die den Programmnamen enthält, wird durchsucht. Man muss einen regulären Ausdruck verwenden weil `journalctl` an den Namen noch die PID anhängt. Mit einem `| wc -l` am Ende bekommt man die Anzahl.
++
+[source,shell]
+----
+$ sudo journalctl -S today | perl -nale 'print if $F[4] =~ /systemd/'
+----
+
+** mit JSON und `jq`. Wenn man `| .MESSAGE` weglässt werden die kompletten Objekte mit allen Attributen ausgegeben.
++
+[source,shell]
+----
+$ sudo journalctl -S today -o json | jq 'select(.SYSLOG_IDENTIFIER == "systemd") | .MESSAGE'
+----
+
+** mit JSON und DuckDB. Mit `select count(*)` bekommt man die Anzahl.
++
+[source,shell]
+----
+$ sudo journalctl -S today -o json | \
+    duckdb -c "select MESSAGE from read_json('/dev/stdin') where SYSLOG_IDENTIFIER = 'systemd';"
+----
+
+
+<<<
+== Arbeiten mit Text - Suchen / Ersetzen
+// TODO
+
+
+<<<
+== Arbeiten mit Text - Gruppieren
+* **Aufgabe**: Die Logmeldungen, die von `journalctl` ausgegeben werden, sollen nach dem Programm gruppiert und die Anzahl pro Programm absteigend sortiert ausgegeben werden.
+* **Lösung**:
+** mit Perl:
++
+[source,shell]
+----
+$ sudo journalctl -S today | perl -nale 'print $F[4]' | sort | uniq -c | sort -rn
+----
+
+** mit Perl, Programmnamen ohne die PIDs:
++
+[source,shell]
+----
+$ sudo journalctl -S today | perl -nale '$F[4] =~ /([a-zA-Z]+)/; print $1' | sort | uniq -c | sort -rn
+----
+
+** mit JSON und DuckDB:
++
+[source,shell]
+----
+$ sudo journalctl -S today -o json | \
+    duckdb -c "select SYSLOG_IDENTIFIER, count(*) from read_json('/dev/stdin') group by 1 order by 2 desc;"
+----
