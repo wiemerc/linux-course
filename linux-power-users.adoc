@@ -19,6 +19,7 @@
 
 // TODO: Folie mit Erklärung der Syntax (<>, [], |)
 // TODO: Folien mit "coolen" Tools wie ack, rsync...?
+// TODO: Folie zu `xargs`?
 // TODO: Bildunterschriften sind in der Präsi immer noch nicht kleiner, im PDF schon.
 // TODO: Bilder ohne Rahmen
 // TODO: Bilder / Screenshots auf Folien mit den Kapitelüberschriften / Übungen
@@ -288,7 +289,7 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 [.step]
 * ist das Kommandozeileninterface (_Command Line Interface_ = CLI) von Linux zum Ausführen von Programmen
 * besitzt auch eingebaute Befehle, Kontrollstrukturen und Variablen und stellt eine vollständige Programmiersprache dar (siehe Kapitel über Shell-Programmierung)
-* mehrere Alternativen: sh, ksh, (t)csh, **bash**, **zsh**, fish
+* mehrere Alternativen: sh, ksh, (t)csh, **bash**, **zsh**
 
 
 <<<
@@ -296,7 +297,7 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 [.step]
 * besteht aus einem (oder mehreren => Pipelines) Befehl(en), Optionen und Argumenten
 * Befehle sind entweder in der Shell eingebaut (z. B. `cd`) oder werden im Suchpfad gesucht (Umgebungsvariable `PATH`) und dann als separate Prozesse ausgeführt.
-* Befehle setzen beim Beenden den _Exit Status_ (Erfolg / Fehler) => spezielle Variable `$?`
+* Befehle setzen beim Beenden den _Exit Status_ (Erfolg / Fehler) => spezielle Variable `$?`, 0 bedeutet Erfolg, > 0 bedeutet Fehler (die genauen Werte sind abhängig vom Programm)
 * Shell beenden: Ctrl-d (oder `exit`)
 * laufendes Programm beenden: Ctrl-c
 
@@ -327,7 +328,6 @@ Eingegebene oder aus der Historie zurückgeholte Befehlszeile lässt sich editie
 
 <<<
 == Shell - Weitere Features (2)
-// TODO: Evtl. erst im Kapitel Shell-Programmierung?
 [.step]
 * Befehl mit seiner Ausgabe ersetzen (_Command Substitution_): `$()`
 +
@@ -335,7 +335,7 @@ Eingegebene oder aus der Historie zurückgeholte Befehlszeile lässt sich editie
 ----
 echo "Hallo $(whoami)@$(hostname)"
 ----
-* Befehl als Datei für Ein- oder Ausgabe nutzen (_Process Substitution_, wenn das mit einer Pipeline nicht möglich ist): `<()` und `>()`
+* Befehl als "Datei" für Ein- oder Ausgabe nutzen (_Process Substitution_, wenn man nicht die Standardein- / -ausgabe nutzen kann): `<()` und `>()`
 +
 [source,sh]
 ----
@@ -400,7 +400,7 @@ diff <(grep bla datei1) <(grep blub datei2)
 <<<
 == Welche Shell soll ich verwenden?
 // TODO
-// TODO: Powershell und Nushell erwähnen?
+// TODO: fish, Powershell und Nushell erwähnen?
 
 
 <<<
@@ -552,7 +552,7 @@ image::file-metadata.svg[width=1200, align="center"]
 
 | Lesen (r) | Inhalt kann gelesen werden. | Inhalt = Namen der Dateien / Unterverzeichnisse kann gelesen werden.
 | Schreiben (w) | Inhalt kann verändert werden. | Dateien / Unterverzeichnisse können angelegt / umbenannt / gelöscht werden, **aber nur wenn auch das Ausführrecht vergeben wurde**.
-| Ausführen (x) | Datei kann ausgeführt werden (wenn es sich um ein Programm oder Script handelt). | Auf Dateien / Unterverzeichnisse kann zugegriffen werden, in das Verzeichnis kann gewechselt werden.
+| Ausführen (x) | Datei kann ausgeführt werden (wenn es sich um ein Programm oder Skript handelt). | Auf Dateien / Unterverzeichnisse kann zugegriffen werden, in das Verzeichnis kann gewechselt werden.
 |===
 
 
@@ -1117,6 +1117,363 @@ jc ls -l /usr/bin | duckdb -c "select sum(size) from read_json('/dev/stdin') whe
 
 
 <<<
+== Shell-Skripte
+[.step]
+* sind eine Folge von Befehlen mit Argumenten und Optionen
+* eventuell ergänzt um Variablen und Kontrollstrukturen
+* werden von der Shell genauso ausgeführt wie interaktiv eingegebene Befehle (mit allen Features wie Pipelines, Ein- / Ausgabeumleitung und Hintergrundprozesse)
+* stellen eine vollständige Programmiersprache dar, sind aber nur bedingt für größere Programmieraufgaben geeignet (besser Python oder Perl verwenden)
+* Die einzelnen Shells implementieren unterschiedliche "Dialekte", die nicht vollständig kompatibel sind => Auf Linux (und auch macOS) sollte man (unabhängig von der Shell, die man interaktiv nutzt) die `bash` für Skripte nutzen.
+
+
+<<<
+== Variablen
+[.step]
+* können Strings oder Ganzzahlen speichern, sind aber eigentlich typlos (auch Zahlen werden intern als Strings gespeichert und Strings können ohne Fehler in arithmetischen Ausdrücken verwendet werden)
+* Zusätzlich gibt es auch Listen und Maps (Schlüssel-Wert-Paare), die aber in diesem Kurs nicht behandelt werden.
+* müssen nicht deklariert werden
+
+
+<<<
+== Verwenden von Variablen
+[source, shell]
+----
+$ s=abc  <1>
+$ x=1
+$ nlines=$(wc -l /tmp/blablub.txt)  <2>
+$ echo $abc  <3>
+$ (( x=$x+1 ))  <4>
+$ echo "x = $x"  <5>
+----
+<1> Zuweisung, wenn der String Leerzeichen enthält muss man Anführungszeichen verwenden.
+<2> Ausgabe des Befehls wird der Variablen zugewiesen.
+<3> Zugriff auf den Wert durch das vorangestellte Dollarzeichen
+<4> Arithmetik, Variablen, die einen String enthalten, werden in 0 umgewandelt.
+<5> _Variablensubstitution_ => Wert der Variablen wird in den String eingesetzt, nur in Strings, die durch doppelte Anführungszeichen begrenzt sind
+
+
+// TODO: Suchen / Ersetzen, Teilstrings in Variablen?
+
+
+<<<
+== Kontrollstrukturen (1)
+[.step]
+* Verzweigungen führen abhängig von einer oder mehreren Bedingung(en) bestimme Anweisungen aus (einen Codeblock): `if` – `elif` - `else`
+* Schleifen wiederholen bestimmte Anweisungen.
+* Es gibt zwei Arten von Schleifen in der Shell:
+[.step]
+** Schleife läuft solange eine Bedingung erfüllt ist: `while`
+** Schleife läuft (_iteriert_) über alle Elemente einer Sequenz: `for`
+* Möglichkeiten für eine Sequenz:
+[.step]
+** Aufzählung von Werten im Code (getrennt durch Leerzeichen)
+** Dateien / Verzeichnisse, die mit einem Wildcard-Ausdruck gefunden werden
+// TODO: weitere Möglichkeiten erwähnen?
+
+
+<<<
+== Kontrollstrukturen (2)
+[.step]
+* Dinge, die bei `if` und `while` als Bedingung verwendet werden können:
+[.step]
+** Vergleiche von Variablen mit einem Wert => Folie _Vergleichsoperatoren_
+** Tests von Verzeichnissen und Dateien => Folie _Tests_
+** Exit-Status von Programmen
+* Bedingungen lassen sich mit `!` negieren.
+* Bedingungen lassen sich mit `&&` (und) bzw. `||` (oder) verknüpfen.
+
+
+<<<
+== Verzweigungen
+[source,sh]
+----
+if [[ $x < 0 ]]; then  <1>
+    echo "x ist kleiner 0 ($x)"  <2>
+elif [[ $x > 0 ]]; then  <3>
+    echo "x ist grösser 0 ($x)"
+else  <4>
+    echo "x ist gleich 0 ($x)"
+fi  <5>
+----
+<1> Erste Verzweigung startet mit `if`, gefolgt von der Bedingung in doppelten eckigen Klammern, gefolgt von `then`.
+<2> Codeblock kann aus einer oder mehreren Zeile(n) bestehen.
+<3> Weitere Verzweigungen können folgen und starten mit `elif`.
+<4> Es kann einen `else`-Zweig geben, der ausgeführt wird, wenn keine der anderen Bedingungen erfüllt ist (nach `else` folgt **kein** `then`).
+<5> Die Struktur wird mit `fi` abgeschlossen.
+
+
+<<<
+== `for`-Schleifen
+[source,sh]
+----
+for name in Alice Bob Charlie; do  <1>
+    echo "Hallo $name"  <2>
+done  <3>
+for file in *.txt; do  <4>
+    ...
+done
+----
+<1> Schleife mit festen Werten, `name` ist die Schleifenvariable, der nacheinander die Werte zugwiesen werden. Der Codeblock wird mit `do` eingeleitet.
+<2> Codeblock kann aus einer oder mehreren Zeile(n) bestehen.
+<3> Die Struktur wird mit `done` abgeschlossen.
+<4> Schleife mit Wildcard
+
+<<<
+== `while`-Schleifen
+[source,sh]
+----
+x=5
+while [[ $x -ge 0 ]]; do  <1>
+    echo $x  <2>
+    (( x=$x-1 ))
+done  <3>
+while IFS= read -r line; do  <4>
+    ...
+done
+----
+<1> Schleife mit einer Bedingung. Der Codeblock wird mit `do` eingeleitet.
+<2> Codeblock kann aus einer oder mehreren Zeile(n) bestehen.
+<3> Die Struktur wird mit `done` abgeschlossen.
+<4> Schleife, die Zeilen aus einer Datei (oder mit Process Substitution von einem Programm) liest, solange bis alle Zeilen gelesen wurden / das Programm sich beendet). `line` ist die Schleifenvariable, der nacheinander die Zeilen zugewiesen werden.
+
+
+<<<
+== Vergleichsoperatoren
+[.text-left]
+Die allgemeine Syntax ist `[[ <Variable> <Operator> <Wert> ]]`.
+
+|===
+| Gleichheit / Ungleichheit | `==` / `!=`
+| Prüfen, ob eine Variable einen bestimmten String enthält | `== \*<String>*`, String in Anführungszeichen wenn er Leerzeichen enthält
+| Vergleich mit einem regulären Ausdruck (nicht PCREs sondern eine abgespeckte Variante) | `=~`
+| grösser / kleiner | `-gt` / `>` / `-lt` / `<`
+| grösser gleich / kleiner gleich | `-ge` / `-le`
+|===
+
+
+<<<
+== Tests
+[.text-left]
+Zusätzlich zu den Vergleichen gibt es auch noch Tests, die Dateien / Verzeichnisse auf bestimmte Eigenschaften testen. Die allgemeine Syntax ist `[[ <Test> <Datei oder Verzeichnis> ]]`.
+
+[cols="3,1"]
+|===
+| Existiert die Datei / das Verzeichnis? | `-e`
+| Ist die Datei wirklich eine Datei? | `-f`
+| Ist das Verzeichnis wirklich ein Verzeichnis? | `-d`
+| Ist die Datei vom Benutzer ausführbar? | `-x`
+|===
+
+
+// TODO: echo /printf?
+// TODO: Funktionen?
+
+
+<<<
+== Beispiel 1 – Report für Verzeichnisse erstellen
+[.step]
+* **Aufgabe**: Es soll für alle Unterverzeichnisse in einem Verzeichnis der belegte Plattenplatz und Anzahl der Dateien ermittelt werden.
+* **Ziele**:
+[.step]
+** Variablen
+** `for`-Schleifen
+** Verzweigungen
+** Tests
+** Kommandosubstitution
+
+
+<<<
+== Beispiel 1 - Schritt 1
+[source,sh]
+----
+#!/bin/bash  <1>
+
+
+
+
+cd $1  <2>
+for entry in *; do  <3>
+
+
+
+
+
+done
+----
+<1> https://de.wikipedia.org/wiki/Shebang[_Shebang_-Zeile], die Linux mitteilt, dass das Skript mit der `bash` ausgeführt werden soll.
+<2> Wechseln in das Verzeichnis, für das der Report erstellt werden soll. `$1` ist das erste Kommandozeilenargument des Skripts.
+<3> Schleife über alle Unterverzeichnisse und Dateien in dem Verzeichnis
+
+
+<<<
+== Beispiel 1 - Schritt 2
+[source,sh]
+----
+#!/bin/bash
+
+
+
+
+cd $1
+for entry in *; do
+    if [[ -d $entry ]]; then  <1>
+
+
+
+    fi
+done
+----
+<1> Ist Verzeichniseintrag ein Unterverzeichnis?
+
+
+<<<
+== Beispiel 1 - Schritt 3
+[source,sh]
+----
+#!/bin/bash
+
+
+
+
+cd $1
+for entry in *; do
+    if [[ -d $entry ]]; then
+        num_files=$(find $entry -type f | wc -l)  <1>
+        used_space=$(du -hs $entry | cut -f1)  <2>
+
+    fi
+done
+----
+<1> Anzahl der Dateien
+<2> Belegter Platz
+
+
+<<<
+== Beispiel 1 - Schritt 4
+[source,sh]
+----
+#!/bin/bash
+
+
+
+
+cd $1
+for entry in *; do
+    if [[ -d $entry ]]; then
+        num_files=$(find $entry -type f | wc -l)
+        used_space=$(du -hs $entry | cut -f1)
+        echo "Unterverzeichnis $entry enthält $num_files Dateien und belegt $used_space Plattenplatz"  <1>
+    fi
+done
+----
+<1> Ausgabe pro Unterverzeichnis
+
+
+<<<
+== Beispiel 1 - Schritt 5
+[source,sh]
+----
+#!/bin/bash
+if [[ $# != 1 ]]; then  <1>
+    echo "Aufruf: $0 <Verzeichnis>"  <2>
+    exit 1  <3>
+fi
+cd $1 || exit 1  <4>
+for entry in *; do
+    if [[ -d $entry ]]; then
+        num_files=$(find $entry -type f | wc -l)
+        used_space=$(du -hs $entry | cut -f1)
+        echo "Unterverzeichnis $entry enthält $num_files Dateien und belegt $used_space Plattenplatz"  <1>
+    fi
+done
+----
+<1> Wurde das Skript mit einem Argument aufgerufen (`$#` enthält die Anzahl der Argument)?
+<2> `$0` ist der Name des Skripts.
+<3> Beenden des Skripts mit dem _Exit Status_ 1
+<4> Wenn `cd` fehlschlägt (weil das Verzeichnis nicht existiert oder der Benutzer keine Berechtigung hat) wird `exit` ausgeführt (Abkürzung für `if ! cd ...`).
+
+
+<<<
+== Beispiel 2 – Logdateien überwachen
+[.step]
+* **Aufgabe**: Eine Logdatei soll überwacht werden und bei Auftreten einer bestimmten Meldung soll ein Befehl ausgeführt werden.
+* **Ziele**:
+[.step]
+** while-Schleife
+** Ausgabe eines Programms zeilenweise einlesen
+** Exit-Status von Kommandos überprüfen
+
+
+<<<
+== Beispiel 2 - Schritt 1
+[source,sh]
+----
+#!/bin/bash
+
+
+while IFS= read -r line; do  <1>
+
+
+
+
+done < <(tail -f $1)  <2>
+----
+<1> zeilenweises Einlesen...
+<2> ...der Ausgabe eines Programms (hier `tail`). Logdatei ist erstes Argument des Skripts.
+
+
+<<<
+== Beispiel 2 - Schritt 2
+[source,sh]
+----
+#!/bin/bash
+
+
+while IFS= read -r line; do
+    if echo $line | grep "$2"; then  <1>
+
+
+    fi
+done < <(tail -f $1)
+----
+<1> Überprüfen, ob die eingelesene Zeile einen bestimmten String (zweites Argument des Skripts) enthält. Die Anführungszeichen um `$2` stellen sicher, dass das Skript auch mit Leerzeichen in dem Suchstring zurechtkommt.
+
+
+<<<
+== Beispiel 2 - Schritt 3
+[source,sh]
+----
+#!/bin/bash
+
+
+while IFS= read -r line; do
+    if echo $line | grep "$2"; then
+        echo "String '$2' in Logdatei $1 gefunden"
+        ping -c1 localhost  <1>
+    fi
+done < <(tail -f $1)
+----
+<1> Ausführen eines Programms (hier `ping`, siehe Kapitel _Linux im Netzwerk_)
+
+
+<<<
+== Beispiel 2 - Schritt 4
+[source,sh]
+----
+#!/bin/bash
+set -o errexit  <1>
+set -o pipefail
+while IFS= read -r line; do
+    if echo $line | grep "$2"; then
+        echo "String '$2' in Logdatei $1 gefunden"
+        ping -c1 localhost
+    fi
+done < <(tail -f $1)
+----
+<1> Skript wird automatisch beendet wenn ein Befehl fehlschlägt (Exit-Status > 0, siehe auch https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html[hier]), hilfreich um Skripte robuster zu machen.
+
+
+<<<
 == Linux für Power User
 1. Allgemeines
 2. Arbeiten mit der Shell
@@ -1248,7 +1605,7 @@ jc ls -l /usr/bin | duckdb -c "select sum(size) from read_json('/dev/stdin') whe
 [.step]
 ** Run Level / Target, in dem der Dienst laufen soll
 ** Umgebungsvariablen
-** Scripts / Programme, die vor / nach dem Starten / Stoppen ausgeführt werden sollen
+** Skripte / Programme, die vor / nach dem Starten / Stoppen ausgeführt werden sollen
 ** Limits für Ressourcen (CPU, Speicher, Plattenplatz)
 * Befehl zum Verwalten von Diensten (Starten, Stoppen, Anzeigen des Status...): `systemctl`
 
@@ -1265,9 +1622,9 @@ jc ls -l /usr/bin | duckdb -c "select sum(size) from read_json('/dev/stdin') whe
 <<<
 == `systemd` Timers (2)
 [.step]
-* zwei Konfigurationsdateien pro Programm / Script:
+* zwei Konfigurationsdateien pro Programm / Skript:
 [.step]
-** Konfiguration des Programms / Scripts (welches Programm / Script, Optionen, Umgebungsvariablen) => `<Name>.service`
+** Konfiguration des Programms / Skripts (welches Programm / Skript, Optionen, Umgebungsvariablen) => `<Name>.service`
 +
 [source,ini]
 ----
@@ -1275,7 +1632,7 @@ jc ls -l /usr/bin | duckdb -c "select sum(size) from read_json('/dev/stdin') whe
 Type=oneshot
 ExecStart=/usr/bin/find /tmp -mtime +30 -delete
 ----
-** Konfiguration der Zeit(en), zu der / denen das Programm / Script ausgeführt werden soll (in https://man7.org/linux/man-pages/man7/systemd.time.7.html[diesem] Format)=> `<Name>.timer`
+** Konfiguration der Zeit(en), zu der / denen das Programm / Skript ausgeführt werden soll (in https://man7.org/linux/man-pages/man7/systemd.time.7.html[diesem] Format)=> `<Name>.timer`
 +
 [source,ini]
 ----
@@ -1355,7 +1712,7 @@ WantedBy=timers.target
 * Welcher Prozess verwendet am meisten CPU, Speicher, IO-Bandbreite? `csysdig` (Alternativen: `top`, `htop`, `iotop`, `iftop`)
 * Welcher Prozess hat eine bestimmte Datei / Netzwerkverbindung (Port) geöffnet?
 +
-[source,shell]
+[source,sh]
 ----
 $ sysdig -c lsof fd.name=/etc/host
 $ lsof /etc/hosts
@@ -1364,7 +1721,7 @@ $ lsof -i :53
 ----
 * Welche Dateien / Netzwerkverbindungen hat ein bestimmter Prozess geöffnet?
 +
-[source,shell]
+[source,sh]
 ----
 $ sysdig -c lsof proc.pid=12345
 $ lsof -p 12345
@@ -1388,7 +1745,7 @@ $ sysdig -c lsof proc.name=sshd
 * Welche Befehle hat ein Benutzer ausgeführt? Shell-Historie, die Dateien `.bash_history` bzw. `.zsh_history` in dem Heimatverzeichnis des Benutzers
 * Welche Dateien / welche Verzeichnisse wurden zuletzt in einem bestimmten Verzeichnis geändert?
 +
-[source,shell]
+[source,sh]
 ----
 $ find . -printf '%T@ %M %u %g %s %p\n' | \
 sort -rn | \
@@ -1440,14 +1797,14 @@ head
 * **Lösung**:
 ** mit `grep`, naiver Ansatz. Die ganze Zeile wird nach dem String `systemd` durchsucht, was zu falschen Treffern führen kann. Mit der Option `-c` bekommt man die Anzahl.
 +
-[source,shell]
+[source,sh]
 ----
 $ sudo journalctl -S today | grep systemd
 ----
 
 ** mit `grep` und regulärem Ausdruck. Dadurch wird der String `systemd` nur gefunden wenn er als Programmname vorkommt.
 +
-[source,shell]
+[source,sh]
 ----
 $ sudo journalctl -S today | grep -P 'systemd\[\d+\]'
 ----
@@ -1458,21 +1815,21 @@ $ sudo journalctl -S today | grep -P 'systemd\[\d+\]'
 * **Lösung**:
 ** mit Perl. Nur die 5. Spalte, die den Programmnamen enthält, wird durchsucht. Man muss einen regulären Ausdruck verwenden weil `journalctl` an den Namen noch die PID anhängt. Mit einem `| wc -l` am Ende bekommt man die Anzahl.
 +
-[source,shell]
+[source,sh]
 ----
 $ sudo journalctl -S today | perl -nale 'print if $F[4] =~ /systemd/'
 ----
 
 ** mit JSON und `jq`. Wenn man `| .MESSAGE` weglässt werden die kompletten Objekte mit allen Attributen ausgegeben.
 +
-[source,shell]
+[source,sh]
 ----
 $ sudo journalctl -S today -o json | jq 'select(.SYSLOG_IDENTIFIER == "systemd") | .MESSAGE'
 ----
 
 ** mit JSON und DuckDB. Mit `select count(*)` bekommt man die Anzahl.
 +
-[source,shell]
+[source,sh]
 ----
 $ sudo journalctl -S today -o json | \
     duckdb -c "select MESSAGE from read_json('/dev/stdin') where SYSLOG_IDENTIFIER = 'systemd';"
@@ -1490,21 +1847,21 @@ $ sudo journalctl -S today -o json | \
 * **Lösung**:
 ** mit Perl:
 +
-[source,shell]
+[source,sh]
 ----
 $ sudo journalctl -S today | perl -nale 'print $F[4]' | sort | uniq -c | sort -rn
 ----
 
 ** mit Perl, Programmnamen ohne die PIDs:
 +
-[source,shell]
+[source,sh]
 ----
 $ sudo journalctl -S today | perl -nale '$F[4] =~ /([a-zA-Z]+)/; print $1' | sort | uniq -c | sort -rn
 ----
 
 ** mit JSON und DuckDB:
 +
-[source,shell]
+[source,sh]
 ----
 $ sudo journalctl -S today -o json | \
     duckdb -c "select SYSLOG_IDENTIFIER, count(*) from read_json('/dev/stdin') group by 1 order by 2 desc;"
