@@ -37,7 +37,7 @@
 // - Arbeiten mit Text(dateien) (grep, sed und awk)
 // - Schreiben von (einfachen) Shell-Skripten
 // - Grundlagen der Systemadministration
-// - Container und Docker
+// - Container
 // 
 // Voraussetzung:
 // - Sicherer Umgang mit einem PC (Windows, Linux) oder einem Mac
@@ -71,7 +71,7 @@
 6. Schreiben von (einfachen) Shell-Skripten
 7. Linux im Netzwerk
 8. Grundlagen der Systemadministration
-9. Container und Docker
+9. Container
 
 
 <<<
@@ -93,7 +93,7 @@
 6. Schreiben von (einfachen) Shell-Skripten
 7. Linux im Netzwerk
 8. Grundlagen der Systemadministration
-9. Container und Docker
+9. Container
 
 
 <<<
@@ -281,7 +281,7 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 6. Schreiben von (einfachen) Shell-Skripten
 7. Linux im Netzwerk
 8. Grundlagen der Systemadministration
-9. Container und Docker
+9. Container
 
 
 <<<
@@ -434,7 +434,7 @@ diff <(grep bla datei1) <(grep blub datei2)
 6. Schreiben von (einfachen) Shell-Skripten
 7. Linux im Netzwerk
 8. Grundlagen der Systemadministration
-9. Container und Docker
+9. Container
 
 
 <<<
@@ -808,7 +808,7 @@ a|
 6. Schreiben von (einfachen) Shell-Skripten
 7. Linux im Netzwerk
 8. Grundlagen der Systemadministration
-9. Container und Docker
+9. Container
 
 
 <<<
@@ -908,7 +908,7 @@ a|
 6. Schreiben von (einfachen) Shell-Skripten
 7. Linux im Netzwerk
 8. Grundlagen der Systemadministration
-9. Container und Docker
+9. Container
 
 
 <<<
@@ -1113,7 +1113,7 @@ jc ls -l /usr/bin | duckdb -c "select sum(size) from read_json('/dev/stdin') whe
 6. **Schreiben von (einfachen) Shell-Skripten**
 7. Linux im Netzwerk
 8. Grundlagen der Systemadministration
-9. Container und Docker
+9. Container
 
 
 <<<
@@ -1483,7 +1483,7 @@ done < <(tail -f $1)
 6. Schreiben von (einfachen) Shell-Skripten
 7. **Linux im Netzwerk**
 8. Grundlagen der Systemadministration
-9. Container und Docker
+9. Container
 
 
 <<<
@@ -1563,7 +1563,7 @@ done < <(tail -f $1)
 6. Schreiben von (einfachen) Shell-Skripten
 7. Linux im Netzwerk
 8. **Grundlagen der Systemadministration**
-9. Container und Docker
+9. Container
 
 
 <<<
@@ -1781,6 +1781,103 @@ head
 [.step]
 * Grafische Oberflächen: https://webmin.com/[Webmin] oder https://cockpit-project.org/[Cockpit]
 * https://en.wikipedia.org/wiki/Infrastructure_as_code[_Infrastructure as Code_] (eher geeignet für eine grössere Anzahl gleichartiger Rechner): https://www.ansible.com/[Ansible], https://www.chef.io/[Chef], https://www.puppet.com/[Puppet]
+
+
+<<<
+== Linux für Power User
+1. Allgemeines
+2. Arbeiten mit der Shell
+3. Arbeiten mit Dateien und Verzeichnissen
+4. Prozesse
+5. Arbeiten mit Text(dateien)
+6. Schreiben von (einfachen) Shell-Skripten
+7. Linux im Netzwerk
+8. Grundlagen der Systemadministration
+9. **Container**
+
+
+<<<
+== Container
+[.step]
+* sind **virtuelle** Instanzen des Betriebssystems, die alle auf dem gleichen tatsächlich vorhandenen System laufen
+[.step]
+** nutzen alle den gleichen Kernel
+** haben jeweils ein eigenes Dateisystem (dadurch sind unterschiedliche Distributionen möglich)
+** haben jeweils einen eigenen _Namensraum_ für Prozesse (PIDs), Benutzer und das Netzwerk => Prozesse und Benutzer scheinen in einem Container "alleine" zu sein.
+* verwendete Ressourcen (CPU, Speicher, Plattenplatz) können limitiert werden
+* werden normalerweise mit Tools wie https://www.docker.com/[_Docker_], https://podman.io/[_Podman_] oder https://github.com/containerd/nerdctl[_nerdctl_] genutzt oder auch https://docs.docker.com/desktop/[_Docker Desktop_] oder https://podman-desktop.io/[_Podman Desktop_]
+* Tools zum Verwalten einer grösseren Anzahl von Containern: https://docs.docker.com/compose/[_Docker Compose_] (eher für eine kleinere Zahl auf einem einzelnen Rechner, z. B. für die Entwicklung) oder https://kubernetes.io/[_Kubernetes_] (eher für eine grössere Zahl auf Clustern von Rechnern)
+
+
+<<<
+== Warum Container?
+[.step]
+* Applikationen können voneinander abgeschottet werden.
+* Applikationen können "vorinstalliert", also zusammen mit notwendigen Bibliotheken, Konfigurationsdateien und einer evtl. notwendigen Laufzeitumgebung (wie die Java Virtual Machine oder der Python-Interpreter) ausgeliefert werden.
+* Container sind leichtgewichtiger als virtuelle Maschinen und bieten unter Umständen weniger Angriffsfläche (weil sie nur die benötigten Programme und Daten enthalten).
+* Container sind auch nützlich, um Testumgebungen / Testnetze auf einem einzelnen Rechner (z. B. eines Entwicklers) aufzubauen.
+
+
+<<<
+== Images
+[.step]
+* stellen das Dateisystem der Container in komprimierter Form dar (spezielle Form von `tar.gz`-Archiven)
+* enthalten teilweise nur die Applikation mit ihren Abhängigkeiten (_Distroless_), oft wird aber eine Linux-Distribution als Basis benutzt (ist https://serverfault.com/a/951888[hier] gut erklärt)
+* können selber erstellt (z. B. mit Docker oder Podman) und lokal gespeichert oder von _Container Registries_ wie z. B. https://hub.docker.com/[_Docker Hub_] heruntergeladen werden.
+* _Dockerfiles_ sind die "Bauanleitungen" für Images
+* Images sind nicht veränderbar => Änderungen in einem laufenden Container werden beim Beenden verworfen.
+
+
+<<<
+== _Optional_: Container ausführen (1)
+[.step]
+* Starten eines Containers: `podman run [Optionen] <Image>[:<Version>] [Befehl]`
+* Wichtige Optionen:
++
+|===
+
+| `-d` | Container im Hintergrund starten
+| `-it` | mit Standardeingabe und einem (Pseudo-)Terminal starten, für interaktive Nutzung, z. B. eine Shell
+| `-v <Pfad auf dem Host>:<Pfad im Container>` | Verzeichnis auf dem Host im Container verfügbar machen, Pfade müssen absolut sein
+| `-p <Port auf dem Host>:<Port im Container>` | geöffnete Netzwerk-Port(s) des Containers auf dem Host verfügbar machen
+|===
+
+
+<<<
+== _Optional_: Container ausführen (2)
+[.step]
+* Laufende Container auflisten: `podman ps`
+* Stoppen eines Containers: `podman kill <ID oder Name>`
+* Programm (z. B. eine Shell) in einem laufenden Container starten:
+[.step]
+** Programm ist in dem Image des Containers vorhanden: `podman exec [-it] <ID oder Name> <Programm und Argumente>`
+** Programm ist in dem Image des Containers **nicht** vorhanden: `nsenter -t $(podman inspect -f '{{.State.Pid}}' <ID oder Name>) <Namensraum> <Programm und Argumente>`
+* Zugriff auf das Dateisystem eines laufenden Containers über das `/proc`-Dateisystem: `/proc/$(podman inspect -f '{{.State.Pid}}' <ID oder Name>)/root/`
+
+
+<<<
+== _Optional_: Images bauen
+[.step]
+* Aufbau eines Images wird durch ein Dockerfile beschrieben.
+* Beispiel (siehe die https://docs.docker.com/reference/dockerfile/[Referenz-Dokumentation] für alle Möglichkeiten):
++
+[source,docker]
+----
+FROM fedora:latest
+RUN dnf install -y podman
+ENTRYPOINT ["sleep", "infinity"]
+----
+* Bauen des Images: `podman build -t <Name> <Verzeichnis, in dem das Dockerfile und alle evtl. benötigten Dateien liegen>`
+
+
+<<<
+== Vielen Dank!
+**Unterlagen als PDF:**
+
+// QR code created with https://www.qrcode-monkey.com/
+// TODO: Update QR code
+image::download-link.svg[width=600, align="center"]
+Made with &#x2764;&#xFE0F;, https://asciidoc.org/[_AsciiDoc_], https://asciidoctor.org/[_Asciidoctor_], https://revealjs.com/[_reveal.js_], https://github.com/paxtonhare/demo-magic[_Demo Magic_] and lots of &#x2615;&#xFE0F;
 
 
 <<<
