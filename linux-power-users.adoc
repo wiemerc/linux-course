@@ -17,7 +17,6 @@
 :stem:
 
 
-// TODO: Folie mit Erklärung der Syntax (<>, [], |)
 // TODO: Folien mit "coolen" Tools wie ack, rsync...?
 // TODO: Folie zu `xargs`?
 // TODO: Bildunterschriften sind in der Präsi immer noch nicht kleiner, im PDF schon.
@@ -32,7 +31,7 @@
 // All das werden wir in dem Kurs behandeln, sowohl theoretisch als auch praktisch. Auch wenn sich der Kurs auf Linux bezieht ist ein Teil der Inhalte für macOS ebenfalls relevant.
 // 
 // Kursinhalte:
-// - Arbeiten mit der Shell (bash, zsh)
+// - Arbeiten mit der Shell (Bash, Zsh)
 // - Arbeiten mit Dateien und Verzeichnissen
 // - Arbeiten mit Text(dateien) (grep, sed und awk)
 // - Schreiben von (einfachen) Shell-Skripten
@@ -64,7 +63,7 @@
 == Inhalte
 [.step]
 1. Allgemeines
-2. Arbeiten mit der Shell (`bash`, `zsh`)
+2. Arbeiten mit der Shell (Bash, Zsh)
 3. Arbeiten mit Dateien und Verzeichnissen
 4. Prozesse
 5. Arbeiten mit Text(dateien) (also mit Befehlen wie `grep`, `sed` und `awk`)
@@ -146,19 +145,63 @@ image::thompson-ritchie.jpg[width=500, align="center"]
 
 
 <<<
+== Wie komme ich zu einem Linux-System?
+[.step]
+* normale Installation, evtl. parallel zu einer bestehenden Windows-Installation (Dual Boot), sinnvoll wenn man Linux hauptsächlich / häufig und mit einer Desktop-Umgebung nutzen will
+* "klassische" virtuelle Maschine (z. B. https://www.virtualbox.org/[_VirtualBox_])
+* "schlankere" und besser integrierte virtuelle Maschine: https://learn.microsoft.com/en-us/windows/wsl/[_Windows Subsystem for Linux_] (WSL) bzw. https://lima-vm.io/[_Lima_] für macOS, gute Option wenn man Linux nur gelegentlich und / oder nur auf der Kommandozeile nutzen will
+* Rechner / Server in einer Cloud
+
+
+<<<
+== Welche Distribution soll ich verwenden?
+[.step]
+* Gute Distributionen für Einsteiger: https://linuxmint.com/[_Mint_] (Windows-ähnliche Oberfläche, viel Software vorinstalliert) oder https://ubuntu.com/[_Ubuntu_]
+* sehr aktuelle Software: https://www.fedoraproject.org/[_Fedora_]
+* sehr stabil mit ausgereifter Software (eher für Server): https://www.debian.org/[_Debian_]
+* Distribution für "Hacker" (mit vielen vorinstallierten Tools): https://www.kali.org/[_Kali_]
+* Distribution für "Sicherheitsbewusste": https://www.qubes-os.org/[_Qubes OS_]
+
+
+<<<
+== Bücher / Ressourcen
+[.step]
+* https://amzn.eu/d/cflxkta[_The Linux Command Line_]
+* https://amzn.eu/d/52aBXLf[_How Linux Works_]
+// TODO:???
+
+
+<<<
+== Verwendete Syntax
+image::command-syntax.svg[width=1200, align="center"]
+[.text-left]
+* notwendige Argumente in spitzen Klammern: `<Datei>`
+* optionale Argumente in eckigen Klammern: `[-x]`
+* Alternativen durch senkrechte Striche getrennt: `Datei|Verzeichnis`
+
+
+<<<
 == Philosophie von Unix / Linux
 [.step]
 * "System von Programmierern für Programmierer"
 * Shell ist wichtige Benutzerschnittstelle.
-* Kleine Tools können kombiniert werden, um grössere Aufgaben zu lösen => Filter und Pipelines
 * Verwendung von Text als universelles Datenformat (in Dateien, Netzwerkprotokollen und als Schnittstelle zwischen Programmen)
-* Aufgaben können durch Skripte automatisiert werden.
 * Ressourcen (wie zum Beispiel angeschlossene Hardware und Netzwerkverbindungen) können als Datei angesprochen werden.
 
 
 <<<
+== Warum Shell?
+[.step]
+* zum Teil effizienter als eine GUI
+* Kleine Tools können kombiniert werden, um grössere Aufgaben zu lösen => Filter und Pipelines
+* Aufgaben können durch Skripte automatisiert werden.
+* Dokumentation von Aufgaben ist einfacher als bei einer GUI.
+* Arbeiten auf entfernten, über das Netzwerk verbundenen Rechnern, ist einfacher.
+
+
+<<<
 == Architektur von Linux
-// TODO
+image::linux-architecture.svg[width=1400, align="center"]
 
 
 <<<
@@ -240,18 +283,8 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 * besitzen jeweils ein eigenes Unterverzeichnis im Verzeichnisbaum => Heimatverzeichnis (_Home Directory_, normalerweise unter `/home` oder `/Users`)
 * werden entweder in den Dateien `/etc/passwd` und `/etc/shadow` oder in einem Verzeichnisdienst wie LDAP verwaltet
 * sind mindestens Mitglied einer Gruppe => primäre Gruppe
-* können in weiteren Gruppen Mitglied sein (in `/etc/group` konfiguriert)
+* können in weiteren (Limit ist meistens 65536) Gruppen Mitglied sein (in `/etc/group` konfiguriert)
 * Benutzer mit der UID 0 (normalerweise `root`) haben Vollzugriff auf das System.
-
-
-<<<
-== Benutzer - wichtige Befehle
-// TODO: Evtl. später?
-[.step]
-* Anzeigen von Benutzername, UID und Gruppe(n): `id`
-* Passwort ändern: `passwd`
-* Ausführen von Befehlen als Root / anderer Benutzer: `sudo <Befehl>` / `sudo -u <Benutzer> <Befehl>`
-* Wechseln zu Root / einem anderen Benutzer (in der Shell): `sudo -i` / `sudo -i -u <Benutzer>`
 
 
 <<<
@@ -259,15 +292,11 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 [.step]
 * sind durch eine (normalerweise) eindeutige Nummer bestimmt => _Group Identifier_ (GID)
 * werden entweder in der Datei `/etc/group` oder in einem Verzeichnisdienst wie LDAP verwaltet
+* Lokale Gruppen (in `/etc/group` verwaltet) können nur Benutzer, *nicht* andere Gruppen enthalten.
 
 
 <<<
-== Getting started - Wie komme ich zu einem Linux-System?
-// TODO: normale Installation, VM, WSL
-
-
-<<<
-== Welche Distribution soll ich verwenden?
+== Übung: Arbeiten mit der VM (WSL)
 // TODO
 
 
@@ -288,8 +317,9 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 == Was ist eine Shell?
 [.step]
 * ist das Kommandozeileninterface (_Command Line Interface_ = CLI) von Linux zum Ausführen von Programmen
+* wird gestartet wenn man in einer Desktop-Umgebung ein Terminal-Programm öffnet oder sich über das Netz in ein System einloggt
 * besitzt auch eingebaute Befehle, Kontrollstrukturen und Variablen und stellt eine vollständige Programmiersprache dar (siehe Kapitel über Shell-Programmierung)
-* mehrere Alternativen: sh, ksh, (t)csh, **bash**, **zsh**
+* mehrere Alternativen: sh, ksh, (t)csh, **Bash**, **Zsh**
 
 
 <<<
@@ -297,6 +327,7 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 [.step]
 * besteht aus einem (oder mehreren => Pipelines) Befehl(en), Optionen und Argumenten
 * Befehle sind entweder in der Shell eingebaut (z. B. `cd`) oder werden im Suchpfad gesucht (Umgebungsvariable `PATH`) und dann als separate Prozesse ausgeführt.
+* Optionen starten mit `-` (Kurzform, ein Buchstabe) oder mit `--` (Langform, ein Wort / mehrere Wörter mit Bindestrich verbunden), Konvention der Befehle / Programme.
 * Befehle setzen beim Beenden den _Exit Status_ (Erfolg / Fehler) => spezielle Variable `$?`, 0 bedeutet Erfolg, > 0 bedeutet Fehler (die genauen Werte sind abhängig vom Programm)
 * Shell beenden: Ctrl-d (oder `exit`)
 * laufendes Programm beenden: Ctrl-c
@@ -304,12 +335,12 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 
 <<<
 == Shell - Editieren der Befehlszeile
-Eingegebene oder aus der Historie zurückgeholte Befehlszeile lässt sich editieren (angegeben sind die Standard-Tastenkombinationen in bash und zsh, lassen sich ändern):
+Eingegebene oder aus der Historie zurückgeholte Befehlszeile lässt sich editieren (angegeben sind die Standard-Tastenkombinationen in Bash und Zsh, lassen sich ändern):
 
 |===
 | Springen zum Zeilenanfang / Zeilenende | Ctrl-a / Ctrl-e
 | einzelnes Zeichen löschen | Ctrl-d / Backspace
-| Wort löschen (Zeichen, die zu einem Wort gehören, lassen sich in der zsh konfigurieren, Variable `WORDCHARS`) | Ctrl-w
+| Wort löschen (Zeichen, die zu einem Wort gehören, lassen sich in der Zsh konfigurieren, Variable `WORDCHARS`) | Ctrl-w
 | Zeile löschen | Ctrl-u
 | gelöschte(s) Zeile / Wort einfügen | Ctrl-y
 |===
@@ -323,7 +354,7 @@ Eingegebene oder aus der Historie zurückgeholte Befehlszeile lässt sich editie
 * Befehle können mit `&` am Ende der Befehlszeile im Hintergrund ausgeführt werden.
 * Ctrl-z unterbricht ein laufendes Programm, `bg` schickt es in den Hintergrund, `fg` holt es wieder in den Vordergrund.
 * Shell kann Befehle durch Drücken der Tab-Taste vervollständigen (Dateien / Verzeichnisse, Programmnamen, Optionen, Variablen).
-* Befehlszeilen können als Aliase abgespeichert werden (mit dem Befehl `alias`).
+* Befehlszeilen können als Aliase abgespeichert werden (mit dem Befehl `alias`) oder als Funktionen, siehe Kapitel _Schreiben von (einfachen) Shell-Skripten_.
 
 
 <<<
@@ -361,13 +392,22 @@ diff <(grep bla datei1) <(grep blub datei2)
 | `[xyz]` |  eines mehrerer möglicher Zeichen, z. B. die Buchstaben x, y oder z
 | `[a-z]` | Bereich von Zeichen, z. B. die Buchstaben a bis z
 | `*.{jpg,png}` | Alternativen, z. B. alle Dateien, die entweder auf `.jpg` oder auf `.png` enden
-| `!(\*.txt)` (`bash` mit der Option `extglob`) bzw. `^*.txt` (`zsh` mit der Option `extendedglob`) | Negierung, z. B. alle Dateien, die nicht auf `.txt` enden
+| `!(\*.txt)` (Bash mit der Option `extglob`) bzw. `^*.txt` (Zsh mit der Option `extendedglob`) | Negierung, z. B. alle Dateien, die nicht auf `.txt` enden
 |===
 
 
 <<<
 == Shell - Quoting / Escaping
-// TODO
+[.step]
+* Die meisten Sonderzeichen haben in der Shell (https://tldp.org/LDP/abs/html/special-chars.html[hier] die vollständige Liste für die Bash) eine besondere Bedeutung.
+* zwei Möglichkeiten wenn man sie "normal" verwenden will:
+[.step]
+** in (einfache oder doppelte) Anführungszeichen setzen (_Quoting_)
+** einen umgekehrten Schrägstrich (Backslash) voranstellen (_Escaping_)
+* Unterschied zwischen einfachen und doppelten Anführungszeichen:
+[.step]
+** einfache Anführungszeichen: Alle Sonderzeichen (auch Backslashes) verlieren ihre besondere Bedeutung.
+** doppelte Anführungszeichen: Manche Sonderzeichen behalten ihre besondere Bedeutung, insbesondere `$` (Variablenexpansion) und `\` (Escaping), siehe https://www.gnu.org/software/bash/manual/html_node/Double-Quotes.html[hier] für die Details.
 
 
 <<<
@@ -376,7 +416,7 @@ diff <(grep bla datei1) <(grep blub datei2)
 * Shell "merkt" sich ausgeführte Befehlszeilen (optional auch dauerhaft in einer Datei) => _Shell-Historie_
 * Blättern in der Historie: Pfeiltasten nach oben / unten
 * Suchen in der Historie: Ctrl-r
-* Befehlszeile aus der Historie vervollständigen (nur zsh): Anfang eingeben + Pfeiltaste nach oben
+* Befehlszeile aus der Historie vervollständigen (nur Zsh): Anfang eingeben + Pfeiltaste nach oben
 
 
 <<<
@@ -392,21 +432,35 @@ diff <(grep bla datei1) <(grep blub datei2)
 <<<
 == `sudo`
 [.step]
-* Tool, um Befehle als Root / als anderer Benutzer auszuführen (`sudo [-u <Benutzer>] <Befehl>`)
+* Tool, um Befehle als Root / als anderer Benutzer auszuführen: `sudo [-u <Benutzer>] <Befehl>`
 * Ohne Befehl aber mit der Option `-i` bekommt man eine Shell mit Root-Rechten bzw. den Rechten des anderen Benutzers.
 * wird über die Datei `/etc/sudoers` konfiguriert (welche Benutzer / Gruppen dürfen `sudo` benutzen, ist ein Passwort erforderlich oder nicht, welche Befehle dürfen ausgeführt werden...)
+* Anzeigen von Benutzername, UID und Gruppe(n): `id`
+* Passwort ändern: `passwd`
 
 
 <<<
 == Welche Shell soll ich verwenden?
-// TODO
-// TODO: fish, Powershell und Nushell erwähnen?
+// TODO: Zsh installieren damit ich sie zeigen kann, z. B. Befehle suchen mit Pfeiltaste, histdb...
+[.step]
+* Bash:
+[.step]
+** Standard-Shell in den meisten Linux-Distributionen
+** ist immer installiert
+** durch die grosse Verbreitung für Shell-Skripte die bessere Option
+** zusätzliche Plugins und Themes von https://ohmybash.nntoan.com/[_Oh My Bash_]
+* Zsh
+[.step]
+** Standard-Shell in macOS und Kali Linux
+** mehr Features, Konfigurationsmöglichkeiten, Plugins und Themes z. B. von (https://ohmyz.sh/[_Oh My Zsh_])
+* "exotischere" / experimentelle Shells: https://fishshell.com/[_fish_], https://learn.microsoft.com/de-de/powershell/[_Microsoft PowerShell_], https://www.nushell.sh/[_Nushell_]
 
 
 <<<
 == Wo bekomme ich Hilfe?
 [.step]
 * Hilfetexte der Programme (meistens `-h` oder `--help`)
+* Vorschläge für mögliche Optionen durch Drücken der Tab-Taste
 * Man(ual) Pages
 [.step]
 ** sind (kurze) Hilfeseiten zu allen auf einem System vorhandenen Befehlen, Konfigurationsdateien, Bibliotheks- und Systemroutinen
@@ -414,14 +468,6 @@ diff <(grep bla datei1) <(grep blub datei2)
 ** Aufruf mit `man [Kapitel] <Titel>`, Durchsuchen mit `man -k <Begriff>`
 * Google, ChatGPT, GitHub Copilot...
 * Cheat Sheets, z. B. https://cheat.sh/ oder https://tldr.sh/
-
-
-<<<
-== Bücher / Ressourcen
-[.step]
-* _Unix Power Tools_
-* _Essential System Administration_
-// TODO
 
 
 <<<
@@ -470,8 +516,8 @@ image::file-metadata.svg[width=1200, align="center"]
 [.step]
 * Links: Verweise auf andere Dateien / Verzeichnisse, zwei Arten von Links
 [.step]
-** harte Links: mehrere Namen für eine Datei (nur innerhalb eines Dateisystems, nicht für Verzeichnisse, Ausnahmen sind `.` und `..` und macOS), nur durch die Anzahl der Links erkennbar
-** weiche (symbolische) Links: spezielle Datei mit dem Namen des Ziels als Inhalt
+** harte Links: zusätzlicher Name für eine bestehende Datei (beide Namen verweisen auf die gleiche Inode), harte Links sind nur innerhalb eines Dateisystems und nur für Dateien möglich, Ausnahmen sind `.` und `..` und macOS), sind nur durch die Anzahl der Links erkennbar
+** weiche (symbolische) Links: spezielle Datei, die den Pfad (absolut oder relativ) zum Ziel enthält
 * versteckte Dateien / Verzeichnisse: beginnen mit einem Punkt, werden nur mit `ls -a` angezeigt (Konvention von Shells und Programmen)
 * Gerätedateien / Devices: dienen zum Zugriff auf Hardware wie Festplatten (befinden sich im Verzeichnis `/dev`)
 * Pipes und Sockets: sind ein Mittel zur Kommunikation zwischen Prozessen (nicht zu verwechseln mit den Sockets zur Netzwerkkommunikation)
@@ -510,7 +556,8 @@ image::file-metadata.svg[width=1200, align="center"]
 <<<
 == Zugriffsrechte (2)
 [.step]
-* Berechtigungen werden im Gegensatz zu Windows nicht vererbt, sondern werden über eine Maske (die sogenannte _umask_), die bestimmt, welche Rechte neue Dateien / Verzeichnisse **nicht** bekommen sollen, festgelegt).
+* Zusätzlich zu den Berechtigungen für User, Group und Other können feingranularere Berechtigungen (für weitere Benutzer und Gruppen) mit Hilfe von https://www.redhat.com/en/blog/linux-access-control-lists[_Access Control Lists_] (ACLs) vergeben werden (wie bei Windows).
+* Berechtigungen werden im Gegensatz zu Windows nicht vererbt, sondern werden über eine numerische Maske (die sogenannte _umask_), die bestimmt, welche Rechte neue Dateien / Verzeichnisse **nicht** bekommen sollen, festgelegt).
 * numerische Darstellung der Zugriffsrechte
 [.step]
 ** 3 Bits für die Flags SUID (4), SGID (2) und Sticky (1), siehe Folie _Bedeutung der Flags / Bits_
@@ -575,7 +622,7 @@ image::file-metadata.svg[width=1200, align="center"]
 +
 [cols="1,3,1"]
 |===
-| Zeitstempel | Bedeutung | `ls-Befehl`
+| Zeitstempel | Bedeutung | `ls`-Befehl
 
 | Change Time (_ctime_) | Zeitpunkt der letzten Änderung **der Metadaten** (Anlegen der Datei, Änderung von Eigentümer / Gruppe oder Zugriffsrechten, **aber nicht Änderung des Namens**) | `ls -lc`
 | Modification Time (_mtime_) | Zeitpunkt der letzten Änderung **des Inhalts** der Datei / des Verzeichnisse (durch Anlegen, Umbenennen oder Löschen von Dateien / Unterverzeichnissen) | `ls -l`
@@ -656,6 +703,7 @@ zum Beispiel HTML, Bilder...
 | Datei(en) / Verzeichnis(se) in ein Verzeichnis verschieben | `mv bla.txt blub/ huhu/` | Zielverzeichnis muss existieren.
 | Inhalt eines Verzeichnisses in ein Verzeichnis verschieben | `mv bla/* blub/` | Zielverzeichnis muss existieren, versteckte Dateien / Verzeichnisse mit `bla/.*`
 |===
+[.text-left]
 icon:warning[] `cp` und `mv` überschreiben bestehende Dateien ohne Nachfrage!
 
 
@@ -688,7 +736,25 @@ entfernt nur den Eintrag im Verzeichnis, überschreibt die Metadaten (Inode) und
 |===
 
 
-// TODO: mkdir
+<<<
+== Wichtige Befehle - Verzeichnisse anlegen / löschen
+|===
+
+| Verzeichnis anlegen | `mkdir <Verzeichnis>`
+| Verzeichnisbaum anlegen (alle Verzeichnisse in dem Pfad werden angelegt wenn sie noch nicht existieren) | `mkdir -p <Pfad>`
+| leeres Verzeichnis löschen (vor allem sinnvoll in Skripten, wenn man sicherstellen will, dass ein nicht-leeres Verzeichnis **nicht** gelöscht wird) | `rmdir <Verzeichnis>`
+|===
+
+
+<<<
+== Wichtige Befehle - Links anlegen
+|===
+
+| harten Link anlegen (nur innerhalb eines Dateisystems) | `ln <Quelle> <Ziel>`
+| weichen (symbolischen) Link anlegen | `ln -s <Quelle> <Ziel>`
+|===
+[.text-left]
+icon:warning[] Bei einem symbolischen Link mit einem **relativen** Pfad als Ziel wird der Pfad **relativ zu dem Verzeichnis, in dem sich der Link befindet**, interpretiert! Mit der Option `-r` ermittelt `ln` selber den richtigen Pfad.
 
 
 <<<
@@ -799,6 +865,18 @@ a|
 
 
 <<<
+== Übung: "Schnitzeljagd" oder "Capture the Flag"
+// TODO: pro Level ein Verzeichnis, jeweils mit einer README-Datei mit den Instruktionen
+// - https://overthewire.org/wargames/bandit/bandit2.html
+// - https://overthewire.org/wargames/bandit/bandit5.html
+// - https://overthewire.org/wargames/bandit/bandit6.html oder https://overthewire.org/wargames/bandit/bandit7.html
+// - Passwort ist Kombination der Namen von 3 Dateien, die man mit `find` finden muss.
+// - https://overthewire.org/wargames/bandit/bandit8.html
+// - https://overthewire.org/wargames/bandit/bandit9.html
+// Passwort für den 11. Level: dtR173fZKb0RRsDFSGsg2RWnpNVj3qRr
+
+
+<<<
 == Linux für Power User
 1. Allgemeines
 2. Arbeiten mit der Shell
@@ -869,20 +947,26 @@ a|
 
 
 <<<
-== Prozesse - Signale
+== Prozesse - Signale (1)
 [.step]
 * sind eine Möglichkeit, bei einem Prozess bestimmte Aktionen auszulösen
 * werden mit `kill -<Signal> <PID>` / `pkill -f <String>` oder in Fehlerfällen vom Betriebssystem selber an einen Prozess geschickt (bei Hintergrundprozessen kann mit `%<Nummer>` anstelle der PID auch die Nummer verwendet werden, die die Shell vergibt)
-* Verschiedene Signale bewirken unterschiedliche Aktionen:
-+
+* Verschiedene Signale bewirken unterschiedliche Aktionen, siehe nächste Folie
+
+
+<<<
+== Prozesse - Signale (2)
+[cols="1,4"]
 |===
 | Signal | Aktion
 
 | SIGTERM (15) | beendet einen Prozess geordnet (ist der Default von `kill`, Ctrl-c in der Shell)
 | SIGKILL (9) | beendet einen Prozess zwangsweise
-| SIGSTOP (17) | unterbricht einen Prozess (Ctrl-z in der Shell)
+| SIGINT (2) | unterbricht einen Prozess (Ctrl-c in der Shell)
+| SIGTSTP (17) | hält einen Prozess (Ctrl-z in der Shell)
 | SIGHUP  (1) | veranlasst einen Dämonen (meistens) zum erneuten Einlesen seiner Konfiguration
-// TODO: Auch Signale, die vom Betriebssystem kommen, erwähnen?
+| SIGSEGV (11) | ungültiger Speicherzugriff (_Segmentation Fault_)
+| SIGPIPE (13) | Versuch, in eine Pipe zu schreiben, dessen anderes Ende (das Programm, das von der Pipe liest) nicht mehr existiert
 |===
 
 
@@ -1044,7 +1128,7 @@ a|
 * ist ein einfaches, textbasiertes, heute sehr häufig genutztes Datenformat
 * wird verwendet für
 [.step]
-** das Speichern von Anwendungsdaten, z. B. TODO
+** das Speichern von Anwendungsdaten
 ** Konfigurationsdateien, z. B. Visual Studio Code
 ** den Datenaustausch zwischen Web-Anwendungen (die im Browser laufen) und Web-Servern
 ** Logdateien
@@ -1123,7 +1207,7 @@ jc ls -l /usr/bin | duckdb -c "select sum(size) from read_json('/dev/stdin') whe
 * eventuell ergänzt um Variablen und Kontrollstrukturen
 * werden von der Shell genauso ausgeführt wie interaktiv eingegebene Befehle (mit allen Features wie Pipelines, Ein- / Ausgabeumleitung und Hintergrundprozesse)
 * stellen eine vollständige Programmiersprache dar, sind aber nur bedingt für größere Programmieraufgaben geeignet (besser Python oder Perl verwenden)
-* Die einzelnen Shells implementieren unterschiedliche "Dialekte", die nicht vollständig kompatibel sind => Auf Linux (und auch macOS) sollte man (unabhängig von der Shell, die man interaktiv nutzt) die `bash` für Skripte nutzen.
+* Die einzelnen Shells implementieren unterschiedliche "Dialekte", die nicht vollständig kompatibel sind => Auf Linux (und auch macOS) sollte man (unabhängig von der Shell, die man interaktiv nutzt) die Bash für Skripte nutzen.
 
 
 <<<
@@ -1149,7 +1233,7 @@ $ echo "x = $x"  <5>
 <2> Ausgabe des Befehls wird der Variablen zugewiesen.
 <3> Zugriff auf den Wert durch das vorangestellte Dollarzeichen
 <4> Arithmetik, Variablen, die einen String enthalten, werden in 0 umgewandelt.
-<5> _Variablensubstitution_ => Wert der Variablen wird in den String eingesetzt, nur in Strings, die durch doppelte Anführungszeichen begrenzt sind
+<5> _Variablenexpansion_ => Wert der Variablen wird in den String eingesetzt, nur in Strings, die durch doppelte Anführungszeichen begrenzt sind
 
 
 // TODO: Suchen / Ersetzen, Teilstrings in Variablen?
@@ -1234,7 +1318,7 @@ done
 <1> Schleife mit einer Bedingung. Der Codeblock wird mit `do` eingeleitet.
 <2> Codeblock kann aus einer oder mehreren Zeile(n) bestehen.
 <3> Die Struktur wird mit `done` abgeschlossen.
-<4> Schleife, die Zeilen aus einer Datei (oder mit Process Substitution von einem Programm) liest, solange bis alle Zeilen gelesen wurden / das Programm sich beendet). `line` ist die Schleifenvariable, der nacheinander die Zeilen zugewiesen werden.
+<4> Schleife, die Zeilen aus einer Datei (oder mit Process Substitution von einem Programm) liest, solange bis alle Zeilen gelesen wurden / das Programm sich beendet). `line` ist die Schleifenvariable, der nacheinander die Zeilen zugewiesen werden (`IFS=` bewirkt, dass Whitespaces am Anfang / Ende der Zeile erhalten bleiben, mit `-r` bleiben Backslashes erhalten).
 
 
 <<<
@@ -1265,8 +1349,41 @@ Zusätzlich zu den Vergleichen gibt es auch noch Tests, die Dateien / Verzeichni
 |===
 
 
-// TODO: echo /printf?
-// TODO: Funktionen?
+<<<
+== Textausgabe
+[.step]
+* einfach: `echo`
+* komfortabler (mehr Möglichkeiten zur Formatierung), sicherer (bei Variablen, die mit `-` beginnen oder Backslashes enthalten) und portabler (gleiches Verhalten in allen Shells und auch auf macOS): `printf <Format-String> [<Liste von Variablen>]`
++
+|===
+
+| Wert einer Variablen ausgeben | `printf 'Hallo %s' $name`
+| wie oben, aber mit Zeilenumbruch am Ende | `printf 'Hallo %s\n' $name`
+| zwei Zahlen in jeweils 5 Zeichen breiten Spalten rechtsbündig ausgeben | `printf '%5d \| %5d\n' $x $y`
+// TODO: weitere Beispiele?
+|===
+
+
+<<<
+== Funktionen
+[.step]
+* kapseln eine bestimmte Funktionalität, die an verschiedenen Stellen des Programms benutzt werden kann (durch den Aufruf der Funktion)
+* können Argumente und einen Rückgabewert besitzen
+* Beispiel: Aufsummieren von zwei Werten
++
+[source,sh]
+----
+summe() {  <1>
+    s=$(( $1 $2 ))  <2>
+    printf $s  <3>
+}
+summe 5 6  <4>
+----
+<1> Definition der Funktion (Argumente werden nicht angegeben)
+<2> Zugriff auf die Argumente über `$1`, `$2`... (wie in einem Skript)
+<3> Rückgabe von Werten durch Ausgabe mit `echo` / `printf` (**nicht** mit `return`)
+<4> Aufruf der Funktion wie ein Programm
+* Funktionen sind auch nützlich als "Aliase" mit Argumenten.
 
 
 <<<
@@ -1300,7 +1417,7 @@ for entry in *; do  <3>
 
 done
 ----
-<1> https://de.wikipedia.org/wiki/Shebang[_Shebang_-Zeile], die Linux mitteilt, dass das Skript mit der `bash` ausgeführt werden soll.
+<1> https://de.wikipedia.org/wiki/Shebang[_Shebang_-Zeile], die Linux mitteilt, dass das Skript mit der Bash ausgeführt werden soll.
 <2> Wechseln in das Verzeichnis, für das der Report erstellt werden soll. `$1` ist das erste Kommandozeilenargument des Skripts.
 <3> Schleife über alle Unterverzeichnisse und Dateien in dem Verzeichnis
 
@@ -1416,7 +1533,7 @@ while IFS= read -r line; do  <1>
 
 
 
-done < <(tail -f $1)  <2>
+done < <(tail -f "$1")  <2>
 ----
 <1> zeilenweises Einlesen...
 <2> ...der Ausgabe eines Programms (hier `tail`). Logdatei ist erstes Argument des Skripts.
@@ -1430,13 +1547,13 @@ done < <(tail -f $1)  <2>
 
 
 while IFS= read -r line; do
-    if echo $line | grep "$2"; then  <1>
+    if printf '%s' "$line" | grep "$2"; then  <1>
 
 
     fi
-done < <(tail -f $1)
+done < <(tail -f "$1")
 ----
-<1> Überprüfen, ob die eingelesene Zeile einen bestimmten String (zweites Argument des Skripts) enthält. Die Anführungszeichen um `$2` stellen sicher, dass das Skript auch mit Leerzeichen in dem Suchstring zurechtkommt.
+<1> Überprüfen, ob die eingelesene Zeile einen bestimmten String (zweites Argument des Skripts) enthält. Die Anführungszeichen um `$1`, `$line` und `$2` stellen sicher, dass das Skript auch mit Leerzeichen in dem Dateinamen, der Zeile und dem Suchstring zurechtkommt.
 
 
 <<<
@@ -1447,11 +1564,11 @@ done < <(tail -f $1)
 
 
 while IFS= read -r line; do
-    if echo $line | grep "$2"; then
-        echo "String '$2' in Logdatei $1 gefunden"
+    if printf '%s' "$line" | grep "$2"; then
+        printf "String '%s' in Logdatei %s gefunden\n" "$2" "$1"
         ping -c1 localhost  <1>
     fi
-done < <(tail -f $1)
+done < <(tail -f "$1")
 ----
 <1> Ausführen eines Programms (hier `ping`, siehe Kapitel _Linux im Netzwerk_)
 
@@ -1464,11 +1581,11 @@ done < <(tail -f $1)
 set -o errexit  <1>
 set -o pipefail
 while IFS= read -r line; do
-    if echo $line | grep "$2"; then
-        echo "String '$2' in Logdatei $1 gefunden"
+    if printf '%s' "$line" | grep "$2"; then
+        printf "String '%s' in Logdatei %s gefunden\n" "$2" "$1"
         ping -c1 localhost
     fi
-done < <(tail -f $1)
+done < <(tail -f "$1")
 ----
 <1> Skript wird automatisch beendet wenn ein Befehl fehlschlägt (Exit-Status > 0, siehe auch https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html[hier]), hilfreich um Skripte robuster zu machen.
 
@@ -1655,7 +1772,7 @@ WantedBy=timers.target
 <<<
 == Logging (1)
 [.step]
-* Logmeldungen vom Kernel, von den Diensten und von Benutzern werden vom `journald`-Dämonen gesammelt und (in binärer Form) in Dateien unter `/var/log/journal` geschrieben (TODO: wie lange aufgehoben?).
+* Logmeldungen vom Kernel, von den Diensten und von Benutzern werden vom `journald`-Dämonen gesammelt und (in binärer Form) in Dateien unter `/var/log/journal` geschrieben (max. 10% des verfügbaren Plattenplatzes oder 4GB).
 * können mit `journalctl` angeschaut / ausgegeben werden (auch als JSON)
 * viele Filtermöglichkeiten, unter anderem
 +
@@ -1706,10 +1823,13 @@ WantedBy=timers.target
 * Alle installierten Pakete können mit einen Befehl aktualisiert werden, wobei Abhängigkeiten berücksichtigt werden (z. B. wenn eine bestimmte Software nicht mit der neuesten Version einer Bibliothek funktioniert).
 
 
+// TODO: Demo: Paket installieren
+
+
 <<<
 == Troubleshooting (1)
 [.step]
-* Welcher Prozess verwendet am meisten CPU, Speicher, IO-Bandbreite? `csysdig` (Alternativen: `top`, `htop`, `iotop`, `iftop`)
+* Welcher Prozess verwendet am meisten CPU, Speicher, IO-Bandbreite? `csysdig` (Alternativen: `top`, `htop`, `iotop`, `iftop`, https://github.com/draios/sysdig/wiki/How-to-Install-Sysdig-for-Linux[Anleitung] zum Installieren von Sysdig)
 * Welcher Prozess hat eine bestimmte Datei / Netzwerkverbindung (Port) geöffnet?
 +
 [source,sh]
