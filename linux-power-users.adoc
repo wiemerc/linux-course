@@ -865,15 +865,14 @@ a|
 
 
 <<<
-== Übung: "Schnitzeljagd" oder "Capture the Flag"
+== Übung: "Schnitzeljagd"
+[.text-left]
+Diese Übung ist eine Art Schnitzeljagd (oder auch ein https://de.wikipedia.org/wiki/Capture_the_Flag#Computersicherheit[_Capture the Flag_]-Spiel). Das Spiel besteht aus TODO Stufen. In jeder Stufe geht es darum, ein oder mehrere Geheimnis(se) in Form von Strings zu finden. Das Spiel befindet sich im Verzeichnis `~/Schnitzeljagd/` mit einem Unterverzeichnis pro Stufe (`level1/` bis `level5/`). In jedem Unterverzeichnis gibt es eine Datei `README.txt` mit einer (kurzen) Anleitung.
+
+Viel Spass! Lust auf mehr? https://overthewire.org/wargames/
 // TODO: pro Level ein Verzeichnis, jeweils mit einer README-Datei mit den Instruktionen
-// - https://overthewire.org/wargames/bandit/bandit2.html
-// - https://overthewire.org/wargames/bandit/bandit5.html
-// - https://overthewire.org/wargames/bandit/bandit6.html oder https://overthewire.org/wargames/bandit/bandit7.html
-// - Passwort ist Kombination der Namen von 3 Dateien, die man mit `find` finden muss.
-// - https://overthewire.org/wargames/bandit/bandit8.html
-// - https://overthewire.org/wargames/bandit/bandit9.html
-// Passwort für den 11. Level: dtR173fZKb0RRsDFSGsg2RWnpNVj3qRr
+// - https://overthewire.org/wargames/bandit/bandit9.html?
+// - https://overthewire.org/wargames/bandit/bandit12.html, so ähnlich, so dass man sed benutzen kann?
 
 
 <<<
@@ -1185,6 +1184,14 @@ jc ls -l | jq '.[] | .date'
 ----
 jc ls -l /usr/bin | duckdb -c "select sum(size) from read_json('/dev/stdin') where filename like 'z%';"
 ----
+
+
+<<<
+== Übung: Arbeiten mit Text - Suchen / Filtern
+**Aufgaben:**
+* Die Ausgabe von `journalctl` soll nach Logmeldungen von `systemd` gefiltert werden und die Anzahl dieser Meldungen soll gezählt werden.
+// TODO: Suchen / Ersetzen
+* Die Logmeldungen, die von `journalctl` ausgegeben werden, sollen nach dem Programm gruppiert und die Anzahl pro Programm absteigend sortiert ausgegeben werden.
 
 
 <<<
