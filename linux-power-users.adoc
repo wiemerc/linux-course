@@ -51,7 +51,7 @@
 * Kurs für alle, die zum Linux "Power User" werden wollen
 * Theorie und praktische Übungen mit einer virtuellen Maschine (https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux[_Windows Subsystem for Linux_]  (WSL))
 * mehr Anwender- und weniger Administratorsicht
-* Kurs behandelt Linux, ein Teil Inhalte sind aber auch für macOS (oder andere Unix-Varianten) anwendbar.
+* Kurs behandelt Linux, ein Teil der Inhalte sind aber auch für macOS (oder andere Unix-Varianten) anwendbar.
 * Unterlagen decken mehr Inhalte ab als der Kurs.
 * Voraussetzungen:
 [.step]
@@ -122,10 +122,10 @@ image::thompson-ritchie.jpg[width=500, align="center"]
 == (Kurze) Geschichte von Unix (2)
 [.step]
 * 1980er: Entstehung von vielen kommerziellen Unix-Varianten (z. B. SunOS / Solaris von Sun Microsystems, HP-UX von HP, AIX von IBM, SINIX von Siemens, Xenix von Microsoft, NeXTSTEP von NeXT) und kommerzielle Verbreitung von Unix
-* 1991: Linus Torvalds veröffentlicht die erste Version von Linux
+* 1991: Linus Torvalds veröffentlicht die erste Version von Linux.
 * 1990er: Verbreitung von Linux und Entstehung der unterschiedlichen Linux-Distributionen (Redhat, SUSE, Debian...)
-* 2001: Apple veröffentlicht die erste Version von macOS (auf der Basis von NeXTSTEP und FreeBSD)
-* 2007: Apple veröffentlicht die erste Version von iOS
+* 2001: Apple veröffentlicht die erste Version von macOS (auf der Basis von NeXTSTEP und FreeBSD).
+* 2007: Apple veröffentlicht die erste Version von iOS.
 * seit den 2000ern: Konsolidierung der kommerziellen Unix-Varianten / Ablösung durch Linux
 
 
@@ -172,15 +172,6 @@ image::thompson-ritchie.jpg[width=500, align="center"]
 
 
 <<<
-== Verwendete Syntax
-image::command-syntax.svg[width=1200, align="center"]
-[.text-left]
-* notwendige Argumente in spitzen Klammern: `<Datei>`
-* optionale Argumente in eckigen Klammern: `[-x]`
-* Alternativen durch senkrechte Striche getrennt: `Datei|Verzeichnis`
-
-
-<<<
 == Philosophie von Unix / Linux
 [.step]
 * "System von Programmierern für Programmierer"
@@ -201,6 +192,7 @@ image::command-syntax.svg[width=1200, align="center"]
 
 <<<
 == Architektur von Linux
+// TODO: Beschreibung der Architektur? Folien zu Kernel, Treibern...?
 image::linux-architecture.svg[width=1400, align="center"]
 
 
@@ -219,8 +211,6 @@ image::linux-architecture.svg[width=1400, align="center"]
 
 <<<
 == Dateisystem -  wichtige Verzeichnisse
-// TODO: Can / should we use @startfiles / @endfiles?
-// TODO: Make legend larger
 // @startmindmap
 // !theme reddress-lightblue
 // <style>
@@ -232,21 +222,24 @@ image::linux-architecture.svg[width=1400, align="center"]
 //       LineThickness 3
 //   }
 // }
+// legend {
+//   FontSize 30
+//   Padding 20
+//   Margin 20
+// }
 // </style>
 // 
 // legend right
-//   | <#99e6ff>               | persistent, vom Benutzer nicht zu ändern |
-//   | <#00bfff>               | persistent, vom Benutzer zu ändern |
-//   | <#adebad>               | nicht persistent, vom Benutzer nicht zu ändern |
-//   | <#32cd32>               | nicht persistent, vom Benutzer zu ändern |
+//   | <#00bfff>               | persistent |
+//   | <#32cd32>               | nicht persistent |
 // endlegend
 // 
 // + **/**
 // 
-// ++[#99e6ff] **/usr**
-// +++[#99e6ff] **/usr/bin**: Programme für Benutzer (/bin verlinkt darauf)
-// +++[#99e6ff] **/usr/sbin**: Programme für das System (/sbin verlinkt darauf)
-// +++[#99e6ff] **/usr/lib**: Programmbibliotheken (/lib verlinkt darauf)
+// ++[#00bfff] **/usr**
+// +++[#00bfff] **/usr/bin**: Programme für Benutzer (/bin verlinkt darauf)
+// +++[#00bfff] **/usr/sbin**: Programme für das System (/sbin verlinkt darauf)
+// +++[#00bfff] **/usr/lib**: Programmbibliotheken (/lib verlinkt darauf)
 // +++[#00bfff] **/usr/local**: gleiche Hierarchie wie unter /usr, nur unabhängig von der Distro
 // 
 // ++[#00bfff] **/etc**: systemweite Konfigurationsdateien
@@ -259,17 +252,17 @@ image::linux-architecture.svg[width=1400, align="center"]
 // 
 // ++[#00bfff] **/root**: Heimatverzeichnis von root
 // 
-// ++[#99e6ff] **/boot**: Kernel und zugehörige Dateien
+// ++[#00bfff] **/boot**: Kernel und zugehörige Dateien
 // 
 // ++[#00bfff] **/var**: variable Daten von Programmen
 // +++[#00bfff] **/var/log**: Logdateien
 // +++[#00bfff] **/var/tmp**: temporäre Dateien (werden nicht gelöscht)
 // 
-// ++[#00bfff] **/tmp**: temporäre Dateien (werden möglicherweise beim Booten gelöscht)
+// ++[#32cd32] **/tmp**: temporäre Dateien (werden möglicherweise beim Booten gelöscht)
 // 
-// ++[#adebad] **/dev**: Gerätedateien
+// ++[#32cd32] **/dev**: Gerätedateien
 // 
-// ++[#adebad] **/run**: Laufzeitinformationen des Systems (z. B. Locks oder Sockets von Daemons)
+// ++[#32cd32] **/run**: Laufzeitinformationen des Systems (z. B. Locks oder Sockets von Daemons)
 // 
 // ++[#32cd32] **/proc**: Infos über das System und die Prozesse
 // @endmindmap
@@ -280,10 +273,10 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 == Benutzer
 [.step]
 * sind durch eine (normalerweise) eindeutige Nummer bestimmt => _User Identifier_ (UID)
-* besitzen jeweils ein eigenes Unterverzeichnis im Verzeichnisbaum => Heimatverzeichnis (_Home Directory_, normalerweise unter `/home` oder `/Users`)
+* besitzen jeweils ein eigenes Unterverzeichnis im Verzeichnisbaum => Heimatverzeichnis (_Home Directory_), normalerweise unter `/home` (oder `/Users` auf macOS)
 * werden entweder in den Dateien `/etc/passwd` und `/etc/shadow` oder in einem Verzeichnisdienst wie LDAP verwaltet
 * sind mindestens Mitglied einer Gruppe => primäre Gruppe
-* können in weiteren (Limit ist meistens 65536) Gruppen Mitglied sein (in `/etc/group` konfiguriert)
+* können in weiteren (Limit ist meistens 65536) Gruppen Mitglied sein (in `/etc/group` oder in einem Verzeichnisdienst konfiguriert)
 * Benutzer mit der UID 0 (normalerweise `root`) haben Vollzugriff auf das System.
 
 
@@ -297,7 +290,10 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 
 <<<
 == Übung: Arbeiten mit der VM (WSL)
-// TODO
+**Aufgaben:**
+[.step]
+* Öffnen Sie ein Windows-Terminal und geben Sie den Befehl `wsl` ein. Warten Sie bis die Linux-VM gestartet ist und Sie einen Shell-Prompt sehen.
+* Geben Sie den Befehl `id` ein. Welche Ausgabe bekommen Sie?
 
 
 <<<
@@ -316,32 +312,43 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 <<<
 == Was ist eine Shell?
 [.step]
-* ist das Kommandozeileninterface (_Command Line Interface_ = CLI) von Linux zum Ausführen von Programmen
-* wird gestartet wenn man in einer Desktop-Umgebung ein Terminal-Programm öffnet oder sich über das Netz in ein System einloggt
-* besitzt auch eingebaute Befehle, Kontrollstrukturen und Variablen und stellt eine vollständige Programmiersprache dar (siehe Kapitel über Shell-Programmierung)
+* ist das Kommandozeilen-Interface (_Command Line Interface_ = CLI) von Linux zum Ausführen von Programmen
+* wird gestartet wenn man sich auf der Konsole eines Linux-Systems anmeldet, in einer Desktop-Umgebung ein Terminal-Programm öffnet oder sich über das Netz in ein System einloggt
+* besitzt auch eingebaute Befehle, Kontrollstrukturen und Variablen und stellt eine vollständige Programmiersprache dar (siehe _Schreiben von (einfachen) Shell-Skripten_)
 * mehrere Alternativen: sh, ksh, (t)csh, **Bash**, **Zsh**
 
 
 <<<
-== Shell - Befehlszeile
+== Shell - Befehlszeile (1)
+image::command-syntax.svg[width=1200, align="center"]
 [.step]
 * besteht aus einem (oder mehreren => Pipelines) Befehl(en), Optionen und Argumenten
-* Befehle sind entweder in der Shell eingebaut (z. B. `cd`) oder werden im Suchpfad gesucht (Umgebungsvariable `PATH`) und dann als separate Prozesse ausgeführt.
+* Syntax in Man Pages, Büchern, Dokumentation... und auch in diesem Kurs:
+[.step]
+** notwendige Argumente in spitzen Klammern: `<Datei>`
+** optionale Argumente in eckigen Klammern: `[-x]`
+** Alternativen durch senkrechte Striche getrennt: `Datei|Verzeichnis`
 * Optionen starten mit `-` (Kurzform, ein Buchstabe) oder mit `--` (Langform, ein Wort / mehrere Wörter mit Bindestrich verbunden), Konvention der Befehle / Programme.
+
+
+<<<
+== Shell - Befehlszeile (2)
+* Befehle sind entweder in der Shell eingebaut (z. B. `cd`) oder werden im _Suchpfad_ gesucht (Umgebungsvariable `PATH`) und dann als separate Prozesse ausgeführt.
 * Befehle setzen beim Beenden den _Exit Status_ (Erfolg / Fehler) => spezielle Variable `$?`, 0 bedeutet Erfolg, > 0 bedeutet Fehler (die genauen Werte sind abhängig vom Programm)
-* Shell beenden: Ctrl-d (oder `exit`)
 * laufendes Programm beenden: Ctrl-c
+* Shell beenden: Ctrl-d (oder `exit`)
 
 
 <<<
 == Shell - Editieren der Befehlszeile
-Eingegebene oder aus der Historie zurückgeholte Befehlszeile lässt sich editieren (angegeben sind die Standard-Tastenkombinationen in Bash und Zsh, lassen sich ändern):
+Eingegebene oder aus der Historie zurückgeholte Befehlszeilen lassen sich editieren. Angegeben sind die Standard-Tastenkombinationen in Bash und Zsh, lassen sich ändern.
 
+[cols="3,1"]
 |===
 | Springen zum Zeilenanfang / Zeilenende | Ctrl-a / Ctrl-e
-| einzelnes Zeichen löschen | Ctrl-d / Backspace
-| Wort löschen (Zeichen, die zu einem Wort gehören, lassen sich in der Zsh konfigurieren, Variable `WORDCHARS`) | Ctrl-w
-| Zeile löschen | Ctrl-u
+| einzelnes Zeichen löschen, vorwärts / rückwärts | Ctrl-d / Backspace
+| Wort rückwärts löschen (in der Bash bis zum nächsten Leerzeichen, in der Zsh lässt sich konfigurieren, welche Zeichen zu einem Wort gehörig betrachtet werden (Variable `WORDCHARS`)) | Ctrl-w
+| Zeile bis zum Anfang löschen | Ctrl-u
 | gelöschte(s) Zeile / Wort einfügen | Ctrl-y
 |===
 
@@ -422,11 +429,11 @@ diff <(grep bla datei1) <(grep blub datei2)
 <<<
 == Konfigurationsdateien
 [.step]
-* Dateien mit einer Standard-Konfiguration liegen in `/etc`, Dateien mit der benutzerspezifischen Konfiguration liegen im Home-Verzeichnis des Benutzers.
+* Dateien mit einer Standard-Konfiguration liegen in `/etc`, Dateien mit der benutzerspezifischen Konfiguration liegen im Heimatverzeichnis des Benutzers.
 * zwei verschiedene (relevante) Dateien:
 [.step]
 ** `.bash_profile` / `.zprofile` für _Login_-Shells (beim Einloggen in der Desktop-Umgebung oder über SSH / `sudo`): Setzen von Umgebungsvariablen (werden an die interaktiven Shells vererbt) und einmaliges Starten von Programmen beim Einloggen
-** `.bashrc` / `.zshrc` für _interaktive_ Shells: Setzen von Shell-Optionen, Definition von Aliasen und Funktionen
+** `.bashrc` / `.zshrc` für _interaktive_ Shells (**nicht** in Skripten): Setzen von Shell-Optionen, Definition von Aliasen und Funktionen
 
 
 <<<
@@ -468,6 +475,14 @@ diff <(grep bla datei1) <(grep blub datei2)
 ** Aufruf mit `man [Kapitel] <Titel>`, Durchsuchen mit `man -k <Begriff>`
 * Google, ChatGPT, GitHub Copilot...
 * Cheat Sheets, z. B. https://cheat.sh/ oder https://tldr.sh/
+
+
+<<<
+== Demo: Interaktives Arbeiten mit der Shell
+// Historie
+// Editieren der Befehlszeile
+// Ctrl-c mit `cat`
+// Ctrl-z, `fg` mit `view`
 
 
 <<<
@@ -1189,6 +1204,7 @@ jc ls -l /usr/bin | duckdb -c "select sum(size) from read_json('/dev/stdin') whe
 <<<
 == Übung: Arbeiten mit Text - Suchen / Filtern
 **Aufgaben:**
+[.step]
 * Die Ausgabe von `journalctl` soll nach Logmeldungen von `systemd` gefiltert werden und die Anzahl dieser Meldungen soll gezählt werden.
 // TODO: Suchen / Ersetzen
 * Die Logmeldungen, die von `journalctl` ausgegeben werden, sollen nach dem Programm gruppiert und die Anzahl pro Programm absteigend sortiert ausgegeben werden.
