@@ -17,6 +17,7 @@
 :stem:
 
 
+// TODO: Immer Platzhalter statt bla.txt... verwenden
 // TODO: Folien mit "coolen" Tools wie ack, rsync...?
 // TODO: Folie zu `xargs`?
 // TODO: Bildunterschriften sind in der Präsi immer noch nicht kleiner, im PDF schon.
@@ -433,7 +434,7 @@ diff <(grep bla datei1) <(grep blub datei2)
 * zwei verschiedene (relevante) Dateien:
 [.step]
 ** `.bash_profile` / `.zprofile` für _Login_-Shells (beim Einloggen in der Desktop-Umgebung oder über SSH / `sudo`): Setzen von Umgebungsvariablen (werden an die interaktiven Shells vererbt) und einmaliges Starten von Programmen beim Einloggen
-** `.bashrc` / `.zshrc` für _interaktive_ Shells (**nicht** in Skripten): Setzen von Shell-Optionen, Definition von Aliasen und Funktionen
+** `.bashrc` / `.zshrc` für _interaktive_ Shells (**nicht** in Skripten): Setzen von Shell-Optionen, Definition von Aliasen und Funktionen, Konfigurieren des Shell-Prompts
 
 
 <<<
@@ -501,9 +502,8 @@ diff <(grep bla datei1) <(grep blub datei2)
 <<<
 == Wichtige Befehle (1)
 |===
-
 | aktuelles Verzeichnis anzeigen (wenn es nicht im Shell-Prompt steht) | `pwd`
-| in ein das Heimatverzeichnis / ein bestimmtes Verzeichnis wechseln | `cd` / `cd <Verzeichnis>`
+| in das Heimatverzeichnis / ein bestimmtes Verzeichnis wechseln | `cd` / `cd <Verzeichnis>`
 | Dateien und Verzeichnisse (mit allen Informationen / _Metadaten_) auflisten | `ls -l` bzw. `ls -l <Verzeichnis>` (oder mit dem Alias `ll`)
 | umgekehrt sortiert nach Datum der letzten Änderung auflisten (neueste zuletzt) | `ls -lrt`
 | versteckte Dateien / Verzeichnisse auflisten | `ls -la`
@@ -559,7 +559,6 @@ image::file-metadata.svg[width=1200, align="center"]
 * drei unterschiedliche Rechte, als Buchstabe oder als Zahl (Wertigkeit des entsprechenden Bits) dargestellt:
 +
 |===
-
 | Lesen | r | 4
 | Schreiben | w | 2
 | Ausführen | x | 1
@@ -572,12 +571,13 @@ image::file-metadata.svg[width=1200, align="center"]
 == Zugriffsrechte (2)
 [.step]
 * Zusätzlich zu den Berechtigungen für User, Group und Other können feingranularere Berechtigungen (für weitere Benutzer und Gruppen) mit Hilfe von https://www.redhat.com/en/blog/linux-access-control-lists[_Access Control Lists_] (ACLs) vergeben werden (wie bei Windows).
-* Berechtigungen werden im Gegensatz zu Windows nicht vererbt, sondern werden über eine numerische Maske (die sogenannte _umask_), die bestimmt, welche Rechte neue Dateien / Verzeichnisse **nicht** bekommen sollen, festgelegt).
+* Berechtigungen werden im Gegensatz zu Windows nicht vererbt, sondern werden über eine numerische Maske (die sogenannte _umask_) festgelegt, die bestimmt, welche Rechte neue Dateien / Verzeichnisse **nicht** bekommen sollen => Wert der Maske wird von 666 (Dateien) bzw. 777 (Verzeichnisse) abgezogen.
 * numerische Darstellung der Zugriffsrechte
 [.step]
 ** 3 Bits für die Flags SUID (4), SGID (2) und Sticky (1), siehe Folie _Bedeutung der Flags / Bits_
 ** jeweils 3 Bits für User, Group und Other (mit den Werten 4, 2 und 1, siehe vorherige Folie)
 ** übliche (oktale) Darstellung: 4 Ziffern = Summen der Bitwerte
+* `stat` zeigt die Zugriffsrechte (auch) numerisch an.
 
 
 <<<
@@ -603,6 +603,27 @@ image::file-metadata.svg[width=1200, align="center"]
 | 1664
 | `chmod u=rw,g=rw,o=tr <Datei>` oder `chmod 1664 <Datei>`
 | `-rw-rw-r-T`
+|===
+
+
+<<<
+== Unterschied Metadaten - Inhalt
+[cols="a,a", frame=none, grid=none]
+|===
+|
+--
+image::file-metadata-content.svg[width=800, align="center"]
+--
+
+|
+--
+[.step]
+* Für jede Datei / jedes Verzeichnis gibt es eine sogenannte _Inode_ (systeminterne Datenstruktur, grüne und blaue Kästchen) mit einer pro Dateisystem eindeutigen Nummer.
+* Die Inodes enthalten die Metadaten und verweisen auf den eigentlichen Inhalt der Datei / des Verzeichnisses (graue Kästchen).
+* Inhalt eines Verzeichnisses: Zuordnung von Dateinamen zu Inode-Nummern => Name ist **nicht** Teil der Metadaten. +
+=> Umbenennen einer Datei / eines Verzeichnisses ändert die Modification Time des übergeordneten Verzeichnises. +
+=> Man braucht dafür **keine** Schreibrechte auf die Datei, nur auf das Verzeichnis.
+--
 |===
 
 
@@ -639,38 +660,20 @@ image::file-metadata.svg[width=1200, align="center"]
 |===
 | Zeitstempel | Bedeutung | `ls`-Befehl
 
-| Change Time (_ctime_) | Zeitpunkt der letzten Änderung **der Metadaten** (Anlegen der Datei, Änderung von Eigentümer / Gruppe oder Zugriffsrechten, **aber nicht Änderung des Namens**) | `ls -lc`
-| Modification Time (_mtime_) | Zeitpunkt der letzten Änderung **des Inhalts** der Datei / des Verzeichnisse (durch Anlegen, Umbenennen oder Löschen von Dateien / Unterverzeichnissen) | `ls -l`
+| Change Time (_ctime_) | Zeitpunkt der letzten Änderung der **Metadaten** (Anlegen der Datei, Änderung von Eigentümer / Gruppe oder Zugriffsrechten, auch Änderung des **Namens** obwohl dieser **nicht** zu den Metadaten gehört, eine Erklärung dazu gibt es https://unix.stackexchange.com/questions/211123/why-does-renaming-a-file-with-mv-command-alter-an-inodes-change-date-time[hier]) | `ls -lc`
+| Modification Time (_mtime_) | Zeitpunkt der letzten Änderung des **Inhalts** der Datei / des Verzeichnisse (durch Anlegen, Umbenennen oder Löschen von Dateien / Unterverzeichnissen) | `ls -l`
 | Access Time (_atime_) | Zeitpunkt des letzten lesenden Zugriffs (nicht immer aktuell) | `ls -u`
 |===
 * Mit `touch` lassen sich die mtime und atime von Dateien / Verzeichnissen ändern (eine Datei wird angelegt wenn sie nicht existiert).
 
 
 <<<
-== Unterschied Metadaten - Inhalt
-[cols="a,a", frame=none, grid=none]
-|===
-|
---
-image::file-metadata-content.svg[width=800, align="center"]
---
-
-|
---
-[.step]
-* Für jede Datei / jedes Verzeichnis gibt es eine sogenannte _Inode_ (systeminterne Datenstruktur, grüne und blaue Kästchen) mit einer pro Dateisystem eindeutigen Nummer.
-* Die Inodes enthalten die Metadaten und verweisen auf den eigentlichen Inhalt der Datei / des Verzeichnisses (graue Kästchen).
-* Inhalt eines Verzeichnisses: Zuordnung von Dateinamen zu Inode-Nummern => Name ist **nicht** Teil der Metadaten. +
-=> Umbenennen einer Datei / eines Verzeichnisses ändert **nicht** die Change Time. +
-=> Man braucht dafür **keine** Schreibrechte auf die Datei, nur auf das Verzeichnis.
---
-|===
+== Demo: Arbeiten mit dem Dateisystem
 
 
 <<<
 == Wichtige Befehle - Textdateien anzeigen
 |===
-
 | komplette Datei ausgeben | `cat <Datei>`
 | Datei / Ausgabe eines Programms seitenweise anzeigen | `less <Datei>` / `<Programm> \| less` (Hilfe mit `h`)
 | die ersten / letzten n (Standard: 10) Zeilen anzeigen | `head -n <n> <Datei>` / `tail -n <n> <Datei>`
@@ -690,10 +693,9 @@ image::file-metadata-content.svg[width=800, align="center"]
 == Wichtige Befehle - Andere Dateien anzeigen
 zum Beispiel HTML, Bilder...
 |===
-
 | Datei mit dem zugeordneten Programm öffnen (wie mit einem Doppelklick) | `xdg-open <Datei>` / `open <Datei>` (macOS)
 | Dateityp bestimmen | `file <Datei>`
-| Hexdump einer Datei anzeigen (hexadezimale Darstellung der Bytes) | `hexdump -C <Datei>`
+| Hexdump einer Datei anzeigen (hexadezimale Darstellung der Bytes) | `hexdump -C <Datei>` / `xxd <Datei>`
 | die ersten / letzten n (Standard: 10) Bytes anzeigen | `head -c <n> <Datei>` / `tail -c <n> <Datei>`
 | nur die enthaltenen Strings ausgeben | `strings <Datei>`
 |===
@@ -702,7 +704,6 @@ zum Beispiel HTML, Bilder...
 <<<
 == Wichtige Befehle - Dateien / Verzeichnisse kopieren (`cp`)
 |===
-
 | einzelne Dateien kopieren | `cp bla.txt blub.txt` |
 | mehrere Dateien in ein Verzeichnis kopieren | `cp bla.txt blub.txt huhu/` | Verzeichnis muss existieren.
 | komplettes Verzeichnis (ggf. mit Unterverzeichnissen) kopieren | `cp -r bla blub` | Wenn das Zielverzeichnis nicht existiert wird es angelegt, ansonsten wird das Quellverzeichnis in das Zielverzeichnis **als Unterverzeichnis** kopiert.
@@ -713,7 +714,6 @@ zum Beispiel HTML, Bilder...
 <<<
 == Wichtige Befehle - Dateien / Verzeichnisse umbenennen / verschieben (`mv`)
 |===
-
 | einzelne Dateien / Verzeichnisse umbenennen | `mv bla.txt blub.txt` | Ziel darf nicht existieren.
 | Datei(en) / Verzeichnis(se) in ein Verzeichnis verschieben | `mv bla.txt blub/ huhu/` | Zielverzeichnis muss existieren.
 | Inhalt eines Verzeichnisses in ein Verzeichnis verschieben | `mv bla/* blub/` | Zielverzeichnis muss existieren, versteckte Dateien / Verzeichnisse mit `bla/.*`
@@ -724,10 +724,8 @@ icon:warning[] `cp` und `mv` überschreiben bestehende Dateien ohne Nachfrage!
 
 <<<
 == Wichtige Befehle - Dateien / Verzeichnisse löschen (`rm`) (1)
-[cols="1,1,2"]
+[cols="1,1,3"]
 |===
-|||
-
 | Datei(en) löschen
 | `rm bla.txt`
 a|
@@ -744,7 +742,6 @@ entfernt nur den Eintrag im Verzeichnis, überschreibt die Metadaten (Inode) und
 <<<
 == Wichtige Befehle - Dateien / Verzeichnisse löschen (`rm`) (2)
 |===
-
 | Schreibgeschützte Datei(en) ohne Nachfrage löschen | `rm -f bla.txt`
 | Dateien erst nach Bestätigung (interaktiv) löschen | `rm -i *`
 | Verzeichnis mit Inhalt (auch Unterverzeichnisse, rekursiv) löschen | `rm -r blub/`
@@ -754,7 +751,6 @@ entfernt nur den Eintrag im Verzeichnis, überschreibt die Metadaten (Inode) und
 <<<
 == Wichtige Befehle - Verzeichnisse anlegen / löschen
 |===
-
 | Verzeichnis anlegen | `mkdir <Verzeichnis>`
 | Verzeichnisbaum anlegen (alle Verzeichnisse in dem Pfad werden angelegt wenn sie noch nicht existieren) | `mkdir -p <Pfad>`
 | leeres Verzeichnis löschen (vor allem sinnvoll in Skripten, wenn man sicherstellen will, dass ein nicht-leeres Verzeichnis **nicht** gelöscht wird) | `rmdir <Verzeichnis>`
@@ -764,12 +760,11 @@ entfernt nur den Eintrag im Verzeichnis, überschreibt die Metadaten (Inode) und
 <<<
 == Wichtige Befehle - Links anlegen
 |===
-
 | harten Link anlegen (nur innerhalb eines Dateisystems) | `ln <Quelle> <Ziel>`
 | weichen (symbolischen) Link anlegen | `ln -s <Quelle> <Ziel>`
 |===
 [.text-left]
-icon:warning[] Bei einem symbolischen Link mit einem **relativen** Pfad als Ziel wird der Pfad **relativ zu dem Verzeichnis, in dem sich der Link befindet**, interpretiert! Mit der Option `-r` ermittelt `ln` selber den richtigen Pfad.
+icon:warning[] Bei einem symbolischen Link mit einem **relativen** Pfad als Quelle wird der Pfad **relativ zu dem Verzeichnis, in dem sich das Ziel befindet**, interpretiert! Mit der Option `-r` ermittelt `ln` selber den richtigen Pfad.
 
 
 <<<
@@ -782,10 +777,10 @@ icon:warning[] Bei einem symbolischen Link mit einem **relativen** Pfad als Ziel
 
 <<<
 == `find` - Suchkriterien
+[.text-left]
 sind standardmässig und-verknüpft, können mit `-o` oder-verknüpft werden
 
 |===
-
 | Name (auch mit Wildcards) | `-name`
 | Änderungsdatum | `-mtime`
 | Grösse | `-size`
@@ -799,7 +794,6 @@ sind standardmässig und-verknüpft, können mit `-o` oder-verknüpft werden
 <<<
 == `find` - Aktionen
 |===
-
 | Dateien / Verzeichnisse auflisten | `-ls` | wie `ls -l`
 | Dateien / Verzeichnisse (rekursiv) löschen | `-delete` |
 | Befehl ausführen | `-exec <Befehl> \{\} \;` | `{}` ist der Platzhalter für den Namen der Datei / des Verzeichnisses, Backslashes sind notwendig weil die geschweiften Klammern und der Strichpunkt auch für die Shell eine Bedeutung haben.
@@ -810,8 +804,7 @@ sind standardmässig und-verknüpft, können mit `-o` oder-verknüpft werden
 == `find` - Beispiele
 [cols="1,1"]
 |===
-
-| Alle Dateien im Verzeichnis `/usr/bin`, die dem Benutzer root gehören und das SUID-Bit gesetzt haben, sollen aufgelistet werden.
+| Alle Dateien im Verzeichnis `/usr/bin`, die dem Benutzer root gehören und das SUID-Bit gesetzt haben (`-4000` heisst, dass nur das SUID-Bit gesetzt sein muss, die restlichen Bits sind egal), sollen aufgelistet werden.
 | `find /usr/bin -type f -user root -perm -4000 -ls`
 
 | Alle Textdateien im Verzeichnis `/home`, die zuletzt vor mindestens einer Woche geändert wurden und grösser als 1MB sind, sollen komprimiert werden.
@@ -830,7 +823,6 @@ sind standardmässig und-verknüpft, können mit `-o` oder-verknüpft werden
 +
 [cols="1,5"]
 |===
-
 | tar
 a|
 * "klassisches" Format / Programm für Linux / Unix
@@ -847,6 +839,7 @@ a|
 
 <<<
 == Dateiarchive - Wichtige Befehle (1)
+[cols="1,1,1,2"]
 |===
 | Aufgabe | tar | ZIP | Bemerkung
 
@@ -864,13 +857,15 @@ a|
 
 <<<
 == Dateiarchive - Wichtige Befehle (2)
+[cols="1,1,1,2"]
 |===
 | Aufgabe | tar | ZIP | Bemerkung
 
 | Inhalte eines Archivs in ein bestimmtes Verzeichnis entpacken
 | `tar -xzvf <Archiv> -C <Verzeichnis>`
 | `unzip -d <Verzeichnis> <Archiv>`
-| Ohne die Optionen `-C` bzw. `-d` werden die Inhalte in das aktuelle Verzeichnis entpackt. icon:warning[] Bestehende Dateien werden ohne Nachfrage überschrieben!
+| Ohne die Optionen `-C` bzw. `-d` werden die Inhalte in das aktuelle Verzeichnis entpackt. +
+icon:warning[] Bestehende Dateien werden ohne Nachfrage überschrieben!
 
 | Einzelne Dateien entpacken
 | `tar -xzf <Archiv> <Datei(en)>`
@@ -1231,6 +1226,9 @@ jc ls -l /usr/bin | duckdb -c "select sum(size) from read_json('/dev/stdin') whe
 * werden von der Shell genauso ausgeführt wie interaktiv eingegebene Befehle (mit allen Features wie Pipelines, Ein- / Ausgabeumleitung und Hintergrundprozesse)
 * stellen eine vollständige Programmiersprache dar, sind aber nur bedingt für größere Programmieraufgaben geeignet (besser Python oder Perl verwenden)
 * Die einzelnen Shells implementieren unterschiedliche "Dialekte", die nicht vollständig kompatibel sind => Auf Linux (und auch macOS) sollte man (unabhängig von der Shell, die man interaktiv nutzt) die Bash für Skripte nutzen.
+
+
+// TODO: Kommentare
 
 
 <<<
