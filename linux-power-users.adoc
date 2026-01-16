@@ -668,10 +668,6 @@ image::file-metadata-content.svg[width=800, align="center"]
 
 
 <<<
-== Demo: Arbeiten mit dem Dateisystem
-
-
-<<<
 == Wichtige Befehle - Textdateien anzeigen
 |===
 | komplette Datei ausgeben | `cat <Datei>`
@@ -765,6 +761,10 @@ entfernt nur den Eintrag im Verzeichnis, überschreibt die Metadaten (Inode) und
 |===
 [.text-left]
 icon:warning[] Bei einem symbolischen Link mit einem **relativen** Pfad als Quelle wird der Pfad **relativ zu dem Verzeichnis, in dem sich das Ziel befindet**, interpretiert! Mit der Option `-r` ermittelt `ln` selber den richtigen Pfad.
+
+
+<<<
+== Demo: Arbeiten mit dem Dateisystem
 
 
 <<<
