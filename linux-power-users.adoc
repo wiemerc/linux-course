@@ -901,11 +901,11 @@ Viel Spass! Lust auf mehr? https://overthewire.org/wargames/
 <<<
 == Prozesse (1)
 [.step]
-* sind Programme, die vom System ausgeführt werden oder auf ihre Ausführung oder ein Ereignis warten
-* sind durch Nummern (_Process Identifier_ = PID) gekennzeichnet
+* sind Programme, die vom System ausgeführt werden oder auf ihre Ausführung / ein Ereignis warten
+* besitzen (zu einem bestimmten Zeitpunkt) eindeutige Nummern => _Process Identifier_ (PID)
 * haben immer einen Eltern-Prozess, von dem sie bestimmte Eigenschaften und Objekte (wie geöffnete Dateien) erben => Baumstruktur
 * Wurzel des Baumes ist der `systemd`-Prozess (oder `init` / `launchd`) mit der PID 1 (wird vom System beim Booten gestartet).
-* Prozesse werden vom _Scheduler_ verwaltet und abwechselnd dem Prozessor / den Prozessoren (bzw. den Prozessorkernen) zugeteilt.
+* Prozesse werden vom _Scheduler_ verwaltet und abwechselnd dem Prozessor / den Prozessoren bzw. den Prozessorkernen zugeteilt.
 * sind immer einem Benutzer zugeordnet, dessen Rechte sie bekommen
 
 
@@ -913,7 +913,7 @@ Viel Spass! Lust auf mehr? https://overthewire.org/wargames/
 == Prozesse (2)
 [.step]
 * besitzen standardmässig drei verschiedene Ein- / Ausgabekanäle, die sie vom Elternprozess erben: Standardeingabe (_stdin_), Standardausgabe (_stdout_), Standardfehlerausgabe (_stderr_)
-* können aus mehreren _Threads_ bestehen
+* können aus mehreren _Threads_ bestehen, die auf mehreren Prozessoren / Prozessorkernen parallel laufen können
 * Prozesse befinden sich immer in einem der folgenden Zustände:
 [.step]
 ** laufend \(R) => Prozess wird gerade ausgeführt oder ist bereit, ausgeführt zu werden (befindet sich in der Warteschlange, Anzahl der Prozesse in der Warteschlange ist die Last des Systems).
@@ -930,13 +930,13 @@ Viel Spass! Lust auf mehr? https://overthewire.org/wargames/
 * Virtueller Speicher ist viel grösser als der physikalische RAM-Speicher (bei 64-Bit-Systemen) => _Paging_
 [.step]
 ** Es werden immer nur die aktuell benötigten Programmteile und Daten im Speicher gehalten.
-** Programmteile und Daten werden erst bei Bedarf = beim ersten Zugriff nachgeladen.
-** Bei Speicherknappheit werden geänderte, aber nicht mehr benötigte Daten in den Swap-Bereich der Festplatte(n) ausgelagert.
+** Programmteile und Daten werden erst bei Bedarf, d. h. beim ersten Zugriff nachgeladen.
+** Bei Speicherknappheit werden geänderte, aber aktuell nicht benötigte Daten in den _Swap_-Bereich der Festplatte(n) ausgelagert und geänderte Daten im _Cache_ (Zwischenspeicher im RAM) in die Dateien geschrieben.
+** Falls das nicht ausreicht beendet Linux zwangsweise einzelne Prozesse, die viel Speicher belegen (der sogenannte https://medium.com/@msmkumar.eee/751cf7823de8[_OOM Killer_]).
 * In dem virtuellen Speicher eines Prozesses befinden sich
 [.step]
-** Programmcode
-** (dynamische) Programmbibliotheken
-** Daten (einschliesslich des Stacks)
+** Programmcode (des Programms und von evtl. verwendeten Programmbibliotheken)
+** Daten
 
 
 <<<
@@ -947,11 +947,10 @@ Viel Spass! Lust auf mehr? https://overthewire.org/wargames/
 * wichtige Dienste / Dämonen:
 +
 |===
-
 | `systemd` | Erster Prozess (mit der PID 1), der nach dem Booten eines Systems gestartet wird, startet alle anderen Dämonen / Dienste
 | `journald` / `rsyslogd` / `syslog-ng` | zentrales Logging (Logdateien in `/var/log`)
-| `crond` | zeitgesteuertes Ausführen von Programmen für jeden Benutzer (wird mit dem Befehl `crontab` konfiguriert)
 | `sshd` | Secure Shell Server zum Einloggen über das Netzwerk
+// TODO: Weitere wichtige Dämonen?
 |===
 
 
@@ -959,8 +958,8 @@ Viel Spass! Lust auf mehr? https://overthewire.org/wargames/
 == Prozesse - Signale (1)
 [.step]
 * sind eine Möglichkeit, bei einem Prozess bestimmte Aktionen auszulösen
-* werden mit `kill -<Signal> <PID>` / `pkill -f <String>` oder in Fehlerfällen vom Betriebssystem selber an einen Prozess geschickt (bei Hintergrundprozessen kann mit `%<Nummer>` anstelle der PID auch die Nummer verwendet werden, die die Shell vergibt)
-* Verschiedene Signale bewirken unterschiedliche Aktionen, siehe nächste Folie
+* werden mit `kill -<Signal> <PID>` / `pkill -<Signal> <Name des Prozesses>` oder in Fehlerfällen vom Betriebssystem selber an einen Prozess geschickt (bei Hintergrundprozessen kann mit `%<Nummer>` anstelle der PID auch die Nummer verwendet werden, die die Shell vergibt)
+* Verschiedene Signale bewirken unterschiedliche Aktionen, siehe nächste Folie, in _kursiv_ die Signale, die vom Betriebssystem geschickt werden => Prozess wird normalerweise beendet.
 
 
 <<<
@@ -969,26 +968,71 @@ Viel Spass! Lust auf mehr? https://overthewire.org/wargames/
 |===
 | Signal | Aktion
 
-| SIGTERM (15) | beendet einen Prozess geordnet (ist der Default von `kill`, Ctrl-c in der Shell)
+| SIGTERM (15) | beendet einen Prozess geordnet (ist der Default von `kill`)
 | SIGKILL (9) | beendet einen Prozess zwangsweise
 | SIGINT (2) | unterbricht einen Prozess (Ctrl-c in der Shell)
-| SIGTSTP (17) | hält einen Prozess (Ctrl-z in der Shell)
+| SIGTSTP (17) | hält einen Prozess an (Ctrl-z in der Shell)
 | SIGHUP  (1) | veranlasst einen Dämonen (meistens) zum erneuten Einlesen seiner Konfiguration
-| SIGSEGV (11) | ungültiger Speicherzugriff (_Segmentation Fault_)
-| SIGPIPE (13) | Versuch, in eine Pipe zu schreiben, dessen anderes Ende (das Programm, das von der Pipe liest) nicht mehr existiert
+| _SIGSEGV_ (11) | ungültiger Speicherzugriff (_Segmentation Fault_)
+| _SIGPIPE_ (13) | Versuch, in eine Pipe zu schreiben, dessen anderes Ende (das Programm, das von der Pipe liest) nicht mehr existiert
 |===
 
 
 <<<
-== Prozesse - Wichtige Befehle
+== Prozesse - Wichtige Befehle (1)
 |===
-
 | alle Prozesse mit den wichtigsten Informationen / Attributen auflisten | `ps -ef` | `-e` selektiert alle Prozesse, `-f` gibt die wichtigsten Informationen aus
 | alle Prozesse eines bestimmten Benutzers auflisten | `ps -u <Benutzername oder UID> -f` |
-| alle Prozesse auflisten, die ein bestimmtes Programm ausführen | `ps -C <Name des Programms> -f` |
-| alle Prozesse mit bestimmten Attributen auflisten | `ps -e -o <Liste der Attribute>` | Die verfügbaren Attribute sind in der Man Page aufgeführt, lässt sich auch mit `-u` oder `-C` verwenden.
+| alle Prozesse auflisten, die ein bestimmtes Programm ausführen | `ps -C <Name des Programms> -f` | Name muss vollständig angegeben werden.
+| Prozess mit einer bestimmten PID auflisten | `ps -p <PID> -f` |
+|===
+
+
+<<<
+== Prozesse - Wichtige Befehle (2)
+|===
+| Ausgabe mit einer sinnvolleren Liste von Attributen | `ps -e -o user,pid,ppid,lstart,stat,vsz,rsz,%cpu,%mem,args` | Die verfügbaren Attribute sind in der Man Page aufgeführt, lässt sich auch mit `-u`, `-C` oder `-p` verwenden.
 | alle Prozesse mit einem bestimmten String in der Kommandozeile (Programm + Argumente) auflisten | `pgrep -af <String>` |
 |===
+
+
+<<<
+== Ausgabe von `ps` (1)
+// TODO: Wichtige Attribute als Tabelle
+// TODO: Namen in eckigen Klammern erklären
+[code,sh]
+----
+UID          PID    PPID  C STIME TTY          TIME CMD
+mvhs         950       1  0 Jan16 ?        00:00:13 /usr/lib/systemd/systemd --user
+
+USER         PID    PPID                  STARTED STAT    VSZ   RSZ %CPU %MEM COMMAND
+mvhs         950       1 Fri Jan 16 10:59:45 2026 Ss    25796 14096  0.0  0.3 /usr/lib/systemd/systemd --user
+----
+
+|===
+| Attribut für `-o` | Spalte | Bedeutung
+
+| `user` | `UID`, `USER` | Benutzer
+| `pid` | `PID` | PID des Prozesses
+| `ppid` | `PPID` | PID des Elternprozesses
+| `lstart` | `STIME`, `STARTED` | Startzeit
+| `stat` | `STAT` | Zustand
+|===
+
+
+<<<
+== Ausgabe von `ps` (2)
+|===
+| Attribut für `-o` | Spalte | Bedeutung
+
+| `vsz`, `rsz` | `VSZ`, `RSZ` | verwendeter virtueller / physischer Speicher, in KiB
+| `%cpu`, `%mem` | `%CPU`, `%MEM` | verwendete(r) CPU / Speicher, relativ
+| `args` | `CMD`, `COMMAND` | Befehl mit Argumenten
+|===
+
+
+<<<
+== Demo: Arbeiten mit Prozessen
 
 
 <<<
@@ -1751,7 +1795,7 @@ done < <(tail -f "$1")
 <<<
 == `systemd` Timers (1)
 [.step]
-* bieten die Möglichkeit, Programme / Skripte periodisch zu bestimmten Zeiten auszuführen, auch wenn der entsprechende Benutzer nicht eingeloggt ist
+* bieten die Möglichkeit, Programme / Skripte periodisch zu bestimmten Zeiten auszuführen (von `systemd`), auch wenn der entsprechende Benutzer nicht eingeloggt ist
 * dienen oft dazu, Wartungsarbeiten (z. B. Backups, Löschen von temporären Dateien) automatisch auszuführen
 * werden mit den Rechten des jeweiligen Benutzers ausgeführt
 * ersetzen auf modernen Linux-Systemen die _Cron Jobs_
