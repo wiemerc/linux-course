@@ -991,7 +991,7 @@ Viel Spass! Lust auf mehr? https://overthewire.org/wargames/
 <<<
 == Prozesse - Wichtige Befehle (2)
 |===
-| Ausgabe mit einer sinnvolleren Liste von Attributen | `ps -e -o user,pid,ppid,lstart,stat,vsz,rsz,%cpu,%mem,args` | Die verfügbaren Attribute sind in der Man Page aufgeführt, lässt sich auch mit `-u`, `-C` oder `-p` verwenden.
+| Ausgabe mit einer sinnvolleren Liste von Attributen | `ps -e -o user,pid,ppid,lstart,state,vsz,rsz,%cpu,%mem,args` | Die verfügbaren Attribute sind in der Man Page aufgeführt, lässt sich auch mit `-u`, `-C` oder `-p` verwenden.
 | alle Prozesse mit einem bestimmten String in der Kommandozeile (Programm + Argumente) auflisten | `pgrep -af <String>` |
 |===
 
@@ -1000,13 +1000,13 @@ Viel Spass! Lust auf mehr? https://overthewire.org/wargames/
 == Ausgabe von `ps` (1)
 // TODO: Wichtige Attribute als Tabelle
 // TODO: Namen in eckigen Klammern erklären
-[code,sh]
+[source,sh]
 ----
 UID          PID    PPID  C STIME TTY          TIME CMD
 mvhs         950       1  0 Jan16 ?        00:00:13 /usr/lib/systemd/systemd --user
 
-USER         PID    PPID                  STARTED STAT    VSZ   RSZ %CPU %MEM COMMAND
-mvhs         950       1 Fri Jan 16 10:59:45 2026 Ss    25796 14096  0.0  0.3 /usr/lib/systemd/systemd --user
+USER         PID    PPID                  STARTED S    VSZ   RSZ %CPU %MEM COMMAND
+mvhs         950       1 Fri Jan 16 10:59:45 2026 S  25796 14096  0.0  0.3 /usr/lib/systemd/systemd --user
 ----
 
 |===
@@ -1016,7 +1016,7 @@ mvhs         950       1 Fri Jan 16 10:59:45 2026 Ss    25796 14096  0.0  0.3 /u
 | `pid` | `PID` | PID des Prozesses
 | `ppid` | `PPID` | PID des Elternprozesses
 | `lstart` | `STIME`, `STARTED` | Startzeit
-| `stat` | `STAT` | Zustand
+| `state` | `S` | Zustand
 |===
 
 
@@ -1054,7 +1054,7 @@ mvhs         950       1 Fri Jan 16 10:59:45 2026 Ss    25796 14096  0.0  0.3 /u
 * Sehr viele Daten liegen auch heute noch als Text vor, z. B. Anwendungsdaten (https://en.wikipedia.org/wiki/JSON[JSON], https://en.wikipedia.org/wiki/XML[XML]), Programmcode, Konfiguration (https://en.wikipedia.org/wiki/INI_file[INI-Dateien], https://en.wikipedia.org/wiki/YAML[YAML]), Dokumentation (https://en.wikipedia.org/wiki/Markdown[Markdown], https://en.wikipedia.org/wiki/AsciiDoc[AsciiDoc]).
 * Text ist das universelle Datenformat in Linux (Dateien, Ein- und Ausgabe von Programmen).
 * Arbeiten mit Text(dateien) ist oft einfacher als mit binären Daten oder Datenbanken (und manchmal auch schneller).
-* Linux / Unix hat sehr mächtige Tools zum Arbeiten mit Text, alle Tools können mit Dateien oder in Pipelines (Standardein- / -ausgabe) verwendet werden.
+* Linux / Unix hat sehr mächtige Tools zum Arbeiten mit Text, alle Tools können mit Dateien oder in Pipelines (mit der Standardein- / -ausgabe) verwendet werden.
 * oft drei Schritte in einer Pipeline: Filtern - Transformieren - Aggregieren
 
 
@@ -1073,7 +1073,7 @@ mvhs         950       1 Fri Jan 16 10:59:45 2026 Ss    25796 14096  0.0  0.3 /u
 |===
 
 | `-F` | nach festem String suchen | kann man weglassen wenn Suchstring nur aus Buchstaben und / oder Zahlen besteht
-| `-P` | nach regulärem Ausdruck suchen |
+| `-P` | nach regulärem Ausdruck suchen | Regulärer Ausdruck ist ein PCRE, siehe Folie unten.
 | `-i` | Gross- / Kleinschreibung nicht beachten |
 | `-r` | Verzeichnis(se) rekursiv durchsuchen |
 | `-c` | nur die Anzahl der Treffer ausgeben |
@@ -1096,7 +1096,7 @@ mvhs         950       1 Fri Jan 16 10:59:45 2026 Ss    25796 14096  0.0  0.3 /u
 [.step]
 * sind Muster zur Suche nach und Validierung von Strings
 * beschreiben die Struktur eines Strings ohne ihn vollständig anzugeben, ähnlich wie die Wildcards in der Shell
-* Beispiel: Grossbuchstabe, gefolgt von einer beliebigen Zahl von Kleinbuchstaben, gefolgt von einer oder mehreren Ziffern => `^[A-Z][a-z]*\d+$`
+* Beispiel: Grossbuchstabe, gefolgt von einer beliebigen Zahl von Kleinbuchstaben, gefolgt von einer oder mehreren Ziffer(n) => `^[A-Z][a-z]*\d+$`
 * können in Editoren (Suchen / Ersetzen), Tools wie `grep` und allen modernen Programmiersprachen genutzt werden
 * verschiedene Dialekte, gängigster Dialekt ist _Perl Compatible Regular Expressions_ (PCRE)
 * Tutorials: https://developer.mozilla.org/de/docs/Web/JavaScript/Guide/Regular_expressions[Mozilla], https://perldoc.perl.org/perlretut[Perl], https://docs.python.org/3/library/re.html[Python]
@@ -1106,28 +1106,81 @@ mvhs         950       1 Fri Jan 16 10:59:45 2026 Ss    25796 14096  0.0  0.3 /u
 // TODO: reguläre Ausdrücke erklären?
 
 
-// TODO: überall Tabellen verwenden?
 <<<
 == Suchen und Ersetzen - `sed` / `perl`
 [.step]
 * oft der Schritt _Transformieren_ in einer Pipeline
-* `sed` ist geeignet für einfache Fälle, nämlich zeilenweise Verarbeitung und feste Strings: `sed -e 's/<von>/<nach>/g'`
-* Mit der Option `-i` wird in einer Datei "in-place" ersetzt (gilt für `sed` und `perl`): `sed -i -e 's/<von>/<nach>/g' <Datei>`
+* `sed` ist geeignet für einfache Fälle, nämlich zeilenweise Verarbeitung und feste Strings.
++
+[source,sh]
+----
+$ sed -e 's/<von>/<nach>/g'
+----
+* Mit der Option `-i` wird in einer Datei "in-place" ersetzt (gilt für `sed` und `perl`).
++
+[source,sh]
+----
+$ sed -i -e 's/<von>/<nach>/g' <Datei>
+----
 * `perl` kann nach regulären Ausdrücken suchen, auch über mehrere Zeilen hinweg.
 [.step]
-** Suchen / Ersetzen mit regulärem Ausdruck: `perl -pe 's/<von>/<nach>/g'`
-** Suchen / Ersetzen über mehrere Zeilen hinweg: `perl -0777 -pe 's/<von>/<nach>/gs', <Datei>`, `-0777` bewirkt, dass die Datei nicht zeilenweise sondern "in einem Rutsch" eingelesen wird, mit dem Flag `s` werden mit `.` im regulären Ausdruck auch Zeilenumbrüche getroffen
+** Suchen / Ersetzen mit regulärem Ausdruck.
++
+[source,sh]
+----
+$ perl -pe 's/<von>/<nach>/g'
+----
+** Suchen / Ersetzen über mehrere Zeilen hinweg, `-0777` bewirkt, dass die Datei nicht zeilenweise sondern "in einem Rutsch" eingelesen wird, mit dem Flag `s` werden mit `.` im regulären Ausdruck auch Zeilenumbrüche getroffen.
++
+[source,sh]
+----
+$ perl -0777 -pi -e 's/<von>/<nach>/gs' <Datei>
+----
 
 
 <<<
 == Strings aus Zeilen ausschneiden - `cut` / `awk` / `perl`
 [.step]
 * oft der Schritt _Transformieren_ in einer Pipeline
-* einzelne Spalte(n), mit festem Trennzeichen: `cut -d<Trennzeichen> -f<n>` oder `awk -F<Trennzeichen> '{print $<n>}'`, Spalten-Index `n` startet mit 1, mehrere Spalten durch Komma trennen, Default-Trennzeichen ist bei `cut` der Tabulator bzw. sind bei `awk` _Whitespaces_ (Leerzeichen, Tabulatoren, Zeilenumbrüche)
-* einzelne Spalte(n), getrennt durch einen regulären Ausdruck: `perl -F<regulärer Ausdruck> -le 'BEGIN{$, = " "} print $F[<n>]'`, Spalten-Index `n` startet mit 0, mehrere Spalten durch Komma trennen
-* regulärer Ausdruck: `perl -nle '/(<regulärer Ausdruck>)/; print $1'`, durch die runden Klammern um den Ausdruck wird der gefundenen String der Variablen `$1` zugewiesen
-* Man kann Zeilen auch nach dem ausgeschnittenen String filtern: `perl -F<regulärer Ausdruck> -le 'print if $F[<n>] =~ /<regulärer Ausdruck>/'` oder `perl -nle '/(<regulärer Ausdruck>)/; print if $1 > <n>'`
-* entspricht `SELECT` bzw. `WHERE` in SQL
+* entspricht `SELECT` in SQL
+* einzelne Spalte(n), mit festem Trennzeichen, `cut` oder `awk`, Spalten-Index `n` startet mit 1, mehrere Spalten durch Komma trennen, Default-Trennzeichen ist bei `cut` der Tabulator bzw. sind bei `awk` _Whitespaces_ (Leerzeichen, Tabulatoren, Zeilenumbrüche)
++
+[source,sh]
+----
+$ cut -d<Trennzeichen> -f<n>
+$ awk -F<Trennzeichen> '{print $<n>}'
+----
+* einzelne Spalte(n), getrennt durch einen regulären Ausdruck, Spalten-Index `n` startet mit 0, mehrere Spalten durch Komma trennen
++
+[source,sh]
+----
+$ perl -F<regulärer Ausdruck> -le 'BEGIN{$, = " "} print $F[<n>]'
+----
+* regulärer Ausdruck, durch die runden Klammern um den Ausdruck wird der gefundenen String der Variablen `$1` zugewiesen
++
+[source,sh]
+----
+$ perl -nle '/(<regulärer Ausdruck>)/; print $1'
+----
+
+
+<<<
+== Zeilen nach einem ausgeschnittenen String filtern - `perl`
+[.step]
+* oft der Schritt _Filtern_ in einer Pipeline
+* entspricht `WHERE` in SQL
+* Zeilen ausgeben, bei denen eine bestimmte Spalte einem regulären Ausdruck entspricht
++
+[source,sh]
+----
+$ perl -F<regulärer Ausdruck> -le 'print if $F[<n>] =~ /<regulärer Ausdruck>/'
+----
+* regulären Ausdruck numerisch vergleichen, Vergleichsoperatoren sind `==`, `!=`, `<`, `>`, `\<=`, `>=`
++
+[source,sh]
+----
+$ perl -nle '/(<regulärer Ausdruck>)/; print if $1 == <Zahl>'
+----
 
 
 <<<
@@ -1135,6 +1188,7 @@ mvhs         950       1 Fri Jan 16 10:59:45 2026 Ss    25796 14096  0.0  0.3 /u
 [.step]
 * sortiert die angegebene Datei oder die Standardeingabe, mit der kompletten Zeile als Schlüssel
 * oft der letzte Schritt in einer Pipeline
+* entspricht `ORDER BY`, ggf. mit `DISTINCT` in SQL
 * Aufruf: `sort [Optionen] [Datei]`
 * Wichtige Optionen
 +
@@ -1146,7 +1200,6 @@ mvhs         950       1 Fri Jan 16 10:59:45 2026 Ss    25796 14096  0.0  0.3 /u
 | `-n` | numerisch sortieren
 | `t<Trennzeichen> -k<n>` | nach Spalte `n` sortieren, Spalten getrennt durch das angegebene Trennzeichen (Default: Whitespaces)
 |===
-* entspricht `ORDER BY`, ggf. mit `DISTINCT` in SQL
 
 
 <<<
@@ -1219,7 +1272,7 @@ mvhs         950       1 Fri Jan 16 10:59:45 2026 Ss    25796 14096  0.0  0.3 /u
 ----
 <1> Listen in eckigen Klammern, die einzelnen Elemente sind durch Komma getrennt
 <2> Objekte = Listen von Schlüssel-Wert-Paaren in geschweiften Klammern, die Paare sind wieder durch Komma getrennt
-<3> Schlüssel und Wert sind durch einen Doppelpunkt getrennt.
+<3> Schlüssel und Wert sind durch einen Doppelpunkt getrennt, Strings stehen in Anführungszeichen.
 <4> Listen und Objekte können verschachtelt werden => hierarchische Datenstruktur
 
 
@@ -1241,12 +1294,18 @@ jc ls -l /usr/bin | duckdb -c "select sum(size) from read_json('/dev/stdin') whe
 
 
 <<<
-== Übung: Arbeiten mit Text - Suchen / Filtern
+== Übung: Arbeiten mit Text - Suchen / Filtern / Aggregieren
 **Aufgaben:**
 [.step]
 * Die Ausgabe von `journalctl` soll nach Logmeldungen von `systemd` gefiltert werden und die Anzahl dieser Meldungen soll gezählt werden.
-// TODO: Suchen / Ersetzen
 * Die Logmeldungen, die von `journalctl` ausgegeben werden, sollen nach dem Programm gruppiert und die Anzahl pro Programm absteigend sortiert ausgegeben werden.
+
+
+<<<
+== Übung: Arbeiten mit Text - Suchen / Ersetzen
+**Aufgaben:**
+[.step]
+// TODO
 
 
 <<<
@@ -2067,7 +2126,7 @@ Made with &#x2764;&#xFE0F;, https://asciidoc.org/[_AsciiDoc_], https://asciidoct
 
 <<<
 == Anhang A: Übungen
-// TODO: Aufgaben in die Folien an der entsprechenden Stelle einfügen
+// TODO: Lösung für Schnitzeljagd?
 // TODO: Sind Beispiele für Arbeiten mit Text zu kompliziert? Evtl. doch CSV-Dateien mit MSISDNs verwenden?
 // Ideen:
 // - systemd Timer anlegen
@@ -2119,12 +2178,7 @@ $ sudo journalctl -S today -o json | \
 
 
 <<<
-== Arbeiten mit Text - Suchen / Ersetzen
-// TODO
-
-
-<<<
-== Arbeiten mit Text - Gruppieren
+== Arbeiten mit Text - Aggregieren
 * **Aufgabe**: Die Logmeldungen, die von `journalctl` ausgegeben werden, sollen nach dem Programm gruppiert und die Anzahl pro Programm absteigend sortiert ausgegeben werden.
 * **Lösung**:
 ** mit Perl:
@@ -2148,3 +2202,8 @@ $ sudo journalctl -S today | perl -nale '$F[4] =~ /([a-zA-Z]+)/; print $1' | sor
 $ sudo journalctl -S today -o json | \
     duckdb -c "select SYSLOG_IDENTIFIER, count(*) from read_json('/dev/stdin') group by 1 order by 2 desc;"
 ----
+
+
+<<<
+== Arbeiten mit Text - Suchen / Ersetzen
+// TODO
