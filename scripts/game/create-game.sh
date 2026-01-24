@@ -6,7 +6,7 @@ set -o pipefail
 
 
 GAME_NAME=Schnitzeljagd
-NUM_LEVELS=4
+NUM_LEVELS=5
 
 
 script_dir=$(realpath $(dirname $0))

@@ -875,14 +875,16 @@ icon:warning[] Bestehende Dateien werden ohne Nachfrage überschrieben!
 
 
 <<<
-== Übung: "Schnitzeljagd"
+== Übung: Schnitzeljagd
 [.text-left]
-Diese Übung ist eine Art Schnitzeljagd (oder auch ein https://de.wikipedia.org/wiki/Capture_the_Flag#Computersicherheit[_Capture the Flag_]-Spiel). Das Spiel besteht aus TODO Stufen. In jeder Stufe geht es darum, ein oder mehrere Geheimnis(se) in Form von Strings zu finden. Das Spiel befindet sich im Verzeichnis `~/Schnitzeljagd/` mit einem Unterverzeichnis pro Stufe (`level1/` bis `level5/`). In jedem Unterverzeichnis gibt es eine Datei `README.txt` mit einer (kurzen) Anleitung.
+Diese Übung ist eine Art Schnitzeljagd (oder auch ein https://de.wikipedia.org/wiki/Capture_the_Flag#Computersicherheit[_Capture the Flag_]-Spiel). Das Spiel besteht aus 5 Stufen. In jeder Stufe geht es darum, ein oder mehrere Geheimnis(se) in Form von Strings zu finden. Das Spiel befindet sich im Verzeichnis `~/Schnitzeljagd/` mit einem Unterverzeichnis pro Stufe (`level1/` bis `level5/`). In jedem Unterverzeichnis gibt es eine Datei `README.txt` mit einer (kurzen) Anleitung.
+
+// TODO: Lesbare Geheimnisse?
+
+[.text-left]
+**Aufgabe:** Lösen Sie die Level 1 bis 3.
 
 Viel Spass! Lust auf mehr? https://overthewire.org/wargames/
-// TODO: pro Level ein Verzeichnis, jeweils mit einer README-Datei mit den Instruktionen
-// - https://overthewire.org/wargames/bandit/bandit9.html?
-// - https://overthewire.org/wargames/bandit/bandit12.html, so ähnlich, so dass man sed benutzen kann?
 
 
 <<<
@@ -1302,10 +1304,9 @@ jc ls -l /usr/bin | duckdb -c "select sum(size) from read_json('/dev/stdin') whe
 
 
 <<<
-== Übung: Arbeiten mit Text - Suchen / Ersetzen
-**Aufgaben:**
-[.step]
-// TODO
+== Übung: Schnitzeljagd
+[.text-left]
+**Aufgabe:** Lösen Sie die Level 4 und 5.
 
 
 <<<

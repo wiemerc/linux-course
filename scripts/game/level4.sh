@@ -1,4 +1,5 @@
 #!/bin/bash
+# cSpell:dictionaries: de-de
 
 
 set -o errexit
