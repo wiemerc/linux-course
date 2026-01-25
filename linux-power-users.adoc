@@ -1339,7 +1339,7 @@ jc ls -l /usr/bin | duckdb -c "select sum(size) from read_json('/dev/stdin') whe
 == Variablen
 [.step]
 * können Strings oder Ganzzahlen speichern, sind aber eigentlich typlos (auch Zahlen werden intern als Strings gespeichert und Strings können ohne Fehler in arithmetischen Ausdrücken verwendet werden)
-* Zusätzlich gibt es auch Listen und Maps (Schlüssel-Wert-Paare), die aber in diesem Kurs nicht behandelt werden.
+* Zusätzlich gibt es auch Listen und Maps (Schlüssel-Wert-Paare), die wir aber in diesem Kurs nicht behandeln.
 * müssen nicht deklariert werden
 
 
@@ -1358,7 +1358,7 @@ $ echo "x = $x"  <5>
 <2> Ausgabe des Befehls wird der Variablen zugewiesen.
 <3> Zugriff auf den Wert durch das vorangestellte Dollarzeichen
 <4> Arithmetik, Variablen, die einen String enthalten, werden in 0 umgewandelt.
-<5> _Variablenexpansion_ => Wert der Variablen wird in den String eingesetzt, nur in Strings, die durch doppelte Anführungszeichen begrenzt sind
+<5> _Variablenexpansion_ => Wert der Variablen wird in den String eingesetzt, nur in Strings, die durch doppelte Anführungszeichen begrenzt sind.
 
 
 // TODO: Suchen / Ersetzen, Teilstrings in Variablen?
@@ -1375,7 +1375,7 @@ $ echo "x = $x"  <5>
 ** Schleife läuft (_iteriert_) über alle Elemente einer Sequenz: `for`
 * Möglichkeiten für eine Sequenz:
 [.step]
-** Aufzählung von Werten im Code (getrennt durch Leerzeichen)
+** Aufzählung von Werten im Skript (getrennt durch Leerzeichen)
 ** Dateien / Verzeichnisse, die mit einem Wildcard-Ausdruck gefunden werden
 // TODO: weitere Möglichkeiten erwähnen?
 
@@ -1404,7 +1404,7 @@ else  <4>
     echo "x ist gleich 0 ($x)"
 fi  <5>
 ----
-<1> Erste Verzweigung startet mit `if`, gefolgt von der Bedingung in doppelten eckigen Klammern, gefolgt von `then`.
+<1> Erste Verzweigung startet mit `if`, gefolgt von der Bedingung in doppelten eckigen Klammern, gefolgt von einem Strichpunkt und `then`.
 <2> Codeblock kann aus einer oder mehreren Zeile(n) bestehen.
 <3> Weitere Verzweigungen können folgen und starten mit `elif`.
 <4> Es kann einen `else`-Zweig geben, der ausgeführt wird, wenn keine der anderen Bedingungen erfüllt ist (nach `else` folgt **kein** `then`).
@@ -1424,7 +1424,7 @@ done
 ----
 <1> Schleife mit festen Werten, `name` ist die Schleifenvariable, der nacheinander die Werte zugwiesen werden. Der Codeblock wird mit `do` eingeleitet.
 <2> Codeblock kann aus einer oder mehreren Zeile(n) bestehen.
-<3> Die Struktur wird mit `done` abgeschlossen.
+<3> Die Schleife wird mit `done` abgeschlossen.
 <4> Schleife mit Wildcard
 
 <<<
@@ -1438,11 +1438,11 @@ while [[ $x -ge 0 ]]; do  <1>
 done  <3>
 while IFS= read -r line; do  <4>
     ...
-done
+done < bla.txt
 ----
 <1> Schleife mit einer Bedingung. Der Codeblock wird mit `do` eingeleitet.
 <2> Codeblock kann aus einer oder mehreren Zeile(n) bestehen.
-<3> Die Struktur wird mit `done` abgeschlossen.
+<3> Die Schleife wird mit `done` abgeschlossen.
 <4> Schleife, die Zeilen aus einer Datei (oder mit Process Substitution von einem Programm) liest, solange bis alle Zeilen gelesen wurden / das Programm sich beendet). `line` ist die Schleifenvariable, der nacheinander die Zeilen zugewiesen werden (`IFS=` bewirkt, dass Whitespaces am Anfang / Ende der Zeile erhalten bleiben, mit `-r` bleiben Backslashes erhalten).
 
 
@@ -1492,14 +1492,14 @@ Zusätzlich zu den Vergleichen gibt es auch noch Tests, die Dateien / Verzeichni
 <<<
 == Funktionen
 [.step]
-* kapseln eine bestimmte Funktionalität, die an verschiedenen Stellen des Programms benutzt werden kann (durch den Aufruf der Funktion)
+* kapseln eine bestimmte Funktionalität, die an verschiedenen Stellen des Skripts benutzt werden kann (durch den Aufruf der Funktion)
 * können Argumente und einen Rückgabewert besitzen
 * Beispiel: Aufsummieren von zwei Werten
 +
 [source,sh]
 ----
 summe() {  <1>
-    s=$(( $1 $2 ))  <2>
+    s=$(( $1+$2 ))  <2>
     printf $s  <3>
 }
 summe 5 6  <4>
@@ -1514,8 +1514,8 @@ summe 5 6  <4>
 <<<
 == Beispiel 1 – Report für Verzeichnisse erstellen
 [.step]
-* **Aufgabe**: Es soll für alle Unterverzeichnisse in einem Verzeichnis der belegte Plattenplatz und Anzahl der Dateien ermittelt werden.
-* **Ziele**:
+* **Aufgabe**: Es soll für alle Unterverzeichnisse in einem Verzeichnis der belegte Plattenplatz und die Anzahl der Dateien ermittelt werden.
+* **Inhalte**:
 [.step]
 ** Variablen
 ** `for`-Schleifen
@@ -1625,7 +1625,7 @@ for entry in *; do
     if [[ -d $entry ]]; then
         num_files=$(find $entry -type f | wc -l)
         used_space=$(du -hs $entry | cut -f1)
-        echo "Unterverzeichnis $entry enthält $num_files Dateien und belegt $used_space Plattenplatz"  <1>
+        echo "Unterverzeichnis $entry enthält $num_files Dateien und belegt $used_space Plattenplatz"
     fi
 done
 ----
@@ -1638,12 +1638,12 @@ done
 <<<
 == Beispiel 2 – Logdateien überwachen
 [.step]
-* **Aufgabe**: Eine Logdatei soll überwacht werden und bei Auftreten einer bestimmten Meldung soll ein Befehl ausgeführt werden.
-* **Ziele**:
+* **Aufgabe**: Eine Logdatei soll überwacht und beim Auftreten einer bestimmten Meldung ein Befehl ausgeführt werden.
+* **Inhalte**:
 [.step]
-** while-Schleife
+** `while`-Schleife
 ** Ausgabe eines Programms zeilenweise einlesen
-** Exit-Status von Kommandos überprüfen
+** Exit-Status von Befehlen überprüfen
 
 
 <<<
@@ -2129,7 +2129,7 @@ Made with &#x2764;&#xFE0F;, https://asciidoc.org/[_AsciiDoc_], https://asciidoct
 == Anhang A: Übungen
 // TODO: Lösung für Schnitzeljagd?
 // TODO: Sind Beispiele für Arbeiten mit Text zu kompliziert? Evtl. doch CSV-Dateien mit MSISDNs verwenden?
-// Ideen:
+// Weitere Ideen:
 // - systemd Timer anlegen
 
 
