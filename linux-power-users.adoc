@@ -1733,20 +1733,23 @@ done < <(tail -f "$1")
 [.step]
 * Die Netzwerk-Funktionalität in Linux wird implementiert durch
 [.step]
-** Netzwerk-Interfaces (Hardware, z. B. Netzwerk-Karte + Gerätetreiber im Kernel, Namen sind abhängig vom Hardware-Typ und der Linux-Distribution)
+** Netzwerk-Interfaces = Hardware (z. B. Netzwerk-Karte) + Gerätetreiber im Kernel
 ** Netzwerk-_Stack_ im Kernel, der die Protokolle wie IP und TCP implementiert
 ** Dämonen, die Netzwerkdienste wie Web Server oder SSH bereitstellen
-* Netzwerk-Interfaces besitzen eine oder mehrere IP-Adressen und die zugehörige(n) Netzwerk-Route(n) (Gateways).
-* Namensauflösung (Zuordnung von Host- / Rechnernamen zu IP-Adressen) erfolgt üblicherweise durch das _Domain Name System_ (DNS), alternativ kann die Zuordnung auch statisch in der Datei `/etc/hosts` gepflegt werden (heute nur noch selten genutzt).
 * "Netzwerklaufwerke" werden in Linux normalerweise über das _Network File System_ (NFS) realisiert, auch Windows Shares (CIFS) werden unterstützt.
 
 
 <<<
 == Konfigurieren des Netzwerks
 [.step]
-* Normalerweise wird das Netzwerk automatisch (über das DHCP-Protokoll) konfiguriert (IP-Adresse, Default-Gateway, DNS-Server...).
-* Alternativ kann man auch Konfigurationsdateien für die Konfiguration der Interfaces verwenden, Dateiname(n) und Format sind abhängig von der Linux-Distribution (z. B. Ubuntu / Debian: `/etc/network/interfaces`, Redhat / CentOS / Fedora: `/etc/sysconfig/network-scripts/ifcfg-ethX`) bzw. der zur Verwaltung des Netzwerks verwendeten Software (z. B. https://wiki.archlinux.org/title/NetworkManager[_NetworkManager_] oder https://wiki.archlinux.org/title/Systemd-networkd[_systemd-networkd_]).
-* Zusätzlich gibt es die Datei `/etc/resolv.conf` für die Konfiguration der DNS-Server.
+* Netzwerk-Interfaces besitzen eine oder mehrere IP-Adresse(n) und die zugehörige(n) Netzwerk-_Route(n)_ (Gateways).
+* Interfaces werden normalerweise automatisch / dynamisch (über das DHCP-Protokoll) konfiguriert.
+* _Namensauflösung_ (Zuordnung von Host- / Rechnernamen zu IP-Adressen) erfolgt normalerweise durch das _Domain Name System_ (DNS), die verwendeten DNS-Server werden auch über DHCP konfiguriert.
+* Alternativ kann das Netzwerk auch manuell / statisch konfiguriert werden:
+[.step]
+** Konfigurationsdateien für die Konfiguration der Interfaces, Dateiname(n) und Format sind abhängig von der Linux-Distribution (z. B. Ubuntu / Debian: `/etc/network/interfaces`, Redhat / CentOS / Fedora: `/etc/sysconfig/network-scripts/ifcfg-ethX`) bzw. der zur Verwaltung des Netzwerks verwendeten Software (z. B. https://wiki.archlinux.org/title/NetworkManager[_NetworkManager_] oder https://wiki.archlinux.org/title/Systemd-networkd[_systemd-networkd_]).
+** Zuordnung von Host- / Rechnernamen zu IP-Adressen in der Datei `/etc/hosts` (heute nur noch selten genutzt)
+** Datei `/etc/resolv.conf` für die Konfiguration der DNS-Server.
 
 
 <<<
@@ -1754,18 +1757,26 @@ done < <(tail -f "$1")
 [.step]
 * Die _Secure Shell_ (SSH) ermöglicht das Arbeiten auf einem über das Netzwerk verbundenen Rechner.
 * Man kann sich einloggen und interaktiv (in der Shell) arbeiten oder einzelne Befehle ausführen: `ssh <Benutzer>@<Hostname oder IP-Adresse> [<Befehl>]`
-* Authentifizierung erfolgt mit Password oder einem **kryptografischen Schlüssel**.
+* Authentifizierung erfolgt mit Password oder einem kryptografischen Schlüssel.
 [.step]
 ** Man erzeugt sich ein Schlüsselpaar, bestehend aus einem öffentlichen und einem privaten Schlüssel mit dem Befehl `ssh-keygen` => die Dateien `id_rsa` (privat) und `id_rsa.pub` (öffentlich) im Verzeichnis `~/.ssh/`.
-** Den privaten Schlüssel muss man geheim halten (Berechtigung 0700 für das Verzeichnis und 0600 für die Datei) und man sollte ihn mit einer Passphrase sichern.
-** Der öffentliche Schlüssel muss in die Datei `~/.ssh/authorized_keys` auf dem Zielrechner eingetragen werden (kann mit dem Befehl `ssh-copy-id` gemacht werden).
-* Auch Rechner (Hosts) besitzen ein Schlüsselpaar, der öffentliche Schlüssel wird beim ersten Einloggen automatisch in die Datei `~/.ssh/known_hosts` eingetragen.
+** Den privaten Schlüssel muss man geheim halten (Berechtigung 0700 für das Verzeichnis und 0600 für die Datei) und man sollte ihn mit einer _Passphrase_ sichern.
+** Der öffentliche Schlüssel muss in die Datei `~/.ssh/authorized_keys` auf dem **Zielrechner** eingetragen werden (kann mit dem Befehl `ssh-copy-id` gemacht werden).
+* Auch Rechner (Hosts) besitzen ein Schlüsselpaar, der öffentliche Schlüssel wird beim ersten Einloggen automatisch in die lokale Datei `~/.ssh/known_hosts` eingetragen.
 
 
 <<<
 == Zugriff auf auf einen entfernten Rechner - SSH (2)
 [.step]
-* Mit der SSH können auch Dateien übertragen / kopiert werden, entweder mit `scp` (wie mit `cp`), z. B. `scp <lokale Datei> <Benutzer>@<Hostname oder IP-Adresse>:<Pfad auf dem Zielrechner>` oder interaktiv mit `sftp` (wie mit `ftp`).
+* Mit der SSH können auch Dateien übertragen / kopiert werden:
+[.step]
+** `scp` (wie mit `cp`)
++
+[source,sh]
+----
+$ scp <lokale Datei> <Benutzer>@<Hostname oder IP-Adresse>:<Pfad auf dem Zielrechner>
+----
+** interaktiv mit `sftp` (wie mit `ftp`)
 * Komfortablere und mächtigere Alternative (basiert auf SSH): `rsync`
 [.step]
 ** nur Unterschiede / Änderungen werden übertragen
@@ -1777,7 +1788,8 @@ done < <(tail -f "$1")
 == Netzwerk - Weitere wichtige Befehle (1)
 |===
 
-| Netzwerk-Interfaces mit MAC-Adresse, IP-Adresse(n) und Netzmasken auflisten | `ip addr`
+| Netzwerk-Interfaces mit MAC-Adresse, IP-Adresse(n) und Netzmasken auflisten +
+(Namen, z. B. `eth0`, sind abhängig vom Hardware-Typ und der Linux-Distribution) | `ip addr`
 | Netzwerk-Interfaces starten / stoppen | `ip link set <Interface> up` bzw. `ip link set <Interface> down`
 | alle Netzwerk-Routen auflisten | `ip route`
 | Route zu einem bestimmten Ziel (IP-Adresse) ermitteln | `ip route get <IP-Adresse>`
