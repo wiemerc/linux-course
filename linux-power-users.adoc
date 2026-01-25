@@ -1327,12 +1327,10 @@ jc ls -l /usr/bin | duckdb -c "select sum(size) from read_json('/dev/stdin') whe
 [.step]
 * sind eine Folge von Befehlen mit Argumenten und Optionen
 * eventuell ergänzt um Variablen und Kontrollstrukturen
+* können Kommentare enthalten, starten mit `#` und gehen bis zum Ende der Zeile
 * werden von der Shell genauso ausgeführt wie interaktiv eingegebene Befehle (mit allen Features wie Pipelines, Ein- / Ausgabeumleitung und Hintergrundprozesse)
 * stellen eine vollständige Programmiersprache dar, sind aber nur bedingt für größere Programmieraufgaben geeignet (besser Python oder Perl verwenden)
 * Die einzelnen Shells implementieren unterschiedliche "Dialekte", die nicht vollständig kompatibel sind => Auf Linux (und auch macOS) sollte man (unabhängig von der Shell, die man interaktiv nutzt) die Bash für Skripte nutzen.
-
-
-// TODO: Kommentare
 
 
 <<<
@@ -1808,6 +1806,18 @@ $ scp <lokale Datei> <Benutzer>@<Hostname oder IP-Adresse>:<Pfad auf dem Zielrec
 
 
 <<<
+== Übung: Arbeiten im Netzwerk
+**Aufgaben:**
+[.step]
+* Bitten Sie Ihren Nachbarn, die IP-Adresse seiner VM zu ermitteln.
+* Prüfen Sie, ob diese IP-Adresse erreichbar ist.
+* Bitten Sie Ihren Nachbarn zu prüfen, ob der TCP-Port für SSH (22) in seiner VM geöffnet ist.
+* Loggen Sie sich mit SSH und Benutzer / Passwort ("mvhs" / "mvhs123") in der VM Ihres Nachbarn ein.
+* Erstellen Sie sich ein SSH-Schlüsselpaar, kopieren Sie den öffentlichen Schlüssel auf die VM Ihres Nachbarn und loggen Sie sich mit dem SSH-Schlüssel ein.
+* Kopieren Sie eine Datei auf die VM Ihres Nachbarn.
+
+
+<<<
 == Linux für Power User
 1. Allgemeines
 2. Arbeiten mit der Shell
@@ -2218,5 +2228,15 @@ $ sudo journalctl -S today -o json | \
 
 
 <<<
-== Arbeiten mit Text - Suchen / Ersetzen
-// TODO
+== Übung: Arbeiten im Netzwerk
+**Aufgaben:**
+[.step]
+* Bitten Sie Ihren Nachbarn, die IP-Adresse seiner VM zu ermitteln.
+* Prüfen Sie, ob diese IP-Adresse erreichbar ist.
+* Bitten Sie Ihren Nachbarn zu prüfen, ob der TCP-Port für SSH (22) in seiner VM geöffnet ist.
+* Loggen Sie sich mit SSH und Benutzer / Passwort ("mvhs" / "mvhs123") in der VM Ihres Nachbarn ein.
+* Erstellen Sie sich ein SSH-Schlüsselpaar, kopieren Sie den öffentlichen Schlüssel auf die VM Ihres Nachbarn und loggen Sie sich mit dem SSH-Schlüssel ein.
+* Kopieren Sie eine Datei auf die VM Ihres Nachbarn.
+
+**Lösung:**
+// TODO: an der MVHS ausprobieren
