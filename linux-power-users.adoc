@@ -124,7 +124,7 @@ image::thompson-ritchie.jpg[width=500, align="center"]
 [.step]
 * 1980er: Entstehung von vielen kommerziellen Unix-Varianten (z. B. SunOS / Solaris von Sun Microsystems, HP-UX von HP, AIX von IBM, SINIX von Siemens, Xenix von Microsoft, NeXTSTEP von NeXT) und kommerzielle Verbreitung von Unix
 * 1991: Linus Torvalds veröffentlicht die erste Version von Linux.
-* 1990er: Verbreitung von Linux und Entstehung der unterschiedlichen Linux-Distributionen (Redhat, SUSE, Debian...)
+* 1990er: Verbreitung von Linux und Entstehung der unterschiedlichen Linux-Distributionen (RedHat, SUSE, Debian...)
 * 2001: Apple veröffentlicht die erste Version von macOS (auf der Basis von NeXTSTEP und FreeBSD).
 * 2007: Apple veröffentlicht die erste Version von iOS.
 * seit den 2000ern: Konsolidierung der kommerziellen Unix-Varianten / Ablösung durch Linux
@@ -1240,7 +1240,7 @@ $ perl -nle '/(<regulärer Ausdruck>)/; print if $1 == <Zahl>'
 ** Konfigurationsdateien, z. B. Visual Studio Code
 ** den Datenaustausch zwischen Web-Anwendungen (die im Browser laufen) und Web-Servern
 ** Logdateien
-* Gute Beschreibung der Syntax: https://en.wikipedia.org/wiki/JSON#Syntax[hier] und https://stackoverflow.blog/2022/06/02/a-beginners-guide-to-json-the-data-format-for-the-internet/[hier]
+* Gute Beschreibung der Syntax: https://en.wikipedia.org/wiki/JSON#Syntax und https://stackoverflow.blog/2022/06/02/a-beginners-guide-to-json-the-data-format-for-the-internet/
 
 
 <<<
@@ -1745,7 +1745,7 @@ done < <(tail -f "$1")
 * _Namensauflösung_ (Zuordnung von Host- / Rechnernamen zu IP-Adressen) erfolgt normalerweise durch das _Domain Name System_ (DNS), die verwendeten DNS-Server werden auch über DHCP konfiguriert.
 * Alternativ kann das Netzwerk auch manuell / statisch konfiguriert werden:
 [.step]
-** Konfigurationsdateien für die Konfiguration der Interfaces, Dateiname(n) und Format sind abhängig von der Linux-Distribution (z. B. Ubuntu / Debian: `/etc/network/interfaces`, Redhat / CentOS / Fedora: `/etc/sysconfig/network-scripts/ifcfg-ethX`) bzw. der zur Verwaltung des Netzwerks verwendeten Software (z. B. https://wiki.archlinux.org/title/NetworkManager[_NetworkManager_] oder https://wiki.archlinux.org/title/Systemd-networkd[_systemd-networkd_]).
+** Konfigurationsdateien für die Konfiguration der Interfaces, Dateiname(n) und Format sind abhängig von der Linux-Distribution (z. B. Ubuntu / Debian: `/etc/network/interfaces`, RedHat / CentOS / Fedora: `/etc/sysconfig/network-scripts/ifcfg-ethX`) bzw. der zur Verwaltung des Netzwerks verwendeten Software (z. B. https://wiki.archlinux.org/title/NetworkManager[_NetworkManager_] oder https://wiki.archlinux.org/title/Systemd-networkd[_systemd-networkd_]).
 ** Zuordnung von Host- / Rechnernamen zu IP-Adressen in der Datei `/etc/hosts` (heute nur noch selten genutzt)
 ** Datei `/etc/resolv.conf` für die Konfiguration der DNS-Server.
 
@@ -1919,7 +1919,7 @@ WantedBy=timers.target
 <<<
 == Logging (1)
 [.step]
-* Logmeldungen vom Kernel, von den Diensten und von Benutzern werden vom `journald`-Dämonen gesammelt und (in binärer Form) in Dateien unter `/var/log/journal` geschrieben (max. 10% des verfügbaren Plattenplatzes oder 4GB).
+* Logmeldungen vom Kernel, von den Diensten und von Benutzern werden vom `journald`-Dämonen gesammelt und (in binärer Form) in Dateien unter `/var/log/journal` geschrieben (max. 10% des verfügbaren Plattenplatzes oder 4GiB).
 * können mit `journalctl` angeschaut / ausgegeben werden (auch als JSON)
 * viele Filtermöglichkeiten, unter anderem
 +
@@ -1957,7 +1957,7 @@ WantedBy=timers.target
 == Paket-Manager - Allgemeines
 [.step]
 * dienen dazu, auf möglichst einfache Weise und aus einer vertrauenswürdigen Quelle Software zu installieren (und zu deinstallieren)
-* Die einzelnen Linux-Distributionen nutzen (zum Teil) unterschiedliche Paket-Manager, siehe https://www.linode.com/docs/guides/linux-package-management-overview/#comparison-of-package-managers[hier] für einen Vergleich.
+* Die einzelnen Linux-Distributionen nutzen (zum Teil) unterschiedliche Paket-Manager => Ubuntu / Mint / Debian / Kali: _APT_,  Fedora / CentOS / RedHat: _DNF_, siehe https://www.linode.com/docs/guides/linux-package-management-overview/#comparison-of-package-managers[hier] für die vollständige Liste.
 
 
 <<<
@@ -1965,19 +1965,29 @@ WantedBy=timers.target
 [.step]
 * Software wird zu einem Paket zusammengefasst (ausführbare Programme, Bibliotheken, Skripte, Konfigurationsdateien) und ggf. für die Distribution angepasst (z. B. Dateipfade).
 * Für jedes Paket werden Abhängigkeiten definiert (welche Pakete zusätzlich benötigt werden), die automatisch mitinstalliert werden (können).
-* Es gibt ein sogenanntes _Repository_ mit allen verfügbaren Paketen (auf einem Installationsmedium wie CD / DVD / USB-Stick oder einem Server).
+* Es gibt ein (von der Distribution zur Verfügung gestelltes) _Repository_ mit allen verfügbaren Paketen (auf einem Installationsmedium wie CD / DVD / USB-Stick oder einem Server). Weitere Repositories (z. B. von Open-Source-Projekten oder Software-Herstellern) können hinzugefügt werden.
 * Auf jedem System existiert eine Datenbank mit allen installierten Paketen.
 * Alle installierten Pakete können mit einen Befehl aktualisiert werden, wobei Abhängigkeiten berücksichtigt werden (z. B. wenn eine bestimmte Software nicht mit der neuesten Version einer Bibliothek funktioniert).
 
 
-// TODO: Demo: Paket installieren
+<<<
+== Paket-Manager - Wichtige Befehle
+|===
+
+| Paket suchen (im Repository) | `apt\|dnf list '\*<Suchstring>*'`
+| Paket installieren (mit den Abhängigkeiten) | `apt\|dnf install <Paket>`
+| Paket deinstallieren | `apt\|dnf remove <Paket>`
+| installierte Paket auflisten | `apt\|dnf list --installed`
+| alle installierten Pakete aktualisieren | `apt\|dnf upgrade`
+| Liste der im Repository verfügbaren Pakete aktualisieren (nur APT) | `apt update`
+|===
 
 
 <<<
 == Troubleshooting (1)
 [.step]
 * Welcher Prozess verwendet am meisten CPU, Speicher, IO-Bandbreite? `csysdig` (Alternativen: `top`, `htop`, `iotop`, `iftop`, https://github.com/draios/sysdig/wiki/How-to-Install-Sysdig-for-Linux[Anleitung] zum Installieren von Sysdig)
-* Welcher Prozess hat eine bestimmte Datei / Netzwerkverbindung (Port) geöffnet?
+* Welcher Prozess hat eine bestimmte Datei / Netzwerkverbindung (Port) geöffnet? `sysdig` oder `lsof`
 +
 [source,sh]
 ----
@@ -1986,13 +1996,13 @@ $ lsof /etc/hosts
 $ sysdig -c lsof fd.port=53
 $ lsof -i :53
 ----
-* Welche Dateien / Netzwerkverbindungen hat ein bestimmter Prozess geöffnet?
+* Welche Dateien / Netzwerkverbindungen hat ein bestimmter Prozess geöffnet? `sysdig` oder `lsof`
 +
 [source,sh]
 ----
+$ sysdig -c lsof proc.name=sshd
 $ sysdig -c lsof proc.pid=12345
 $ lsof -p 12345
-$ sysdig -c lsof proc.name=sshd
 ----
 
 
@@ -2000,8 +2010,13 @@ $ sysdig -c lsof proc.name=sshd
 == Troubleshooting (2)
 [.step]
 * Wie voll ist ein Datenträger (ein Mount Point)? `df -h <Mount Point>`
-* Wie viel Platz belegt ein (Unter-)Verzeichnis? `du -hs <Verzeichnis>`
-* Welches (Unter-)Verzeichnis belegt den meisten Platz? `du -h --max-depth 1 | sort -rh`
+* Wie viel Platz belegt ein Verzeichnis? `du -hs <Verzeichnis>`
+* Welches (Unter-)Verzeichnis belegt den meisten Platz?
++
+[source,sh]
+----
+$ du -h --max-depth 1 | sort -rh
+----
 
 
 <<<
@@ -2010,7 +2025,7 @@ $ sysdig -c lsof proc.name=sshd
 * Wer ist momentan eingeloggt? `who`
 * Historie der Logins eines Benutzers: `last <Benutzername>` (greift auf die binäre Datei `/var/log/wtmp` zu)
 * Welche Befehle hat ein Benutzer ausgeführt? Shell-Historie, die Dateien `.bash_history` bzw. `.zsh_history` in dem Heimatverzeichnis des Benutzers
-* Welche Dateien / welche Verzeichnisse wurden zuletzt in einem bestimmten Verzeichnis geändert?
+* Welche Dateien / welche (Unter-)Verzeichnisse wurden zuletzt in einem bestimmten Verzeichnis geändert?
 +
 [source,sh]
 ----
@@ -2048,6 +2063,11 @@ head
 [.step]
 * Grafische Oberflächen: https://webmin.com/[Webmin] oder https://cockpit-project.org/[Cockpit]
 * https://en.wikipedia.org/wiki/Infrastructure_as_code[_Infrastructure as Code_] (eher geeignet für eine grössere Anzahl gleichartiger Rechner): https://www.ansible.com/[Ansible], https://www.chef.io/[Chef], https://www.puppet.com/[Puppet]
+
+
+<<<
+Demo:
+// TODO: Demo: Paket installieren
 
 
 <<<
