@@ -5,7 +5,7 @@ TYPE_SPEED=8
 
 # run the busybox container
 clear
-pei "podman run -d --name sleep-test --rm busybox sleep infinity"
+pei "podman run -d --name sleep-test --rm busybox:musl sleep infinity"
 pei "podman ps"
 pei "podman exec sleep-test ps -ef"
 wait
@@ -25,8 +25,7 @@ ENTRYPOINT ["/usr/bin/sleep", "infinity"]
 EOF
 pei "cat Dockerfile-distroless"
 wait
-# TODO: consti.linux -> mvhs
-pei "podman build -t distroless-test -f /home/consti.linux/Dockerfile-distroless /"
+pei "podman build -t distroless-test -f /home/mvhs/Dockerfile-distroless /"
 pei "podman run -d --name distroless-test --rm distroless-test"
 pei "podman top distroless-test"
 wait

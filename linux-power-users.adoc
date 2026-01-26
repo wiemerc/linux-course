@@ -2137,7 +2137,7 @@ head
 
 | `-d` | Container im Hintergrund starten
 | `-it` | mit Standardeingabe und einem (Pseudo-)Terminal starten, für interaktive Nutzung, z. B. eine Shell
-| `-v <Pfad auf dem Host>:<Pfad im Container>` | Verzeichnis auf dem Host im Container verfügbar machen, Pfade müssen absolut sein
+| `-v <Pfad auf dem Host>:<Pfad im Container>` | Datei / Verzeichnis auf dem Host im Container verfügbar machen, Pfade müssen absolut sein
 | `-p <Port auf dem Host>:<Port im Container>` | geöffnete Netzwerk-Port(s) des Containers auf dem Host verfügbar machen
 |===
 
@@ -2166,7 +2166,7 @@ FROM fedora:latest
 RUN dnf install -y podman
 ENTRYPOINT ["sleep", "infinity"]
 ----
-* Bauen des Images: `podman build -t <Name> <Verzeichnis, in dem das Dockerfile und alle evtl. benötigten Dateien liegen>`
+* Bauen des Images: `podman build -t <Name> <Verzeichnis>`, man muss das Verzeichnis angeben, in dem das Dockerfile und alle evtl. benötigten Dateien liegen
 
 
 <<<
@@ -2260,7 +2260,6 @@ $ sudo journalctl -S today -o json | \
 <<<
 == Übung: Arbeiten im Netzwerk
 **Aufgaben:**
-[.step]
 * Bitten Sie Ihren Nachbarn, die IP-Adresse seiner VM zu ermitteln.
 * Prüfen Sie, ob diese IP-Adresse erreichbar ist.
 * Bitten Sie Ihren Nachbarn zu prüfen, ob der TCP-Port für SSH (22) in seiner VM geöffnet ist.
