@@ -2174,7 +2174,6 @@ ENTRYPOINT ["sleep", "infinity"]
 **Unterlagen als PDF:**
 
 // QR code created with https://www.qrcode-monkey.com/
-// TODO: Update QR code
 image::download-link.svg[width=600, align="center"]
 Made with &#x2764;&#xFE0F;, https://asciidoc.org/[_AsciiDoc_], https://asciidoctor.org/[_Asciidoctor_], https://revealjs.com/[_reveal.js_], https://github.com/paxtonhare/demo-magic[_Demo Magic_] and lots of &#x2615;&#xFE0F;
 
@@ -2260,6 +2259,7 @@ $ sudo journalctl -S today -o json | \
 <<<
 == Übung: Arbeiten im Netzwerk
 **Aufgaben:**
+
 * Bitten Sie Ihren Nachbarn, die IP-Adresse seiner VM zu ermitteln.
 * Prüfen Sie, ob diese IP-Adresse erreichbar ist.
 * Bitten Sie Ihren Nachbarn zu prüfen, ob der TCP-Port für SSH (22) in seiner VM geöffnet ist.
