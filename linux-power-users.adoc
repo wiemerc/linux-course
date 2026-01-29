@@ -57,6 +57,7 @@
 * Voraussetzungen:
 [.step]
 ** Sicherer Umgang mit einem PC (Windows, Linux) oder einem Mac
+** Arbeiten auf der Kommandozeile (z. B. PowerShell) wünschenswert
 ** Erste Erfahrungen mit Linux wünschenswert
 
 
@@ -103,6 +104,7 @@ image::unix-license-plate.jpg[width=500, align="center"]
 
 [.step]
 * eine Familie von Betriebssystemen mit ähnlicher Architektur und ähnlichen Eigenschaften
+* heutzutage wichtigste Vertreter: Linux und macOS
 * auch eine Spezifikation für Betriebssysteme (Single UNIX Specification und POSIX)
 * und eine eigene Kultur :-)
 * Viele Technologien in der IT haben ihren Ursprung in Unix oder sind durch Unix verbreitet worden: TCP/IP, C/C++, reguläre Ausdrücke, Pipes, hierarchische Dateisysteme.
@@ -138,7 +140,7 @@ image::thompson-ritchie.jpg[width=500, align="center"]
 * wird üblicherweise als Distribution vertrieben, bestehend aus
 [.step]
 ** dem Linux-Kernel
-** Systemsoftware wie Dämonen Shells, Bibliotheken und Tools, zum Teil aus dem https://de.wikipedia.org/wiki/GNU[GNU]-Projekt
+** Systemsoftware wie Dämonen, Shells, Bibliotheken und Tools, zum Teil aus dem https://de.wikipedia.org/wiki/GNU[GNU]-Projekt
 ** einem Paketmanager
 ** einem Fenstersystem (X11, Wayland)
 ** einer Desktop-Umgebung (Gnome, KDE...)
@@ -165,7 +167,7 @@ image::thompson-ritchie.jpg[width=500, align="center"]
 
 
 <<<
-== Bücher / Ressourcen
+== Bücher
 [.step]
 * https://amzn.eu/d/cflxkta[_The Linux Command Line_]
 * https://amzn.eu/d/52aBXLf[_How Linux Works_]
@@ -173,27 +175,7 @@ image::thompson-ritchie.jpg[width=500, align="center"]
 
 
 <<<
-== Philosophie von Unix / Linux
-[.step]
-* "System von Programmierern für Programmierer"
-* Shell ist wichtige Benutzerschnittstelle.
-* Verwendung von Text als universelles Datenformat (in Dateien, Netzwerkprotokollen und als Schnittstelle zwischen Programmen)
-* Ressourcen (wie zum Beispiel angeschlossene Hardware und Netzwerkverbindungen) können als Datei angesprochen werden.
-
-
-<<<
-== Warum Shell?
-[.step]
-* zum Teil effizienter als eine GUI
-* Kleine Tools können kombiniert werden, um grössere Aufgaben zu lösen => Filter und Pipelines
-* Aufgaben können durch Skripte automatisiert werden.
-* Dokumentation von Aufgaben ist einfacher als bei einer GUI.
-* Arbeiten auf entfernten, über das Netzwerk verbundenen Rechnern, ist einfacher.
-
-
-<<<
 == Architektur von Linux
-// TODO: Beschreibung der Architektur? Folien zu Kernel, Treibern...?
 image::linux-architecture.svg[width=1400, align="center"]
 
 
@@ -202,7 +184,7 @@ image::linux-architecture.svg[width=1400, align="center"]
 [.step]
 * Dateisystem = Komponente im Kernel + Datenstrukturen auf dem Datenträger
 * Alle Dateien und Verzeichnisse sind in einem Baum angeordnet, der mit `/` (Root-Verzeichnis) beginnt.
-* Sie sind durch den _Pfad_ = Liste aller übergeordneter Verzeichnisse + der eigene Name eindeutig identifizierbar.
+* Sie sind durch den _Pfad_ = Liste aller übergeordneter Verzeichnisse + der eigene Name eindeutig identifizierbar, Trennzeichen ist der Schrägstrich `/`.
 * _Absoluter_ Pfad: beginnt mit dem Root-Verzeichnis (`/`), _relativer_ Pfad: relativ zum aktuellen Verzeichnis
 * Es können sich mehrere Dateisysteme (auf verschiedenen Datenträgern) an verschiedenen Stellen als Unterverzeichnisse in dem Baum befinden (_gemountet_).
 * Neben normalen Dateien gibt es auch noch spezielle Pseudo-Dateien: Links, Pipes, Devices, Sockets 
@@ -248,8 +230,8 @@ image::linux-architecture.svg[width=1400, align="center"]
 // ++[#00bfff] **/opt**: Programmpakete unabhängig von der Distro
 // 
 // ++[#00bfff] **/home**: Heimatverzeichnisse der Benutzer
-// +++[#00bfff] **/home/.local**: gleiche Hierarchie wie unter /usr, nur pro Benutzer
-// +++[#00bfff] **/home/.config**: Konfigurationsdateien pro Benutzer (teilweise)
+// +++[#00bfff] **/home/<Benutzer>/.local**: gleiche Hierarchie wie unter /usr, nur pro Benutzer
+// +++[#00bfff] **/home/<Benutzer>/.config**: Konfigurationsdateien pro Benutzer (teilweise)
 // 
 // ++[#00bfff] **/root**: Heimatverzeichnis von root
 // 
@@ -273,18 +255,20 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 <<<
 == Benutzer
 [.step]
-* sind durch eine (normalerweise) eindeutige Nummer bestimmt => _User Identifier_ (UID)
-* besitzen jeweils ein eigenes Unterverzeichnis im Verzeichnisbaum => Heimatverzeichnis (_Home Directory_), normalerweise unter `/home` (oder `/Users` auf macOS)
+* Um mit einem Linux-System zu arbeiten braucht man einen Benutzer (wird normalerweise bei der Installation angelegt).
+* Zusätzlich gibt es auch System-Benutzer für verschiedene Zwecke, z. B. Dämonen.
+* Benutzer werden durch ihren eindeutigen Namen und systemintern durch eine (normalerweise) eindeutige Nummer identifiziert => _User Identifier_ (UID)
+* besitzen jeweils ein eigenes Heimatverzeichnis (_Home Directory_), normalerweise unter `/home` (oder `/Users` auf macOS)
 * werden entweder in den Dateien `/etc/passwd` und `/etc/shadow` oder in einem Verzeichnisdienst wie LDAP verwaltet
 * sind mindestens Mitglied einer Gruppe => primäre Gruppe
 * können in weiteren (Limit ist meistens 65536) Gruppen Mitglied sein (in `/etc/group` oder in einem Verzeichnisdienst konfiguriert)
-* Benutzer mit der UID 0 (normalerweise `root`) haben Vollzugriff auf das System.
+* Spezieller Benutzer: _root_ mit der UID 0, Administrator, hat (normalerweise) Vollzugriff auf das System
 
 
 <<<
 == Gruppen
 [.step]
-* sind durch eine (normalerweise) eindeutige Nummer bestimmt => _Group Identifier_ (GID)
+* werden durch ihren eindeutigen Namen und systemintern durch eine (normalerweise) eindeutige Nummer identifiziert => _Group Identifier_ (GID)
 * werden entweder in der Datei `/etc/group` oder in einem Verzeichnisdienst wie LDAP verwaltet
 * Lokale Gruppen (in `/etc/group` verwaltet) können nur Benutzer, *nicht* andere Gruppen enthalten.
 
@@ -317,6 +301,16 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 * wird gestartet wenn man sich auf der Konsole eines Linux-Systems anmeldet, in einer Desktop-Umgebung ein Terminal-Programm öffnet oder sich über das Netz in ein System einloggt
 * besitzt auch eingebaute Befehle, Kontrollstrukturen und Variablen und stellt eine vollständige Programmiersprache dar (siehe _Schreiben von (einfachen) Shell-Skripten_)
 * mehrere Alternativen: sh, ksh, (t)csh, **Bash**, **Zsh**
+
+
+<<<
+== Warum Shell?
+[.step]
+* zum Teil effizienter als eine GUI
+* Kleine Tools können kombiniert werden, um grössere Aufgaben zu lösen => Filter und Pipelines
+* Aufgaben können durch Skripte automatisiert werden.
+* Dokumentation von Aufgaben ist einfacher als bei einer GUI.
+* Arbeiten auf entfernten, über das Netzwerk verbundenen Rechnern, ist einfacher.
 
 
 <<<
