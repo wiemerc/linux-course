@@ -297,7 +297,7 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 <<<
 == Was ist eine Shell?
 [.step]
-* ist das Kommandozeilen-Interface (_Command Line Interface_ = CLI) von Linux zum Ausführen von Programmen
+* ist das Kommandozeilen-Interface (_Command Line Interface_ = CLI) von Linux zum Eingeben von Befehlen und Ausführen von Programmen
 * wird gestartet wenn man sich auf der Konsole eines Linux-Systems anmeldet, in einer Desktop-Umgebung ein Terminal-Programm öffnet oder sich über das Netz in ein System einloggt
 * besitzt auch eingebaute Befehle, Kontrollstrukturen und Variablen und stellt eine vollständige Programmiersprache dar (siehe _Schreiben von (einfachen) Shell-Skripten_)
 * mehrere Alternativen: sh, ksh, (t)csh, **Bash**, **Zsh**
@@ -314,42 +314,59 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 
 
 <<<
-== Shell - Befehlszeile (1)
+== Aufbau einer Befehlszeile (1)
 image::command-syntax.svg[width=1200, align="center"]
 [.step]
-* besteht aus einem (oder mehreren => Pipelines) Befehl(en), Optionen und Argumenten
-* Syntax in Man Pages, Büchern, Dokumentation... und auch in diesem Kurs:
+* Shell-Prompt fordert zu Eingabe eines Befehls auf.
+* Befehlszeile besteht aus einem (oder mehreren => Pipelines) Befehl(en), Optionen und Argumenten.
+* Gängige Syntax zur Beschreibung von Befehlen:
 [.step]
 ** notwendige Argumente in spitzen Klammern: `<Datei>`
-** optionale Argumente in eckigen Klammern: `[-x]`
+** Optionen oder optionale Argumente in eckigen Klammern: `[-x]`
 ** Alternativen durch senkrechte Striche getrennt: `Datei|Verzeichnis`
 * Optionen starten mit `-` (Kurzform, ein Buchstabe) oder mit `--` (Langform, ein Wort / mehrere Wörter mit Bindestrich verbunden), Konvention der Befehle / Programme.
 
 
 <<<
-== Shell - Befehlszeile (2)
-* Befehle sind entweder in der Shell eingebaut (z. B. `cd`) oder werden im _Suchpfad_ gesucht (Umgebungsvariable `PATH`) und dann als separate Prozesse ausgeführt.
-* Befehle setzen beim Beenden den _Exit Status_ (Erfolg / Fehler) => spezielle Variable `$?`, 0 bedeutet Erfolg, > 0 bedeutet Fehler (die genauen Werte sind abhängig vom Programm)
-* laufendes Programm beenden: Ctrl-c
+== Aufbau einer Befehlszeile (2)
+[.step]
+* Wie werden Befehle gefunden? Drei Möglichkeiten:
+[.step]
+** Befehl ist in der Shell eingebaut (z. B. `cd`).
+** Befehl / Programm / Skript wird mit Pfad angegeben.
+** Befehl / Programm / Skript wird ohne Pfad angegeben und im _Suchpfad_  = Liste von Verzeichnissen mit Programmen / Befehlen / Skripten gesucht (Umgebungsvariable `PATH`).
+* Shell führt nicht eingebaute Befehle / Programme / Skripte als separate Prozesse aus.
+* Befehle / Programme / Skripte setzen beim Beenden den _Exit Status_ (Erfolg / Fehler) => spezielle Variable `$?`, 0 bedeutet Erfolg, > 0 bedeutet Fehler (die genauen Werte sind abhängig vom Befehl / Programm / Skript).
+* Laufende Befehle / Programm / Skripte können mit Ctrl-c beendet werden.
 * Shell beenden: Ctrl-d (oder `exit`)
 
 
 <<<
-== Shell - Editieren der Befehlszeile
+== Shell-Historie
+[.step]
+* Shell "merkt" sich ausgeführte Befehlszeilen (optional auch dauerhaft in einer Datei) => _Shell-Historie_
+* Blättern in der Historie: Pfeiltasten nach oben / unten
+* Suchen in der Historie: Ctrl-r
+* Befehlszeile aus der Historie vervollständigen (nur Zsh): Anfang eingeben + Pfeiltaste nach oben
+
+
+<<<
+== Editieren der Befehlszeile
+[text-left]
 Eingegebene oder aus der Historie zurückgeholte Befehlszeilen lassen sich editieren. Angegeben sind die Standard-Tastenkombinationen in Bash und Zsh, lassen sich ändern.
 
 [cols="3,1"]
 |===
 | Springen zum Zeilenanfang / Zeilenende | Ctrl-a / Ctrl-e
-| einzelnes Zeichen löschen, vorwärts / rückwärts | Ctrl-d / Backspace
-| Wort rückwärts löschen (in der Bash bis zum nächsten Leerzeichen, in der Zsh lässt sich konfigurieren, welche Zeichen zu einem Wort gehörig betrachtet werden (Variable `WORDCHARS`)) | Ctrl-w
-| Zeile bis zum Anfang löschen | Ctrl-u
+| einzelnes Zeichen vorwärts / rückwärts löschen | Ctrl-d / Backspace
+| Wort vorwärts / rückwärts löschen (in der Bash bis zum nächsten Leerzeichen, in der Zsh lässt sich konfigurieren, welche Zeichen zu einem Wort gehörig betrachtet werden (Variable `WORDCHARS`)) | Esc-d / Ctrl-w
+| Zeile bis zum Anfang / Ende löschen | Ctrl-u / Ctrl-k
 | gelöschte(s) Zeile / Wort einfügen | Ctrl-y
 |===
 
 
 <<<
-== Shell - Weitere Features (1)
+== Weitere Features (1)
 [.step]
 * Befehle können von einer Datei lesen (mit `<`) und ihre Ausgabe in eine Datei schreiben (mit `>`) bzw. an eine bestehende Datei anhängen (mit `>>`).
 * Befehle können mit `|` zu _Pipelines_ verkettet werden => Ausgabe des ersten Befehls ist Eingabe des zweiten Befehls.
@@ -360,7 +377,7 @@ Eingegebene oder aus der Historie zurückgeholte Befehlszeilen lassen sich editi
 
 
 <<<
-== Shell - Weitere Features (2)
+== Weitere Features (2)
 [.step]
 * Befehl mit seiner Ausgabe ersetzen (_Command Substitution_): `$()`
 +
@@ -368,7 +385,7 @@ Eingegebene oder aus der Historie zurückgeholte Befehlszeilen lassen sich editi
 ----
 echo "Hallo $(whoami)@$(hostname)"
 ----
-* Befehl als "Datei" für Ein- oder Ausgabe nutzen (_Process Substitution_, wenn man nicht die Standardein- / -ausgabe nutzen kann): `<()` und `>()`
+* Befehl als "Datei" für Ein- oder Ausgabe nutzen (_Process Substitution_, wenn man nicht eine Pipeline nutzen kann): `<()` und `>()`
 +
 [source,sh]
 ----
@@ -377,15 +394,16 @@ diff <(grep bla datei1) <(grep blub datei2)
 
 
 <<<
-== Shell - Wildcards (1)
+== Wildcards (1)
 [.step]
 * In der Shell kann mit unvollständigen Datei- und Verzeichnisnamen gearbeitet werden => Suchmuster oder _Wildcards_ (auch _Globbing_ genannt)
 * werden von der Shell und nicht von den Befehlen ausgewertet
-* icon:exclamation-circle[] Maximale Länge der Befehlszeile (bei Linux 2MB) beachten!
+* Beispiel: `*.txt` => alle Dateien, die mit `.txt` enden
+* icon:exclamation-circle[] Maximale Länge der Befehlszeile (2MB) beachten!
 
 
 <<<
-== Shell - Wildcards (2)
+== Wildcards (2)
 |===
 | Syntax | Bedeutung
 
@@ -399,7 +417,7 @@ diff <(grep bla datei1) <(grep blub datei2)
 
 
 <<<
-== Shell - Quoting / Escaping
+== Quoting / Escaping
 [.step]
 * Die meisten Sonderzeichen haben in der Shell (https://tldp.org/LDP/abs/html/special-chars.html[hier] die vollständige Liste für die Bash) eine besondere Bedeutung.
 * zwei Möglichkeiten wenn man sie "normal" verwenden will:
@@ -413,12 +431,14 @@ diff <(grep bla datei1) <(grep blub datei2)
 
 
 <<<
-== Shell - Historie
+== Umgebungsvariablen
 [.step]
-* Shell "merkt" sich ausgeführte Befehlszeilen (optional auch dauerhaft in einer Datei) => _Shell-Historie_
-* Blättern in der Historie: Pfeiltasten nach oben / unten
-* Suchen in der Historie: Ctrl-r
-* Befehlszeile aus der Historie vervollständigen (nur Zsh): Anfang eingeben + Pfeiltaste nach oben
+* Schlüssel-Wert-Paare bzw. eine besondere Form von Shell-Variablen (siehe auch Kapitel _Schreiben von (einfachen) Shell-Skripten_)
+* dienen zur Konfiguration der Shell selber und der ausgeführten Befehle / Programme / Skripte (werden an die von der Shell gestarteten Prozesse vererbt)
+* Variable setzen (in `.bash_profile` / `.zprofile` wenn sie permanent gesetzt sein soll, siehe nächste Folie): `export <VARIABLE>=<Wert>`, Name wird üblicherweise gross geschrieben, Wert muss man in Anführungszeichen setzen wenn er Leer- und / oder Sonderzeichen enthält
+* Wert ausgeben: `echo $<VARIABLE>`, z. B. `echo $PATH`
+* Variable löschen: `unset $<VARIABLE>`
+* alle gesetzen Variablen ausgeben: `env`
 
 
 <<<
@@ -429,6 +449,26 @@ diff <(grep bla datei1) <(grep blub datei2)
 [.step]
 ** `.bash_profile` / `.zprofile` für _Login_-Shells (beim Einloggen in der Desktop-Umgebung oder über SSH / `sudo`): Setzen von Umgebungsvariablen (werden an die interaktiven Shells vererbt) und einmaliges Starten von Programmen beim Einloggen
 ** `.bashrc` / `.zshrc` für _interaktive_ Shells (**nicht** in Skripten): Setzen von Shell-Optionen, Definition von Aliasen und Funktionen, Konfigurieren des Shell-Prompts
+
+
+<<<
+== Beispiele für Konfigurationsdateien
+[source,sh]
+----
+# .bash_profile
+export PATH=~/.local/bin:$PATH  <1>
+export LANG=de_DE.UTF-8  <2>
+
+# .bashrc
+PS1='\u@\h $ '  <3>
+shopt -s extglob  <4>
+alias ll='ls -l'  <5>
+----
+<1> Erweitern des Suchpfads um ein Verzeichnis (`~` ist das Heimatverzeichnis)
+<2> Setzen der Sprache
+<3> Konfigurieren des Prompts (`PS1` ist keine Umgebungsvariable weil sie nicht "exportiert" wurde)
+<4> Setzen einer Shell-Option
+<5> Definieren eines Aliases
 
 
 <<<
@@ -443,7 +483,6 @@ diff <(grep bla datei1) <(grep blub datei2)
 
 <<<
 == Welche Shell soll ich verwenden?
-// TODO: Zsh installieren damit ich sie zeigen kann, z. B. Befehle suchen mit Pfeiltaste, histdb...
 [.step]
 * Bash:
 [.step]
@@ -475,10 +514,13 @@ diff <(grep bla datei1) <(grep blub datei2)
 <<<
 == Demo: Interaktives Arbeiten mit der Shell
 // Historie
+// Befehle vervollständigen
+// Man Pages
+// Ausgeben von Text
 // Editieren der Befehlszeile
+// Umleiten in eine Datei
+// Ausgeben von Umgebungsvariablen (PATH)
 // Ctrl-c mit `cat`
-// Ctrl-z, `fg` mit `view`
-
 
 <<<
 == Linux für Power User
