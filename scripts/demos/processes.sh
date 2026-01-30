@@ -13,7 +13,7 @@ pei 'ps -u mvhs -o user,pid,ppid,lstart,stat,vsz,rsz,%cpu,%mem,args'
 wait
 
 clear
-pei 'ps -C systemd'
+pei 'ps -o user,pid,ppid,lstart,stat,vsz,rsz,%cpu,%mem,args -C systemd'
 pei 'pgrep -af systemd'
 wait
 

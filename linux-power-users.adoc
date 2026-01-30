@@ -957,7 +957,7 @@ Viel Spass! Lust auf mehr? https://overthewire.org/wargames/
 [.step]
 ** laufend \(R) => Prozess wird gerade ausgeführt oder ist bereit, ausgeführt zu werden (befindet sich in der Warteschlange, Anzahl der Prozesse in der Warteschlange ist die Last des Systems).
 ** unterbrechbar schlafend (S) => Prozess wartet auf ein Ereignis (z. B. Benutzereingabe, Netzwerk-IO oder Ablauf eines Timers) und kann durch Signale (siehe unten) aufgeweckt werden.
-** nicht unterbrechbar schlafend (D) => Prozess wartet auf die Beendigung einer Festplatten-IO-Operation.
+** nicht unterbrechbar schlafend (D) => Prozess wartet auf die Beendigung einer Massenspeicher-IO-Operation.
 ** gestoppt (T, t) => Prozess wurde angehalten (durch Ctrl-z in der Shell oder von einem Debugger).
 ** _Zombie_ (Z) => Prozess ist beendet aber Informationen werden noch im Kernel gehalten (für den Elternprozess).
 
@@ -965,17 +965,13 @@ Viel Spass! Lust auf mehr? https://overthewire.org/wargames/
 <<<
 == Prozesse - Speicherverwaltung
 [.step]
-* Jeder Prozess hat seinen eigenen _virtuellen Speicher_ (4GB bei 32-Bit-Systemen, 256TB bei 64-Bit-Systemen).
+* Jeder Prozess hat seinen eigenen _virtuellen Speicher_ (4GB bei 32-Bit-Systemen, 256TB bei 64-Bit-Systemen), in dem sich der Programmcode (des Programms und von evtl. verwendeten Programmbibliotheken) und die Daten befinden.
 * Virtueller Speicher ist viel grösser als der physikalische RAM-Speicher (bei 64-Bit-Systemen) => _Paging_
 [.step]
-** Es werden immer nur die aktuell benötigten Programmteile und Daten im Speicher gehalten.
-** Programmteile und Daten werden erst bei Bedarf, d. h. beim ersten Zugriff nachgeladen.
-** Bei Speicherknappheit werden geänderte, aber aktuell nicht benötigte Daten in den _Swap_-Bereich der Festplatte(n) ausgelagert und geänderte Daten im _Cache_ (Zwischenspeicher im RAM) in die Dateien geschrieben.
+** Programmteile und Daten werden erst bei Bedarf, d. h. beim ersten Zugriff in den Speicher geladen.
+** Bei Speicherknappheit wird der Speicher für momentan nicht genutzte Programmteile und Daten wiederverwendet.
+** Geänderte, aber momentan nicht genutzte Daten werden in den _Swap_-Bereich der Festplatte(n) ausgelagert und geänderte Daten im _Cache_ (Zwischenspeicher im RAM für die Massenspeicher) in die Dateien geschrieben.
 ** Falls das nicht ausreicht beendet Linux zwangsweise einzelne Prozesse, die viel Speicher belegen (der sogenannte https://medium.com/@msmkumar.eee/751cf7823de8[_OOM Killer_]).
-* In dem virtuellen Speicher eines Prozesses befinden sich
-[.step]
-** Programmcode (des Programms und von evtl. verwendeten Programmbibliotheken)
-** Daten
 
 
 <<<
@@ -997,7 +993,8 @@ Viel Spass! Lust auf mehr? https://overthewire.org/wargames/
 == Prozesse - Signale (1)
 [.step]
 * sind eine Möglichkeit, bei einem Prozess bestimmte Aktionen auszulösen
-* werden mit `kill -<Signal> <PID>` / `pkill -<Signal> <Name des Prozesses>` oder in Fehlerfällen vom Betriebssystem selber an einen Prozess geschickt (bei Hintergrundprozessen kann mit `%<Nummer>` anstelle der PID auch die Nummer verwendet werden, die die Shell vergibt)
+* werden vom Benutzer mit `kill -<Signal> <PID>` / `pkill -<Signal> <Name des Prozesses>` oder in Fehlerfällen vom Betriebssystem selber an einen Prozess geschickt
+* Bei Hintergrundprozessen in der Shell kann mit `kill -<Signal> %<Nummer>` anstelle der PID auch die Nummer verwendet werden, die die Shell vergibt.
 * Verschiedene Signale bewirken unterschiedliche Aktionen, siehe nächste Folie, in _kursiv_ die Signale, die vom Betriebssystem geschickt werden => Prozess wird normalerweise beendet.
 
 
