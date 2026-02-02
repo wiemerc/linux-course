@@ -447,7 +447,7 @@ diff <(grep bla datei1) <(grep blub datei2)
 * Dateien mit einer Standard-Konfiguration liegen in `/etc`, Dateien mit der benutzerspezifischen Konfiguration liegen im Heimatverzeichnis des Benutzers.
 * zwei verschiedene (relevante) Dateien:
 [.step]
-** `.bash_profile` / `.zprofile` für _Login_-Shells (beim Einloggen in der Desktop-Umgebung oder über SSH / `sudo`): Setzen von Umgebungsvariablen (werden an die interaktiven Shells vererbt) und einmaliges Starten von Programmen beim Einloggen
+** `.profile` / `.bash_profile` / `.zprofile` für _Login_-Shells (beim Einloggen in der Desktop-Umgebung oder über SSH / `sudo`): Setzen von Umgebungsvariablen (werden an die interaktiven Shells vererbt) und einmaliges Starten von Programmen beim Einloggen
 ** `.bashrc` / `.zshrc` für _interaktive_ Shells (**nicht** in Skripten): Setzen von Shell-Optionen, Definition von Aliasen und Funktionen, Konfigurieren des Shell-Prompts
 
 
@@ -1785,7 +1785,30 @@ done < <(tail -f "$1")
 
 
 <<<
-== Zugriff auf auf einen entfernten Rechner - SSH (1)
+== Netzwerk - Wichtige Befehle (1)
+|===
+
+| Netzwerk-Interfaces mit MAC-Adresse, IP-Adresse(n) und Netzmasken auflisten +
+(Namen, z. B. `eth0`, sind abhängig vom Hardware-Typ und der Linux-Distribution) | `ip addr`
+| Netzwerk-Interfaces starten / stoppen | `ip link set <Interface> up` bzw. `ip link set <Interface> down`
+| alle Netzwerk-Routen auflisten | `ip route`
+| Route zu einem bestimmten Ziel (IP-Adresse) ermitteln | `ip route get <IP-Adresse>`
+|===
+
+
+<<<
+== Netzwerk - Wichtige Befehle (2)
+|===
+
+| Erreichbarkeit eines Rechners im Netz prüfen | `ping <Hostname oder IP-Adresse>`
+| Erreichbarkeit eines TCP- oder UDP-Ports auf einem Rechner prüfen (mit `netcat`) | `nc -v <Hostname oder IP-Adresse> <Port-Nummer>` bzw. `nc -uv` für UDP
+| alle Netzwerkverbindungen und offene Ports auf dem lokalen Rechner mit den zugehörigen Prozessen auflisten | `netstat -pan` oder `ss -pan`
+| IP-Adresse zu einem Host- / Rechnernamen ermitteln ("Namen auflösen") | `host <Hostname>` oder `nslookup <Hostname>`
+|===
+
+
+<<<
+== _Optional_: Zugriff auf auf einen entfernten Rechner - SSH (1)
 [.step]
 * Die _Secure Shell_ (SSH) ermöglicht das Arbeiten auf einem über das Netzwerk verbundenen Rechner.
 * Man kann sich einloggen und interaktiv (in der Shell) arbeiten oder einzelne Befehle ausführen: `ssh <Benutzer>@<Hostname oder IP-Adresse> [<Befehl>]`
@@ -1798,7 +1821,7 @@ done < <(tail -f "$1")
 
 
 <<<
-== Zugriff auf auf einen entfernten Rechner - SSH (2)
+== _Optional_: Zugriff auf auf einen entfernten Rechner - SSH (2)
 [.step]
 * Mit der SSH können auch Dateien übertragen / kopiert werden:
 [.step]
@@ -1817,30 +1840,7 @@ $ scp <lokale Datei> <Benutzer>@<Hostname oder IP-Adresse>:<Pfad auf dem Zielrec
 
 
 <<<
-== Netzwerk - Weitere wichtige Befehle (1)
-|===
-
-| Netzwerk-Interfaces mit MAC-Adresse, IP-Adresse(n) und Netzmasken auflisten +
-(Namen, z. B. `eth0`, sind abhängig vom Hardware-Typ und der Linux-Distribution) | `ip addr`
-| Netzwerk-Interfaces starten / stoppen | `ip link set <Interface> up` bzw. `ip link set <Interface> down`
-| alle Netzwerk-Routen auflisten | `ip route`
-| Route zu einem bestimmten Ziel (IP-Adresse) ermitteln | `ip route get <IP-Adresse>`
-|===
-
-
-<<<
-== Netzwerk - Weitere wichtige Befehle (2)
-|===
-
-| Erreichbarkeit eines Rechners im Netz prüfen | `ping <Hostname oder IP-Adresse>`
-| Erreichbarkeit eines TCP- oder UDP-Ports auf einem Rechner prüfen (mit `netcat`) | `nc -v <Hostname oder IP-Adresse> <Port-Nummer>` bzw. `nc -uv` für UDP
-| alle Netzwerkverbindungen und offene Ports auf dem lokalen Rechner mit den zugehörigen Prozessen auflisten | `netstat -pan` oder `ss -pan`
-| IP-Adresse zu einem Host- / Rechnernamen ermitteln ("Namen auflösen") | `host <Hostname>` oder `nslookup <Hostname>`
-|===
-
-
-<<<
-== Übung: Arbeiten im Netzwerk
+== _Optional_: Übung: Arbeiten im Netzwerk
 **Aufgaben:**
 [.step]
 * Bitten Sie Ihren Nachbarn, die IP-Adresse seiner VM zu ermitteln.
@@ -2196,10 +2196,14 @@ head
 [source,docker]
 ----
 FROM fedora:latest
-RUN dnf install -y podman
+RUN dnf install -y xyz
 ENTRYPOINT ["sleep", "infinity"]
 ----
 * Bauen des Images: `podman build -t <Name> <Verzeichnis>`, man muss das Verzeichnis angeben, in dem das Dockerfile und alle evtl. benötigten Dateien liegen
+
+
+<<<
+== _Optional_: Demo zu Containern und Images
 
 
 <<<
