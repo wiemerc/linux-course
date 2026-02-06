@@ -41,7 +41,6 @@ wait
 
 rm -rf bla blub
 pei 'mkdir bla'
-pei 'touch bla/.hidden'
 pei 'head -c 10 /dev/zero > bla/zero'
 pei 'head -c 20 /dev/random > bla/random'
 pei 'ls -l bla/'

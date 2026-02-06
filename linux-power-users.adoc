@@ -600,26 +600,36 @@ image::file-metadata.svg[width=1200, align="center"]
 | Ausführen | x | 1
 |===
 
-* Besitzer und Gruppe lassen sich mit den Befehlen `chown` / `chgrp`, die Rechte mit `chmod` ändern (`chown`: nur Root, `chgrp`: nur der Besitzer, der auch Mitglied der neuen Gruppe sein muss oder Root, `chmod`: nur der Besitzer oder Root).
+* Zusätzlich gibt es auch noch die Flags SUID (4, s), SGID (2, s) und Sticky (1, t), siehe Folie _Bedeutung der Flags_.
+* Angabe der Zugriffsrechte mit Buchstaben bei `chmod`: 3 Gruppen, jeweils die Kombination der Rechte und Flags für User, Group und Other
 
 
 <<<
 == Zugriffsrechte (2)
 [.step]
-* Zusätzlich zu den Berechtigungen für User, Group und Other können feingranularere Berechtigungen (für weitere Benutzer und Gruppen) mit Hilfe von https://www.redhat.com/en/blog/linux-access-control-lists[_Access Control Lists_] (ACLs) vergeben werden (wie bei Windows).
-* Berechtigungen werden im Gegensatz zu Windows nicht vererbt, sondern werden über eine numerische Maske (die sogenannte _umask_) festgelegt, die bestimmt, welche Rechte neue Dateien / Verzeichnisse **nicht** bekommen sollen => Wert der Maske wird von 666 (Dateien) bzw. 777 (Verzeichnisse) abgezogen.
-* numerische Darstellung der Zugriffsrechte
+* Ausgabe von `ls -l`: 3 Dreiergruppen, Minuszeichen stehen für nicht vorhandene Rechte, gesetzte Flags stehen an der Stelle des Ausführrechts
+* numerische Darstellung der Zugriffsrechte: 4 Zahlen zwischen 0 und 7 (oktal)
 [.step]
-** 3 Bits für die Flags SUID (4), SGID (2) und Sticky (1), siehe Folie _Bedeutung der Flags / Bits_
-** jeweils 3 Bits für User, Group und Other (mit den Werten 4, 2 und 1, siehe vorherige Folie)
-** übliche (oktale) Darstellung: 4 Ziffern = Summen der Bitwerte
-* `stat` zeigt die Zugriffsrechte (auch) numerisch an.
+** 2. bis 4. Zahl = Summe der Rechte für User, Group und Other
+** 1. Zahl = Summe der Flags
+* Berechtigungen werden im Gegensatz zu Windows nicht vererbt, sondern werden über eine numerische Maske (die sogenannte _umask_) festgelegt, die bestimmt, welche Rechte neue Dateien / Verzeichnisse **nicht** bekommen sollen (Default-Wert ist 022 oder 002) => Wert der Maske wird von 666 (Dateien) bzw. 777 (Verzeichnisse) abgezogen.
+* Zusätzlich zu den Berechtigungen für User, Group und Other können feingranularere Berechtigungen (für weitere Benutzer und Gruppen) mit Hilfe von https://www.redhat.com/en/blog/linux-access-control-lists[_Access Control Lists_] (ACLs) vergeben werden (wie bei Windows).
+
+
+<<<
+== Zugriffsrechte - wichtige Befehle
+|===
+| Besitzer / Gruppe ändern (Besitzer: nur Root, Gruppe: nur der Besitzer, der auch Mitglied der neuen Gruppe sein muss oder Root) | `chown <Benutzer> <Datei / Verzeichnis>` / `chgrp <Gruppe> <Datei / Verzeichnis>`
+| Rechte ändern (nur der Besitzer oder Root), Rechte können mit Buchstaben oder numerisch angegeben werden, siehe unten | `chmod <Rechte> <Datei / Verzeichnis>`
+| Zugriffsrechte (auch) numerisch anzeigen | `stat <Datei / Verzeichnis>`
+| umask anzeigen / ändern | `umask [Wert]`
+|===
 
 
 <<<
 == Zugriffsrechte - Beispiel (1)
 |===
-| Rechte | Binäre Darstellung | Oktale Darstellung | `chmod`-Befehl | Ausgabe von `ls`
+| Rechte | Binäre Darstellung (Bits) | Oktale Darstellung | `chmod`-Befehl | Ausgabe von `ls`
 
 | gesetztes SUID-Flag, alle Rechte für den Besitzer, Lese- und Ausführrecht für die Gruppe und keine Rechte für alle anderen
 | 100 111 101 000
@@ -632,7 +642,7 @@ image::file-metadata.svg[width=1200, align="center"]
 <<<
 == Zugriffsrechte - Beispiel (2)
 |===
-| Rechte | Binäre Darstellung | Oktale Darstellung | `chmod`-Befehl | Ausgabe von `ls`
+| Rechte | Binäre Darstellung (Bits) | Oktale Darstellung | `chmod`-Befehl | Ausgabe von `ls`
 
 | gesetztes Sticky-Flag, Schreib- und Leserecht für den Besitzer und die Gruppe und Leserecht für alle anderen
 | 001 110 110 100
@@ -657,7 +667,7 @@ image::file-metadata-content.svg[width=800, align="center"]
 * Für jede Datei / jedes Verzeichnis gibt es eine sogenannte _Inode_ (systeminterne Datenstruktur, grüne und blaue Kästchen) mit einer pro Dateisystem eindeutigen Nummer.
 * Die Inodes enthalten die Metadaten und verweisen auf den eigentlichen Inhalt der Datei / des Verzeichnisses (graue Kästchen).
 * Inhalt eines Verzeichnisses: Zuordnung von Dateinamen zu Inode-Nummern => Name ist **nicht** Teil der Metadaten. +
-=> Umbenennen einer Datei / eines Verzeichnisses ändert die Modification Time des übergeordneten Verzeichnises. +
+=> Umbenennen / Löschen einer Datei / eines Verzeichnisses ändert die Modification Time des übergeordneten Verzeichnises. +
 => Man braucht dafür **keine** Schreibrechte auf die Datei, nur auf das Verzeichnis.
 --
 |===
@@ -671,19 +681,19 @@ image::file-metadata-content.svg[width=800, align="center"]
 
 | Lesen (r) | Inhalt kann gelesen werden. | Inhalt = Namen der Dateien / Unterverzeichnisse kann gelesen werden.
 | Schreiben (w) | Inhalt kann verändert werden. | Dateien / Unterverzeichnisse können angelegt / umbenannt / gelöscht werden, **aber nur wenn auch das Ausführrecht vergeben wurde**.
-| Ausführen (x) | Datei kann ausgeführt werden (wenn es sich um ein Programm oder Skript handelt). | Auf Dateien / Unterverzeichnisse kann zugegriffen werden, in das Verzeichnis kann gewechselt werden.
+| Ausführen (x) | Datei kann ausgeführt werden (wenn es sich um ein Programm oder Skript handelt). | Auf Dateien / Unterverzeichnisse kann zugegriffen werden (Metadaten / Inhalt), in das Verzeichnis kann gewechselt werden. Dateien / Unterverzeichnisse können angelegt / umbenannt / gelöscht werden, **aber nur wenn auch das Schreibrecht vergeben wurde**.
 |===
 
 
 <<<
-== Bedeutung der Flags / Bits
+== Bedeutung der Flags
 [cols="1,2,2"]
 |===
-| Flag / Bit | Ausführbare Datei | Verzeichnis
+| Flag | Ausführbare Datei | Verzeichnis
 
 | Set User ID (SUID) | wird mit den Rechten des Besitzer ausgeführt | -
-| Set Group ID (SGID) | wird mit den Rechten der Gruppe ausgeführt | Neu angelegte Dateien / Unterverzeichnisse erben die Gruppe des Verzeichnisses.
-| Sticky | - | Dateien / Unterverzeichnisse können nur vom Besitzer (oder Root) gelöscht werden.
+| Set Group ID (SGID) | wird mit den Rechten der Gruppe ausgeführt | Neu angelegte Dateien / Unterverzeichnisse erben die Gruppe des Verzeichnisses (und nicht die Gruppe des Benutzer).
+| Sticky | - | Dateien / Unterverzeichnisse können nur vom Besitzer (oder Root) gelöscht werden (und nicht von anderen Benutzern, die das Schreibrecht auf das Verzeichnis haben).
 |===
 
 
@@ -698,7 +708,7 @@ image::file-metadata-content.svg[width=800, align="center"]
 
 | Change Time (_ctime_) | Zeitpunkt der letzten Änderung der **Metadaten** (Anlegen der Datei, Änderung von Eigentümer / Gruppe oder Zugriffsrechten, auch Änderung des **Namens** obwohl dieser **nicht** zu den Metadaten gehört, eine Erklärung dazu gibt es https://unix.stackexchange.com/questions/211123/why-does-renaming-a-file-with-mv-command-alter-an-inodes-change-date-time[hier]) | `ls -lc`
 | Modification Time (_mtime_) | Zeitpunkt der letzten Änderung des **Inhalts** der Datei / des Verzeichnisse (durch Anlegen, Umbenennen oder Löschen von Dateien / Unterverzeichnissen) | `ls -l`
-| Access Time (_atime_) | Zeitpunkt des letzten lesenden Zugriffs (nicht immer aktuell) | `ls -u`
+| Access Time (_atime_) | Zeitpunkt des letzten lesenden Zugriffs (nicht immer aktuell) | `ls -lu`
 |===
 * Mit `touch` lassen sich die mtime und atime von Dateien / Verzeichnissen ändern (eine Datei wird angelegt wenn sie nicht existiert).
 
