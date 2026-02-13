@@ -17,8 +17,8 @@
 :stem:
 
 
+// TODO: Abgleich mit _The Linux Command Line_, 3. Auflage
 // TODO: Immer Platzhalter statt bla.txt... verwenden
-// TODO: Folien mit "coolen" Tools wie ack, rsync...?
 // TODO: Folie zu `xargs`?
 // TODO: Bildunterschriften sind in der Präsi immer noch nicht kleiner, im PDF schon.
 // TODO: Bilder ohne Rahmen
@@ -311,6 +311,7 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 * Aufgaben können durch Skripte automatisiert werden.
 * Dokumentation von Aufgaben ist einfacher als bei einer GUI.
 * Arbeiten auf entfernten, über das Netzwerk verbundenen Rechnern, ist einfacher.
+* https://www.youtube.com/watch?v=0PxTAn4g20U
 
 
 <<<
@@ -410,9 +411,10 @@ diff <(grep bla datei1) <(grep blub datei2)
 | `?` | ein beliebiges Zeichen
 | `*` | eine beliebige Anzahl von Zeichen
 | `[xyz]` |  eines mehrerer möglicher Zeichen, z. B. die Buchstaben x, y oder z
-| `[a-z]` | Bereich von Zeichen, z. B. die Buchstaben a bis z
-| `*.{jpg,png}` | Alternativen, z. B. alle Dateien, die entweder auf `.jpg` oder auf `.png` enden
-| `!(\*.txt)` (Bash mit der Option `extglob`) bzw. `^*.txt` (Zsh mit der Option `extendedglob`) | Negierung, z. B. alle Dateien, die nicht auf `.txt` enden
+| `[a-e]` | Bereich von Zeichen, z. B. die Buchstaben a bis e
+| `+[[:alpha:]]+`, `+[[:digit:]]+` | Zeichenklassen, z. B. Buchstaben oder Ziffern
+| `+*.{jpg,png}+` | Alternativen, z. B. alle Dateien, die entweder auf `.jpg` oder auf `.png` enden
+| `+!(*.txt)+` (Bash mit der Option `extglob`) bzw. `^*.txt` (Zsh mit der Option `extendedglob`) | Negierung, z. B. alle Dateien, die nicht auf `.txt` enden
 |===
 
 
@@ -750,6 +752,7 @@ zum Beispiel HTML, Bilder...
 | mehrere Dateien in ein Verzeichnis kopieren | `cp bla.txt blub.txt huhu/` | Verzeichnis muss existieren.
 | komplettes Verzeichnis (ggf. mit Unterverzeichnissen) kopieren | `cp -r bla blub` | Wenn das Zielverzeichnis nicht existiert wird es angelegt, ansonsten wird das Quellverzeichnis in das Zielverzeichnis **als Unterverzeichnis** kopiert.
 | Inhalt eines Verzeichnisses in ein bestehendes Verzeichnis kopieren | `cp -r bla/. blub/` | einschliesslich versteckter Dateien / Verzeichnisse
+// TODO: Optionen -u und -a
 |===
 
 
@@ -1101,6 +1104,7 @@ mvhs         950       1 Fri Jan 16 10:59:45 2026 S  25796 14096  0.0  0.3 /usr/
 * Text ist das universelle Datenformat in Linux (Dateien, Ein- und Ausgabe von Programmen).
 * Arbeiten mit Text(dateien) ist oft einfacher als mit binären Daten oder Datenbanken (und manchmal auch schneller).
 * Linux / Unix hat sehr mächtige Tools zum Arbeiten mit Text, alle Tools können mit Dateien oder in Pipelines (mit der Standardein- / -ausgabe) verwendet werden.
+* Tools ermöglichen die Automatisierung und das Arbeiten mit vielen Dateien (im Gegensatz zu Editoren).
 * oft drei Schritte in einer Pipeline: Filtern - Transformieren - Aggregieren
 
 
@@ -1132,7 +1136,7 @@ mvhs         950       1 Fri Jan 16 10:59:45 2026 S  25796 14096  0.0  0.3 /usr/
 |===
 
 | `-l` | nur Namen der Dateien ausgeben, die mindestens einen Treffer enthalten |
-| `-v` | Zeilen ausgeben, die den Suchstring **nicht** enthalten | Zusammen mit `-l` werden die Namen der Dateien ausgegeben, die mindestens eine Zeile enthalten, die den Suchstring **nicht** enthält.
+| `-v` | Zeilen ausgeben, die den Suchstring / regulären Ausdruck **nicht** enthalten | Zusammen mit `-l` werden die Namen der Dateien ausgegeben, die mindestens eine Zeile enthalten, die den Suchstring / regulären Ausdruck **nicht** enthält.
 | `-A<n>`, `-B<n>` | n Zeilen nach / vor jedem Treffer ausgeben (für den Kontext) |
 |===
 
@@ -1189,7 +1193,7 @@ $ perl -0777 -pi -e 's/<von>/<nach>/gs' <Datei>
 [.step]
 * oft der Schritt _Transformieren_ in einer Pipeline
 * entspricht `SELECT` in SQL
-* einzelne Spalte(n), mit festem Trennzeichen, `cut` oder `awk`, Spalten-Index `n` startet mit 1, mehrere Spalten durch Komma trennen, Default-Trennzeichen ist bei `cut` der Tabulator bzw. sind bei `awk` _Whitespaces_ (Leerzeichen, Tabulatoren, Zeilenumbrüche)
+* einzelne Spalte(n), mit festem Trennzeichen, `cut` oder `awk`, Spalten-Index `n` startet mit 1, mehrere Spalten durch Komma trennen, Default-Trennzeichen ist bei `cut` der Tabulator bzw. sind bei `awk` _Whitespaces_ (Leerzeichen, Tabulatoren)
 +
 [source,sh]
 ----
@@ -1221,7 +1225,15 @@ $ perl -nle '/(<regulärer Ausdruck>)/; print $1'
 ----
 $ perl -F<regulärer Ausdruck> -le 'print if $F[<n>] =~ /<regulärer Ausdruck>/'
 ----
-* regulären Ausdruck numerisch vergleichen, Vergleichsoperatoren sind `==`, `!=`, `<`, `>`, `\<=`, `>=`
+
+* eine bestimmte Spalte numerisch vergleichen, Vergleichsoperatoren sind `==`, `!=`, `<`, `>`, `\<=`, `>=`
++
+[source,sh]
+----
+$ perl -F<regulärer Ausdruck> -le 'print if $F[<n>] == <Zahl>'
+----
+
+* regulären Ausdruck numerisch vergleichen
 +
 [source,sh]
 ----
@@ -1244,7 +1256,7 @@ $ perl -nle '/(<regulärer Ausdruck>)/; print if $1 == <Zahl>'
 | `-u` | nur unterschiedliche Zeilen / Werte ausgeben
 | `-r` | absteigend sortieren
 | `-n` | numerisch sortieren
-| `t<Trennzeichen> -k<n>` | nach Spalte `n` sortieren, Spalten getrennt durch das angegebene Trennzeichen (Default: Whitespaces)
+| `-t<Trennzeichen> -k<n>` | nach Spalte `n` (beginnend bei 1) sortieren, Spalten getrennt durch das angegebene Trennzeichen (Default: Whitespaces)
 |===
 
 
@@ -1256,7 +1268,7 @@ $ perl -nle '/(<regulärer Ausdruck>)/; print if $1 == <Zahl>'
 [.step]
 ** Zeilen zählen: (`COUNT()` in SQL): `wc -l`
 ** nur unterschiedliche Zeilen zusammen mit ihrer Häufigkeit ausgeben (`GROUP BY` mit `COUNT()` in SQL): `uniq -c`, Zeilen müssen bereits sortiert sein
-** Zeilen aufsummieren (`SUM() in SQL`): `awk '{sum += $0} END{print sum}'`, Zeilen dürfen nur aus Zahlen bestehen
+** Zeilen aufsummieren (`SUM() in SQL`): `awk '{sum += $0} END{print sum}'`
 
 
 <<<
@@ -1272,6 +1284,7 @@ $ perl -nle '/(<regulärer Ausdruck>)/; print if $1 == <Zahl>'
 
 // TODO: split?
 // TODO: join?
+// TODO: paste?
 
 
 <<<
@@ -1281,9 +1294,9 @@ $ perl -nle '/(<regulärer Ausdruck>)/; print if $1 == <Zahl>'
 * wird verwendet für
 [.step]
 ** das Speichern von Anwendungsdaten
-** Konfigurationsdateien, z. B. Visual Studio Code
-** den Datenaustausch zwischen Web-Anwendungen (die im Browser laufen) und Web-Servern
+** Konfigurationsdateien
 ** Logdateien
+** den Datenaustausch zwischen Web-Anwendungen (die im Browser laufen) und Web-Servern
 * Gute Beschreibung der Syntax: https://en.wikipedia.org/wiki/JSON#Syntax und https://stackoverflow.blog/2022/06/02/a-beginners-guide-to-json-the-data-format-for-the-internet/
 
 
@@ -1291,8 +1304,8 @@ $ perl -nle '/(<regulärer Ausdruck>)/; print if $1 == <Zahl>'
 == _Optional_: JSON (2)
 [.step]
 * JSON-Daten können mit Tools wie https://jqlang.org/[_jq_], https://www.duckdb.org/[_DuckDB_] und https://de.wikipedia.org/wiki/PowerShell[_Microsoft Powershell_] sowie mit allen gängigen Programmiersprachen gefiltert, umgewandelt und verarbeitet werden.
-* Linux-Tools bieten zum Teil die Möglichkeit, ihre Ausgabe als JSON zu formatieren, die Ausgabe von vielen anderen Tools kann mit https://github.com/kellyjonbrazil/jc[`jc`] in JSON umgewandelt werden (auch bestimmte Dateien wie `/etc/passwd` werden unterstützt).
 * JSON + entsprechende Tools sind teilweise einfacher, lesbarer und robuster zu verwenden als unstrukturierter Text + Tools wie `grep`, `sed`, `awk` und `perl`.
+* Linux-Tools bieten zum Teil die Möglichkeit, ihre Ausgabe als JSON zu formatieren, die Ausgabe von vielen anderen Tools kann mit https://github.com/kellyjonbrazil/jc[`jc`] in JSON umgewandelt werden (auch bestimmte Dateien wie `/etc/passwd` werden unterstützt).
 
 
 <<<
@@ -1341,6 +1354,8 @@ jc ls -l /usr/bin | duckdb -c "select sum(size) from read_json('/dev/stdin') whe
 
 <<<
 == Übung: Arbeiten mit Text - Suchen / Filtern / Aggregieren
+// TODO: Übung in Schnitzeljagd integrieren?
+[.text-left]
 **Aufgaben:**
 [.step]
 * Die Ausgabe von `journalctl` soll nach Logmeldungen von `systemd` gefiltert werden und die Anzahl dieser Meldungen soll gezählt werden.
@@ -1817,6 +1832,9 @@ done < <(tail -f "$1")
 |===
 
 
+// TODO: Optionale Folien zu netcat, dig, curl?
+
+
 <<<
 == _Optional_: Zugriff auf auf einen entfernten Rechner - SSH (1)
 [.step]
@@ -2257,7 +2275,7 @@ $ sudo journalctl -S today | grep -P 'systemd\[\d+\]'
 +
 [source,sh]
 ----
-$ sudo journalctl -S today | perl -nale 'print if $F[4] =~ /systemd/'
+$ sudo journalctl -S today | perl -nale 'print if $F[4] =~ /systemd\[\d+\]/'
 ----
 
 ** mit JSON und `jq`. Wenn man `| .MESSAGE` weglässt werden die kompletten Objekte mit allen Attributen ausgegeben.
@@ -2280,11 +2298,18 @@ $ sudo journalctl -S today -o json | \
 == Arbeiten mit Text - Aggregieren
 * **Aufgabe**: Die Logmeldungen, die von `journalctl` ausgegeben werden, sollen nach dem Programm gruppiert und die Anzahl pro Programm absteigend sortiert ausgegeben werden.
 * **Lösung**:
-** mit Perl:
+** mit `cut`:
 +
 [source,sh]
 ----
-$ sudo journalctl -S today | perl -nale 'print $F[4]' | sort | uniq -c | sort -rn
+$ sudo journalctl -S today | cut -d' ' -f5 | sort | uniq -c | sort -rn
+----
+
+** mit `cut`, Programmnamen ohne die PIDs:
++
+[source,sh]
+----
+$ sudo journalctl -S today | cut -d' ' -f5 | cut -d'[' -f1 | sort | uniq -c | sort -rn
 ----
 
 ** mit Perl, Programmnamen ohne die PIDs:
