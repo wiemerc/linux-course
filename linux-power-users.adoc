@@ -1404,14 +1404,14 @@ jc ls -l /usr/bin | duckdb -c "select sum(size) from read_json('/dev/stdin') whe
 == Verwenden von Variablen
 [source, shell]
 ----
-$ s=abc  <1>
-$ x=1
-$ nlines=$(wc -l /tmp/blablub.txt)  <2>
-$ echo $abc  <3>
-$ (( x=$x+1 ))  <4>
-$ echo "x = $x"  <5>
+s=abc  <1>
+x=1
+nlines=$(wc -l /tmp/blablub.txt)  <2>
+echo $abc  <3>
+(( x=$x+1 ))  <4>
+echo "x = $x"  <5>
 ----
-<1> Zuweisung, wenn der String Leerzeichen enthält muss man Anführungszeichen verwenden.
+<1> Zuweisung, wenn der String Leerzeichen / Sonderzeichen enthält muss man Anführungszeichen verwenden.
 <2> Ausgabe des Befehls wird der Variablen zugewiesen.
 <3> Zugriff auf den Wert durch das vorangestellte Dollarzeichen
 <4> Arithmetik, Variablen, die einen String enthalten, werden in 0 umgewandelt.
@@ -1510,7 +1510,7 @@ Die allgemeine Syntax ist `[[ <Variable> <Operator> <Wert> ]]`.
 
 |===
 | Gleichheit / Ungleichheit | `==` / `!=`
-| Prüfen, ob eine Variable einen bestimmten String enthält | `== \*<String>*`, String in Anführungszeichen wenn er Leerzeichen enthält
+| Prüfen, ob eine Variable einen bestimmten String enthält | `== \*<String>*`, String in Anführungszeichen wenn er Leerzeichen / Sonderzeichen enthält
 | Vergleich mit einem regulären Ausdruck (nicht PCREs sondern eine abgespeckte Variante) | `=~`
 | grösser / kleiner | `-gt` / `>` / `-lt` / `<`
 | grösser gleich / kleiner gleich | `-ge` / `-le`
@@ -1549,7 +1549,7 @@ Zusätzlich zu den Vergleichen gibt es auch noch Tests, die Dateien / Verzeichni
 <<<
 == Funktionen
 [.step]
-* kapseln eine bestimmte Funktionalität, die an verschiedenen Stellen des Skripts benutzt werden kann (durch den Aufruf der Funktion)
+* kapseln eine bestimmte Funktionalität = Code-Block, die an verschiedenen Stellen des Skripts benutzt werden kann (durch den Aufruf der Funktion)
 * können Argumente und einen Rückgabewert besitzen
 * Beispiel: Aufsummieren von zwei Werten
 +
