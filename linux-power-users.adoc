@@ -1974,8 +1974,8 @@ WantedBy=timers.target
 == `systemd` Timers (3)
 [.step]
 * können systemweit (Dateien unter `/usr/lib/systemd/system/`, editieren mit `systemctl edit --full --force <Datei>`) oder für einen Benutzer (Dateien unter `~/.config/systemd/user/`, editieren mit `systemctl --user edit --full --force <Datei>`) angelegt werden
-* Ausgaben (Standardausgabe / Standardfehlerausgabe) werden vom `journald`-Dämonen gesammelt und können mit `journalctl` angeschaut werden.
 * Gute Anleitungen: https://wiki.archlinux.org/title/Systemd/Timers und https://unix.stackexchange.com/a/688512
+* Ausgaben (Standardausgabe / Standardfehlerausgabe) werden vom `journald`-Dämonen gesammelt und können mit `journalctl` angeschaut werden.
 
 
 <<<
