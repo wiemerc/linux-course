@@ -24,7 +24,6 @@
 // TODO: Bilder ohne Rahmen
 // TODO: Bilder / Screenshots auf Folien mit den Kapitelüberschriften / Übungen
 
-// Beschreibung
 // Linux für Power User
 // 
 // Wollten Sie schon immer verstehen, wie Linux wirklich funktioniert? Möchten Sie lernen, effektiver mit Ihrem Computer zu arbeiten, beruflich oder privat, indem Sie die Kommandozeile (Shell) und die entsprechenden Tools verwenden? Möchten Sie Routineaufgaben mit Skripten automatisieren?
@@ -50,7 +49,7 @@
 == Aufbau des Kurses / Vorkenntnisse
 [.step]
 * Kurs für alle, die zum Linux "Power User" werden wollen
-* Theorie und praktische Übungen mit einer virtuellen Maschine (https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux[_Windows Subsystem for Linux_]  (WSL))
+* Theorie und praktische Übungen mit einer virtuellen Maschine (https://www.virtualbox.org/[_VirtualBox_])
 * mehr Anwender- und weniger Administratorsicht
 * Kurs behandelt Linux, ein Teil der Inhalte sind aber auch für macOS (oder andere Unix-Varianten) anwendbar.
 * Unterlagen decken mehr Inhalte ab als der Kurs.
@@ -1869,6 +1868,7 @@ $ scp <lokale Datei> <Benutzer>@<Hostname oder IP-Adresse>:<Pfad auf dem Zielrec
 
 <<<
 == _Optional_: Übung: Arbeiten im Netzwerk
+[.text-left]
 **Aufgaben:**
 [.step]
 * Bitten Sie Ihren Nachbarn, die IP-Adresse seiner VM zu ermitteln.
@@ -2330,14 +2330,59 @@ $ sudo journalctl -S today -o json | \
 
 <<<
 == Übung: Arbeiten im Netzwerk
-**Aufgaben:**
+// TODO: an der MVHS testen
+* **Aufgaben:**
 
-* Bitten Sie Ihren Nachbarn, die IP-Adresse seiner VM zu ermitteln.
-* Prüfen Sie, ob diese IP-Adresse erreichbar ist.
-* Bitten Sie Ihren Nachbarn zu prüfen, ob der TCP-Port für SSH (22) in seiner VM geöffnet ist.
-* Loggen Sie sich mit SSH und Benutzer / Passwort ("mvhs" / "mvhs123") in der VM Ihres Nachbarn ein.
-* Erstellen Sie sich ein SSH-Schlüsselpaar, kopieren Sie den öffentlichen Schlüssel auf die VM Ihres Nachbarn und loggen Sie sich mit dem SSH-Schlüssel ein.
-* Kopieren Sie eine Datei auf die VM Ihres Nachbarn.
+** Bitten Sie Ihren Nachbarn, die IP-Adresse seiner VM zu ermitteln.
+** Prüfen Sie, ob diese IP-Adresse erreichbar ist.
+** Bitten Sie Ihren Nachbarn zu prüfen, ob der TCP-Port für SSH (22) in seiner VM geöffnet ist.
+** Loggen Sie sich mit SSH und Benutzer / Passwort ("mvhs" / "mvhs123") in der VM Ihres Nachbarn ein.
+** Erstellen Sie sich ein SSH-Schlüsselpaar, kopieren Sie den öffentlichen Schlüssel auf die VM Ihres Nachbarn und loggen Sie sich mit dem SSH-Schlüssel ein.
+** Kopieren Sie eine Datei auf die VM Ihres Nachbarn.
 
-**Lösung:**
-// TODO: an der MVHS ausprobieren
+* **Lösung:**
+
+** IP-Adresse
++
+[source,sh]
+----
+$ ip addr
+----
+
+** Prüfen der Erreichbarkeit
++
+[source,sh]
+----
+$ ping 192.168.x.x
+----
+
+** Prüfen, ob Port geöffnet ist
++
+[source,sh]
+----
+$ sudo netstat / ss -pan | grep :22  # alle Ports (-a)
+$ sudo netstat / ss -tlpn | grep :22  # filtert nach den relevanten Ports: nur TCP-Ports (-t) im Zustand LISTEN (-l)
+----
+
+** Einloggen mit Passwort
++
+[source,sh]
+----
+$ ssh mvhs@192.168.x.x
+----
+
+** Einloggen mit SSH-Schlüssel
++
+[source,sh]
+----
+$ ssh-keygen  # Erzeugen eines Schlüsselpaares, Passphrase eingeben
+$ ssh-copy-id mvhs@192.168.x.x  # öffentlichen Schlüssel auf das Zielsystem kopieren
+$ ssh mvhs@192.168.x.x  # *Passphrase*, nicht das Passwort eingeben
+----
+
+** Kopieren einer Datei
++
+[source,sh]
+----
+$ scp /etc/hosts mvhs@192.168.x.x:/tmp/
+----
