@@ -1,6 +1,5 @@
 *.html
 *.json
-*.svg
 *.pdf
 node_modules
 .venv*
