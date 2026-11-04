@@ -1046,7 +1046,6 @@ Viel Spass! Lust auf mehr? https://overthewire.org/wargames/
 
 <<<
 == Ausgabe von `ps` (1)
-// TODO: Wichtige Attribute als Tabelle
 // TODO: Namen in eckigen Klammern erklären
 [source,sh]
 ----
@@ -1417,7 +1416,17 @@ echo "x = $x"  <5>
 <5> _Variablenexpansion_ => Wert der Variablen wird in den String eingesetzt, nur in Strings, die durch doppelte Anführungszeichen begrenzt sind.
 
 
-// TODO: Suchen / Ersetzen, Teilstrings in Variablen?
+<<<
+== String-Transformationen
+[cols="1,2"]
+|===
+| Teilstring extrahieren | `${<Variable>:<Position>:<Länge>}`, Position beginnt bei 1.
+| Suchen / Ersetzen | `${<Variable>/<nach>/<durch>}`
+| Länge eines Strings | `${#<Variable>}`
+|===
+
+[.text-left]
+Die Variable wird dabei nicht verändert => Wert einer neuen Variablen zuweisen oder in einem Vergleich verwenden.
 
 
 <<<
