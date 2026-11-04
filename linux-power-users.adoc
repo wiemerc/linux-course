@@ -745,13 +745,22 @@ zum Beispiel HTML, Bilder...
 
 
 <<<
-== Wichtige Befehle - Dateien / Verzeichnisse kopieren (`cp`)
+== Wichtige Befehle - Dateien / Verzeichnisse kopieren (`cp`) (1)
 |===
 | einzelne Dateien kopieren | `cp bla.txt blub.txt` |
 | mehrere Dateien in ein Verzeichnis kopieren | `cp bla.txt blub.txt huhu/` | Verzeichnis muss existieren.
 | komplettes Verzeichnis (ggf. mit Unterverzeichnissen) kopieren | `cp -r bla blub` | Wenn das Zielverzeichnis nicht existiert wird es angelegt, ansonsten wird das Quellverzeichnis in das Zielverzeichnis **als Unterverzeichnis** kopiert.
+|===
+[.text-left]
+icon:warning[] `cp` und `mv` überschreiben existierende Dateien ohne Nachfrage!
+
+
+<<<
+== Wichtige Befehle - Dateien / Verzeichnisse kopieren (`cp`) (2)
+|===
 | Inhalt eines Verzeichnisses in ein bestehendes Verzeichnis kopieren | `cp -r bla/. blub/` | einschliesslich versteckter Dateien / Verzeichnisse
-// TODO: Optionen -u und -a
+| Verzeichnis sichern oder "archivieren" | `cp -a bla bla.bak` | Besitzer, Gruppe, Zugriffsrechte, Zeitstempel und Links bleiben erhalten.
+| existierende Dateien nur überschreiben wenn sie älter sind | `cp -u ...` |
 |===
 
 
@@ -762,8 +771,6 @@ zum Beispiel HTML, Bilder...
 | Datei(en) / Verzeichnis(se) in ein Verzeichnis verschieben | `mv bla.txt blub/ huhu/` | Zielverzeichnis muss existieren.
 | Inhalt eines Verzeichnisses in ein Verzeichnis verschieben | `mv bla/* blub/` | Zielverzeichnis muss existieren, versteckte Dateien / Verzeichnisse mit `bla/.*`
 |===
-[.text-left]
-icon:warning[] `cp` und `mv` überschreiben bestehende Dateien ohne Nachfrage!
 
 
 <<<
