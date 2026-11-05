@@ -1841,13 +1841,10 @@ done < <(tail -f "$1")
 |===
 
 | Erreichbarkeit eines Rechners im Netz prüfen | `ping <Hostname oder IP-Adresse>`
-| Erreichbarkeit eines TCP- oder UDP-Ports auf einem Rechner prüfen (mit `netcat`) | `nc -v <Hostname oder IP-Adresse> <Port-Nummer>` bzw. `nc -uv` für UDP
 | alle Netzwerkverbindungen und offene Ports auf dem lokalen Rechner mit den zugehörigen Prozessen auflisten | `netstat -pan` oder `ss -pan`
-| IP-Adresse zu einem Host- / Rechnernamen ermitteln ("Namen auflösen") | `host <Hostname>` oder `nslookup <Hostname>`
+| nur offene (im Zustand _LISTEN_) TCP- bzw. UDP-Ports auf dem lokalen Rechner mit den zugehörigen Prozessen auflisten | `netstat / ss -tlpn` bzw. `netstat / ss -ulpn`
+| IP-Adresse zu einem Host- / Rechnernamen ermitteln ("Namen auflösen") | `host <Hostname>` (nur DNS) oder `getent hosts <Hostname>` (auch `/etc/hosts` und andere Quellen wie `systemd-resolved`)
 |===
-
-
-// TODO: Optionale Folien zu netcat, dig, curl?
 
 
 <<<
@@ -1880,6 +1877,46 @@ $ scp <lokale Datei> <Benutzer>@<Hostname oder IP-Adresse>:<Pfad auf dem Zielrec
 ** nur Unterschiede / Änderungen werden übertragen
 ** sehr viele zusätzliche Optionen
 ** gut geeignet für Backups oder zum Synchronisieren von mehreren Systemen
+
+
+<<<
+== _Optional_: `netcat`
+[.step]
+* Kommandozeilentool zum Testen von und Fehlersuche in Netzwerken auf der Transportschicht (UDP / TCP)
+* kann sich mit beliebigen UDP- und TCP-Ports verbinden und kann als Server gestartet werden
+* liest Daten von der Standardeingabe und sendet sie über UDP oder TCP und schreibt empfangene Daten auf die Standardausgabe
+* nützlich unter anderem zum Testen, ob eine Verbindung zu einem bestimmten Port möglich ist (oder z. B. von einer Firewall blockiert wird)
+* Beispiele:
+[.step]
+** Erreichbarkeit eines TCP- oder UDP-Ports auf einem Rechner prüfen: `nc -v <Hostname oder IP-Adresse> <Port-Nummer>` bzw. `nc -uv` für UDP
+** TCP-Verbindung zwischen zwei Rechnern: `nc -vl <Hostname oder IP-Adresse> <Port-Nummer>` (Server) und `nc -v <Hostname oder IP-Adresse> <Port-Nummer>` (Client)
+
+
+<<<
+== _Optional_: `dig`
+[.step]
+* Kommandozeilen-Client für DNS, ähnlich wie `host` (oder `nslookup`), aber mit mehr Features
+* bietet eine detailliertere Ausgabe (die gut zu parsen ist), man kann gezielt einen bestimmten DNS-Server oder einen bestimmten Record-Typ abfragen
+* nützlich zur Fehlersuche und zum Automatisieren von Aufgaben in Scripts
+* Beispiele:
+[.step]
+** Rückwärtssuche (Namen zu einer IP-Adresse ermitteln): `dig -x 8.8.8.8`
+** Mail-Server zu einer Domäne ermitteln: `dig -t MX allianz.de`
+** rekursive Namensauflösung verfolgen (Trace-Modus): `dig +trace allianz.de`
+
+
+<<<
+== _Optional_: `curl`
+[.step]
+* Kommandozeilen-Client für HTTP(S)
+* kann zum Testen (z. B. ob eine bestimmte URL erreichbar ist), zur Fehlersuche und zum Automatisieren von Aufgaben (in Scripts, z. B. Übertragen von Dateien, Nutzen eines Webdienstes (API)) verwendet werden
+* unterstützt alle HTTP-Methoden (GET, POST...) und alle gängigen Authentifizierungsarten, Header können gesetzt, Daten gesendet und empfangen werden
+* Status-Informationen und empfangene Header werden auf die Standardausgabe ausgegeben.
+* Die zu sendenden Daten können von der Standardeingabe oder aus einer Datei gelesen, die empfangenen Daten auf die Standardausgabe oder in eine Datei geschrieben werden.
+* Beispiele:
+[.step]
+** Herunterladen einer Datei: `curl -O https://httpbin.org/robots.txt`
+** Senden von Daten im JSON-Format an eine API: `curl --json '{"bla": "blub"}' https://httpbin.org/post`
 
 
 <<<
