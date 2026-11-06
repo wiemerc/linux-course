@@ -80,7 +80,7 @@
 * Ausbildung zum Kommunikationselektroniker und Nachrichtentechnik-Studium
 * IT-Allrounder mit 30 Jahren Berufserfahrung
 * sehr viel Erfahrung mit Unix und Linux
-* arbeite bei der Allianz Technology im Bereich Applikationsmonitoring / Cloud-Infrastruktur
+* arbeite bei der Allianz Technology im Bereich Cloud-Infrastruktur / DevOps
 * Mastodon: https://mastodon.social/@wiemerc0x32 / GitHub: https://github.com/wiemerc
 
 
@@ -508,7 +508,7 @@ alias ll='ls -l'  <5>
 ** sind (kurze) Hilfeseiten zu allen auf einem System vorhandenen Befehlen, Konfigurationsdateien, Bibliotheks- und Systemroutinen
 ** sind in verschiedene Kapitel (Sections) aufgeteilt (1: Befehle, 2: Systemroutinen, 3: Bibliotheksroutinen, 5: Konfigurationsdateien)
 ** Aufruf mit `man [Kapitel] <Titel>`, Durchsuchen mit `man -k <Begriff>`
-* Google, ChatGPT, GitHub Copilot...
+* Google, ChatGPT, GitHub Copilot..., evtl. auch in der Shell integriert, z. B. https://github.com/loiccoyle/zsh-github-copilot oder https://github.com/sigoden/aichat
 * Cheat Sheets, z. B. https://cheat.sh/ oder https://tldr.sh/
 
 
