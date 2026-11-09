@@ -1,0 +1,22 @@
+= Zeitplan
+
+10 - 17 Uhr => 6 Stunden pro Tag
+
+== Tag 1 - 06:45
+|===
+
+| Allgemeines | 01:45
+| Arbeiten mit der Shell | 01:30
+| Arbeiten mit Dateien und Verzeichnissen | 02:45
+| Prozesse | 00:45
+|===
+
+== Tag 2 - 06:45
+|===
+
+| Arbeiten mit Text(dateien) | 02:15
+| Schreiben von (einfachen) Shell-Skripten | 01:45
+| Linux im Netzwerk | 00:30
+| Grundlagen der Systemadministration | 01:45
+| Container | 00:30
+|===
