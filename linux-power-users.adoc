@@ -168,7 +168,7 @@ image::thompson-ritchie.jpg[width=500, align="center"]
 <<<
 == Bücher
 [.step]
-* https://amzn.eu/d/cflxkta[_The Linux Command Line_]
+* https://amzn.eu/d/044UM2k8[_The Linux Command Line_]
 * https://amzn.eu/d/52aBXLf[_How Linux Works_]
 // TODO:???
 
@@ -273,10 +273,10 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 
 
 <<<
-== Übung: Arbeiten mit der VM (WSL)
+== Übung: Arbeiten mit der VM
 **Aufgaben:**
 [.step]
-* Öffnen Sie ein Windows-Terminal und geben Sie den Befehl `wsl` ein. Warten Sie bis die Linux-VM gestartet ist und Sie einen Shell-Prompt sehen.
+// TODO: VM einrichten
 * Geben Sie den Befehl `id` ein. Welche Ausgabe bekommen Sie?
 
 
@@ -445,11 +445,12 @@ diff <(grep bla datei1) <(grep blub datei2)
 <<<
 == Konfigurationsdateien
 [.step]
-* Dateien mit einer Standard-Konfiguration liegen in `/etc`, Dateien mit der benutzerspezifischen Konfiguration liegen im Heimatverzeichnis des Benutzers.
+* Dateien mit einer Standard-Konfiguration liegen in `/etc` (ohne den führenden Punkt), Dateien mit der benutzerspezifischen Konfiguration liegen im Heimatverzeichnis des Benutzers.
 * zwei verschiedene (relevante) Dateien:
 [.step]
 ** `.profile` / `.bash_profile` / `.zprofile` für _Login_-Shells (beim Einloggen in der Desktop-Umgebung oder über SSH / `sudo`): Setzen von Umgebungsvariablen (werden an die interaktiven Shells vererbt) und einmaliges Starten von Programmen beim Einloggen
 ** `.bashrc` / `.zshrc` für _interaktive_ Shells (**nicht** in Skripten): Setzen von Shell-Optionen, Definition von Aliasen und Funktionen, Konfigurieren des Shell-Prompts
+** `.zshenv` für _alle_ Shells (nur Zsh): Setzen von Umgebungsvariablen, die man immer haben möchte
 
 
 <<<
@@ -476,10 +477,12 @@ alias ll='ls -l'  <5>
 == `sudo`
 [.step]
 * Tool, um Befehle als Root / als anderer Benutzer auszuführen: `sudo [-u <Benutzer>] <Befehl>`
-* Ohne Befehl aber mit der Option `-i` bekommt man eine Shell mit Root-Rechten bzw. den Rechten des anderen Benutzers.
+* Ohne Befehl aber mit den Optionen `-i` / `-s` bekommt man eine Login-Shell / interaktive Shell mit Root-Rechten bzw. den Rechten des anderen Benutzers.
 * wird über die Datei `/etc/sudoers` konfiguriert (welche Benutzer / Gruppen dürfen `sudo` benutzen, ist ein Passwort erforderlich oder nicht, welche Befehle dürfen ausgeführt werden...)
-* Anzeigen von Benutzername, UID und Gruppe(n): `id`
-* Passwort ändern: `passwd`
+* Zwei dazu passende Befehle:
+[.step]
+** Anzeigen von Benutzername, UID und Gruppe(n): `id`
+** Passwort ändern: `passwd`
 
 
 <<<
@@ -494,7 +497,7 @@ alias ll='ls -l'  <5>
 * Zsh
 [.step]
 ** Standard-Shell in macOS und Kali Linux
-** mehr Features, Konfigurationsmöglichkeiten, Plugins und Themes z. B. von (https://ohmyz.sh/[_Oh My Zsh_])
+** mehr Features, Konfigurationsmöglichkeiten, Plugins und Themes z. B. von https://ohmyz.sh/[_Oh My Zsh_]
 * "exotischere" / experimentelle Shells: https://fishshell.com/[_fish_], https://learn.microsoft.com/de-de/powershell/[_Microsoft PowerShell_], https://www.nushell.sh/[_Nushell_]
 
 
@@ -602,13 +605,13 @@ image::file-metadata.svg[width=1200, align="center"]
 |===
 
 * Zusätzlich gibt es auch noch die Flags SUID (4, s), SGID (2, s) und Sticky (1, t), siehe Folie _Bedeutung der Flags_.
-* Angabe der Zugriffsrechte mit Buchstaben bei `chmod`: 3 Gruppen, jeweils die Kombination der Rechte und Flags für User, Group und Other
+* Angabe der Zugriffsrechte mit Buchstaben bei `chmod`: 3 Gruppen, jeweils die Kombination der Rechte und Flags für User, Group und Other, siehe Beispiele unten
 
 
 <<<
 == Zugriffsrechte (2)
 [.step]
-* Ausgabe von `ls -l`: 3 Dreiergruppen, Minuszeichen stehen für nicht vorhandene Rechte, gesetzte Flags stehen an der Stelle des Ausführrechts
+* Ausgabe von `ls -l`: 3 Gruppen, jeweils die Kombination der Rechte für User, Group und Other, Minuszeichen stehen für nicht vorhandene Rechte, gesetzte Flags stehen an der Stelle des Ausführrechts, siehe Beispiele unten
 * numerische Darstellung der Zugriffsrechte: 4 Zahlen zwischen 0 und 7 (oktal)
 [.step]
 ** 2. bis 4. Zahl = Summe der Rechte für User, Group und Other
@@ -961,9 +964,9 @@ Viel Spass! Lust auf mehr? https://overthewire.org/wargames/
 [.step]
 * sind Programme, die vom System ausgeführt werden oder auf ihre Ausführung / ein Ereignis warten
 * besitzen (zu einem bestimmten Zeitpunkt) eindeutige Nummern => _Process Identifier_ (PID)
-* haben immer einen Eltern-Prozess, von dem sie bestimmte Eigenschaften und Objekte (wie geöffnete Dateien) erben => Baumstruktur
+* haben immer einen Eltern-Prozess, von dem sie bestimmte Eigenschaften und Objekte (wie geöffnete Dateien und Umgebungsvariablen) erben => Baumstruktur
 * Wurzel des Baumes ist der `systemd`-Prozess (oder `init` / `launchd`) mit der PID 1 (wird vom System beim Booten gestartet).
-* Prozesse werden vom _Scheduler_ verwaltet und abwechselnd dem Prozessor / den Prozessoren bzw. den Prozessorkernen zugeteilt.
+* werden vom _Scheduler_ verwaltet und abwechselnd dem Prozessor / den Prozessoren bzw. den Prozessorkernen zugeteilt
 * sind immer einem Benutzer zugeordnet, dessen Rechte sie bekommen
 
 
@@ -1198,7 +1201,7 @@ $ perl -0777 -pi -e 's/<von>/<nach>/gs' <Datei>
 [.step]
 * oft der Schritt _Transformieren_ in einer Pipeline
 * entspricht `SELECT` in SQL
-* einzelne Spalte(n), mit festem Trennzeichen, `cut` oder `awk`, Spalten-Index `n` startet mit 1, mehrere Spalten durch Komma trennen, Default-Trennzeichen ist bei `cut` der Tabulator bzw. sind bei `awk` _Whitespaces_ (Leerzeichen, Tabulatoren)
+* einzelne Spalte(n) mit festem Trennzeichen, Spalten-Index `n` startet mit 1, mehrere Spalten durch Komma trennen, Default-Trennzeichen ist bei `cut` der Tabulator bzw. sind bei `awk` _Whitespaces_ (Leerzeichen, Tabulatoren)
 +
 [source,sh]
 ----
@@ -1220,7 +1223,7 @@ $ perl -nle '/(<regulärer Ausdruck>)/; print $1'
 
 
 <<<
-== Zeilen nach einem ausgeschnittenen String filtern - `perl`
+== _Optional_: Zeilen nach einem ausgeschnittenen String filtern - `perl`
 [.step]
 * oft der Schritt _Filtern_ in einer Pipeline
 * entspricht `WHERE` in SQL
@@ -1284,7 +1287,6 @@ $ perl -nle '/(<regulärer Ausdruck>)/; print if $1 == <Zahl>'
 * Verzeichnisse (rekursiv) vergleichen: `diff -r <Verzeichnis 1> <Verzeichnis 2>`
 * Zeilen ausgeben, die nur in der ersten / zweiten Datei vorkommen (Dateien müssen sortiert sein): `comm -23 <Datei 1> <Datei 2>` / `comm -13 <Datei 1> <Datei 2>`
 * Alternative zu `diff` mit schönerer Ausgabe: https://terminaltrove.com/delta/[`delta`]
-* entspricht `MINUS` in SQL (mehr oder weniger)
 
 
 // TODO: split?
@@ -1343,13 +1345,13 @@ $ perl -nle '/(<regulärer Ausdruck>)/; print if $1 == <Zahl>'
 <<<
 == _Optional_: JSON - Beispiele
 [.step]
-* Beispiel für `jq`: Ausgeben des Zeitstempels aller Dateien in einem Verzeichnis
+* Beispiel für `jc` und `jq`: Ausgeben (nur) des Zeitstempels aller Dateien in einem Verzeichnis
 +
 [source,sh]
 ----
 jc ls -l | jq '.[] | .date'
 ----
-* Beispiel für DuckDB / SQL: Aufsummieren der Grösse aller Dateien in einem Verzeichnis, die mit z beginnen:
+* Beispiel für `jc` und DuckDB / SQL: Aufsummieren der Grösse aller Dateien in einem Verzeichnis, die mit z beginnen:
 +
 [source,sh]
 ----
@@ -1363,8 +1365,8 @@ jc ls -l /usr/bin | duckdb -c "select sum(size) from read_json('/dev/stdin') whe
 [.text-left]
 **Aufgaben:**
 [.step]
-* Die Ausgabe von `journalctl` soll nach Logmeldungen von `systemd` gefiltert werden und die Anzahl dieser Meldungen soll gezählt werden.
-* Die Logmeldungen, die von `journalctl` ausgegeben werden, sollen nach dem Programm gruppiert und die Anzahl pro Programm absteigend sortiert ausgegeben werden.
+* Die Ausgabe von `journalctl` soll nach Logmeldungen von `systemd` gefiltert werden und die Anzahl dieser Meldungen soll ermittelt werden.
+* Die Logmeldungen sollen nach dem Programm gruppiert und die Anzahl pro Programm absteigend sortiert ausgegeben werden.
 
 
 <<<
@@ -1390,10 +1392,10 @@ jc ls -l /usr/bin | duckdb -c "select sum(size) from read_json('/dev/stdin') whe
 == Shell-Skripte
 [.step]
 * sind eine Folge von Befehlen mit Argumenten und Optionen
-* eventuell ergänzt um Variablen und Kontrollstrukturen
-* können Kommentare enthalten, starten mit `#` und gehen bis zum Ende der Zeile
+* können darüber hinaus Variablen und Kontrollstrukturen enthalten
+* können auch Kommentare enthalten, starten mit `#` und gehen bis zum Ende der Zeile
 * werden von der Shell genauso ausgeführt wie interaktiv eingegebene Befehle (mit allen Features wie Pipelines, Ein- / Ausgabeumleitung und Hintergrundprozesse)
-* stellen eine vollständige Programmiersprache dar, sind aber nur bedingt für größere Programmieraufgaben geeignet (besser Python oder Perl verwenden)
+* stellen eine vollständige Programmiersprache dar, sind aber nur bedingt für grössere Programmieraufgaben geeignet (besser Python oder Perl verwenden)
 * Die einzelnen Shells implementieren unterschiedliche "Dialekte", die nicht vollständig kompatibel sind => Auf Linux (und auch macOS) sollte man (unabhängig von der Shell, die man interaktiv nutzt) die Bash für Skripte nutzen.
 
 
@@ -1416,15 +1418,15 @@ echo $abc  <3>
 (( x=$x+1 ))  <4>
 echo "x = $x"  <5>
 ----
-<1> Zuweisung, wenn der String Leerzeichen / Sonderzeichen enthält muss man Anführungszeichen verwenden.
-<2> Ausgabe des Befehls wird der Variablen zugewiesen.
+<1> Zuweisung: Wenn der String Leerzeichen / Sonderzeichen enthält muss man Anführungszeichen verwenden.
+<2> _Command Substitution_: Ausgabe des Befehls wird der Variablen zugewiesen.
 <3> Zugriff auf den Wert durch das vorangestellte Dollarzeichen
-<4> Arithmetik, Variablen, die einen String enthalten, werden in 0 umgewandelt.
-<5> _Variablenexpansion_ => Wert der Variablen wird in den String eingesetzt, nur in Strings, die durch doppelte Anführungszeichen begrenzt sind.
+<4> Rechnen mit Variablen: Variablen, die einen String enthalten, werden in 0 umgewandelt.
+<5> _Variablenexpansion_: Wert der Variablen wird in den String eingesetzt, nur in Strings, die durch doppelte Anführungszeichen begrenzt sind.
 
 
 <<<
-== String-Transformationen
+== Variablen-Transformationen
 [cols="1,2"]
 |===
 | Teilstring extrahieren | `${<Variable>:<Position>:<Länge>}`, Position beginnt bei 1.
@@ -1433,7 +1435,7 @@ echo "x = $x"  <5>
 |===
 
 [.text-left]
-Die Variable wird dabei nicht verändert => Wert einer neuen Variablen zuweisen oder in einem Vergleich verwenden.
+Die Variable wird dabei **nicht** verändert => Wert einer neuen Variablen zuweisen oder in einem Vergleich verwenden.
 
 
 <<<
@@ -1566,6 +1568,7 @@ Zusätzlich zu den Vergleichen gibt es auch noch Tests, die Dateien / Verzeichni
 [.step]
 * kapseln eine bestimmte Funktionalität = Code-Block, die an verschiedenen Stellen des Skripts benutzt werden kann (durch den Aufruf der Funktion)
 * können Argumente und einen Rückgabewert besitzen
+* Funktionen sind auch nützlich als "Aliase" mit Argumenten.
 * Beispiel: Aufsummieren von zwei Werten
 +
 [source,sh]
@@ -1580,7 +1583,6 @@ summe 5 6  <4>
 <2> Zugriff auf die Argumente über `$1`, `$2`... (wie in einem Skript)
 <3> Rückgabe von Werten durch Ausgabe mit `echo` / `printf` (**nicht** mit `return`)
 <4> Aufruf der Funktion wie ein Programm
-* Funktionen sind auch nützlich als "Aliase" mit Argumenten.
 
 
 <<<
@@ -1702,13 +1704,13 @@ for entry in *; do
 done
 ----
 <1> Wurde das Skript mit einem Argument aufgerufen (`$#` enthält die Anzahl der Argument)?
-<2> `$0` ist der Name des Skripts.
+<2> `$0` ist der Name des Skripts, so wie es vom Benutzer aufgerufen wurde.
 <3> Beenden des Skripts mit dem _Exit Status_ 1
 <4> Wenn `cd` fehlschlägt (weil das Verzeichnis nicht existiert oder der Benutzer keine Berechtigung hat) wird `exit` ausgeführt (Abkürzung für `if ! cd ...`).
 
 
 <<<
-== Beispiel 2 – Logdateien überwachen
+== Beispiel 2 - Logdateien überwachen
 [.step]
 * **Aufgabe**: Eine Logdatei soll überwacht und beim Auftreten einer bestimmten Meldung ein Befehl ausgeführt werden.
 * **Inhalte**:
@@ -1980,19 +1982,23 @@ $ scp <lokale Datei> <Benutzer>@<Hostname oder IP-Adresse>:<Pfad auf dem Zielrec
 <<<
 == Starten und Stoppen eines Systems - `systemd` (2)
 [.step]
-* Vielfältige Konfigurationsmöglichkeiten pro Dienst (in den sogenannten _Unit Files_):
+* Jeder Dienst kann über die sogenannten _Unit Files_ konfiguriert werden:
 [.step]
 ** Run Level / Target, in dem der Dienst laufen soll
 ** Umgebungsvariablen
 ** Skripte / Programme, die vor / nach dem Starten / Stoppen ausgeführt werden sollen
 ** Limits für Ressourcen (CPU, Speicher, Plattenplatz)
-* Befehl zum Verwalten von Diensten (Starten, Stoppen, Anzeigen des Status...): `systemctl`
+* Befehl zum Verwalten von Diensten: `systemctl`
+[.step]
+** alle laufenden Dienste anzeigen: `systemctl status`
+** einen bestimmten Dienst anzeigen / starten / stoppen: `systemctl status|start|stop <name of the service>`
+** einen bestimmten Dienst aktivieren / deaktivieren: `systemctl enable|disable --now <name of the service>` (`--now` startet / stoppt den Dienst auch)
 
 
 <<<
 == `systemd` Timers (1)
 [.step]
-* bieten die Möglichkeit, Programme / Skripte periodisch zu bestimmten Zeiten auszuführen (von `systemd`), auch wenn der entsprechende Benutzer nicht eingeloggt ist
+* bieten die Möglichkeit, Programme / Skripte periodisch zu bestimmten Zeiten auszuführen (von `systemd`), auch wenn der Benutzer nicht eingeloggt ist
 * dienen oft dazu, Wartungsarbeiten (z. B. Backups, Löschen von temporären Dateien) automatisch auszuführen
 * werden mit den Rechten des jeweiligen Benutzers ausgeführt
 * ersetzen auf modernen Linux-Systemen die _Cron Jobs_
@@ -2035,12 +2041,12 @@ WantedBy=timers.target
 == Logging (1)
 [.step]
 * Logmeldungen vom Kernel, von den Diensten und von Benutzern werden vom `journald`-Dämonen gesammelt und (in binärer Form) in Dateien unter `/var/log/journal` geschrieben (max. 10% des verfügbaren Plattenplatzes oder 4GiB).
-* können mit `journalctl` angeschaut / ausgegeben werden (auch als JSON)
+* können mit `journalctl` angeschaut / ausgegeben werden (auch als JSON, siehe Übung _Arbeiten mit Text_)
 * viele Filtermöglichkeiten, unter anderem
 +
 |===
 
-| Zeitraum | `--since` (`-S`) / `--until` (`-U`)
+| Zeitraum (auch Abkürzungen wie `today`, gleiches Format wie bei den `systemd` Timers) | `--since` (`-S`) / `--until` (`-U`)
 | Dienst | `--unit` (`-u`)
 | _Facility_ (`kern`, `user`, `auth`, ...) | `--facility`
 | Priorität (von `debug` bis `emerg`) | `--priority` (`-p`)
@@ -2051,7 +2057,7 @@ WantedBy=timers.target
 == Logging (2)
 [.step]
 * Benutzer können mit dem Befehl `logger` selber Logmeldungen schreiben (z. B. in Skripten).
-* Unter Umständen gibt es auch noch Logdateien unter `/var/log`.
+* Unter Umständen gibt es auch noch Logdateien unter `/var/log`, die nicht von `journald` geschrieben werden.
 
 
 <<<
@@ -2070,7 +2076,7 @@ WantedBy=timers.target
 * Folgende Möglichkeiten zum Einhängen:
 [.step]
 ** beim Booten durch den `systemd`, Gerätedateien und zugehörige Mount Points müssen in der Datei `/etc/fstab` aufgelistet sein
-** automatisch (durch einen Dämonen) beim Einlegen / Anschliessen des Datenträgers (CDs / DVDs, USB-Sticks, Wechselfestplatten), üblicherweise unter `/media` oder `/run/media`
+** automatisch (durch einen Dämonen) beim Einlegen / Anschliessen des Datenträgers (CDs / DVDs, USB-Sticks, Wechselfestplatten), diese Medien werden üblicherweise unter `/media` oder `/run/media` eingehängt
 ** manuell mit dem `mount`-Befehl (z. B. `mount /dev/sdb1 /data`), Aushängen mit `umount`
 * Aushängen ist nur möglich wenn niemand mehr auf Dateien / Verzeichnisse auf dem Datenträger zugreift (auch nicht als aktuelles Verzeichnis).
 
@@ -2096,7 +2102,7 @@ WantedBy=timers.target
 == Paket-Manager - Wichtige Befehle
 |===
 
-| Paket suchen (im Repository) | `apt\|dnf list '\*<Suchstring>*'`
+| Paket suchen (im Repository, auch mit Wildcards) | `apt\|dnf list <Suchstring>`
 | Paket installieren (mit den Abhängigkeiten) | `apt\|dnf install <Paket>`
 | Paket deinstallieren | `apt\|dnf remove <Paket>`
 | installierte Paket auflisten | `apt\|dnf list --installed`
@@ -2112,7 +2118,7 @@ WantedBy=timers.target
 <<<
 == Troubleshooting (1)
 [.step]
-* Welcher Prozess verwendet am meisten CPU, Speicher, IO-Bandbreite? `csysdig` (Alternativen: `top`, `htop`, `iotop`, `iftop`, https://github.com/draios/sysdig/wiki/How-to-Install-Sysdig-for-Linux[Anleitung] zum Installieren von Sysdig)
+* Welcher Prozess verwendet am meisten CPU, Speicher, IO-Bandbreite (Platten- oder Netzwerkzugriffe)? `csysdig` (Alternativen: `top`, `htop`, `iotop`, `iftop`, https://github.com/draios/sysdig/wiki/How-to-Install-Sysdig-for-Linux[Anleitung] zum Installieren von Sysdig)
 * Welcher Prozess hat eine bestimmte Datei / Netzwerkverbindung (Port) geöffnet? `sysdig` oder `lsof`
 +
 [source,sh]
@@ -2142,7 +2148,7 @@ $ ls -l /proc/12345/fd
 +
 [source,sh]
 ----
-$ du -h --max-depth 1 | sort -rh
+$ du -h --max-depth 1 <directory> | sort -rh
 ----
 
 
@@ -2171,13 +2177,13 @@ head
 == `/proc`-Dateisystem
 [.step]
 * ist ein _virtuelles_ Dateisystem, das vom Kernel zur Laufzeit des Systems angelegt und aktualisiert wird
+* hauptsächlich nützlich für Debugging und Troubleshooting
 * Inhalte, bereitgestellt in einzelnen Dateien, teilweise in Unterverzeichnissen:
 [.step]
 ** Informationen zur Hardware wie CPU und Speicher (`/proc/cpuinfo` und `/proc/meminfo`)
 ** Informationen zu den laufenden Prozessen (ein Unterverzeichnis pro Prozess) wie die Befehlszeile, mit der der Prozess gestartet wurde (`/proc/<PID>/cmdline`) und die gesetzen Umgebungsvariablen (`/proc/<PID>/environ`)
 ** zur Laufzeit des Systems änderbare Kernel-Parameter wie z. B. Netzwerk-Einstellungen (`/proc/sys/...`)
 * Dateien können mit `cat` gelesen und mit `echo ... > /proc/sys/...` verändert werden.
-* hauptsächlich nützlich für Debugging und Troubleshooting
 
 
 <<<
@@ -2271,7 +2277,7 @@ head
 <<<
 == _Optional_: Images bauen
 [.step]
-* Aufbau eines Images wird durch ein Dockerfile beschrieben.
+* Aufbau eines Images (zu installierende Software, welche Dateien hinzugefügt werden sollen usw.) wird durch ein Dockerfile beschrieben.
 * Beispiel (siehe die https://docs.docker.com/reference/dockerfile/[Referenz-Dokumentation] für alle Möglichkeiten):
 +
 [source,docker]
@@ -2381,35 +2387,27 @@ $ sudo journalctl -S today -o json | \
 ----
 
 
-<<<
-== Übung: Arbeiten im Netzwerk
 // TODO: an der MVHS testen
-* **Aufgaben:**
-
-** Bitten Sie Ihren Nachbarn, die IP-Adresse seiner VM zu ermitteln.
-** Prüfen Sie, ob diese IP-Adresse erreichbar ist.
-** Bitten Sie Ihren Nachbarn zu prüfen, ob der TCP-Port für SSH (22) in seiner VM geöffnet ist.
-** Loggen Sie sich mit SSH und Benutzer / Passwort ("mvhs" / "mvhs123") in der VM Ihres Nachbarn ein.
-** Erstellen Sie sich ein SSH-Schlüsselpaar, kopieren Sie den öffentlichen Schlüssel auf die VM Ihres Nachbarn und loggen Sie sich mit dem SSH-Schlüssel ein.
-** Kopieren Sie eine Datei auf die VM Ihres Nachbarn.
-
-* **Lösung:**
-
-** IP-Adresse
+<<<
+== Übung: Arbeiten im Netzwerk (1)
+* **Aufgabe**: Bitten Sie Ihren Nachbarn, die IP-Adresse seiner VM zu ermitteln.
+* **Lösung**:
 +
 [source,sh]
 ----
 $ ip addr
 ----
 
-** Prüfen der Erreichbarkeit
+* **Aufgabe**: Prüfen Sie, ob diese IP-Adresse erreichbar ist.
+* **Lösung**:
 +
 [source,sh]
 ----
 $ ping 192.168.x.x
 ----
 
-** Prüfen, ob Port geöffnet ist
+* **Aufgabe**: Bitten Sie Ihren Nachbarn zu prüfen, ob der TCP-Port für SSH (22) in seiner VM geöffnet ist.
+* **Lösung**:
 +
 [source,sh]
 ----
@@ -2417,14 +2415,19 @@ $ sudo netstat / ss -pan | grep :22  # alle Ports (-a)
 $ sudo netstat / ss -tlpn | grep :22  # filtert nach den relevanten Ports: nur TCP-Ports (-t) im Zustand LISTEN (-l)
 ----
 
-** Einloggen mit Passwort
+
+<<<
+== Übung: Arbeiten im Netzwerk (2)
+* **Aufgabe**: Loggen Sie sich mit SSH und Benutzer / Passwort ("mvhs" / "mvhs123") in der VM Ihres Nachbarn ein.
+* **Lösung**:
 +
 [source,sh]
 ----
 $ ssh mvhs@192.168.x.x
 ----
 
-** Einloggen mit SSH-Schlüssel
+* **Aufgabe**: Erstellen Sie sich ein SSH-Schlüsselpaar, kopieren Sie den öffentlichen Schlüssel auf die VM Ihres Nachbarn und loggen Sie sich mit dem SSH-Schlüssel ein.
+* **Lösung**:
 +
 [source,sh]
 ----
@@ -2433,7 +2436,8 @@ $ ssh-copy-id mvhs@192.168.x.x  # öffentlichen Schlüssel auf das Zielsystem ko
 $ ssh mvhs@192.168.x.x  # *Passphrase*, nicht das Passwort eingeben
 ----
 
-** Kopieren einer Datei
+* **Aufgabe**: Kopieren Sie eine Datei auf die VM Ihres Nachbarn.
+* **Lösung**:
 +
 [source,sh]
 ----
