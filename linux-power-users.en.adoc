@@ -1,0 +1,2410 @@
+// cSpell:dictionaries: de-de
+= Linux for Power Users
+:imagesdir: images
+// To turn off figure numbering
+:figure-caption!:
+:revealjsdir: https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.9.2
+:revealjs_theme: white
+:revealjs_width: 1800
+:revealjs_height: 1000
+:revealjs_margin: 0
+:revealjs_hash: true
+:revealjs_center: false
+:revealjs_pdfseparatefragments: false
+:source-highlighter: highlight.js
+:highlightjs-theme: https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css
+:icons: font
+:stem:
+
+
+// TODO: Immer Platzhalter statt bla.txt... verwenden
+// TODO: Folie zu `xargs`?
+// TODO: Bildunterschriften sind in der Präsi immer noch nicht kleiner, im PDF schon.
+// TODO: Bilder ohne Rahmen
+// TODO: Bilder / Screenshots auf Folien mit den Kapitelüberschriften / Übungen
+
+
+<<<
+== Course Structure / Prerequisites
+[.step]
+* A course for anyone who wants to become a Linux "power user"
+* Theory and hands-on exercises using a virtual machine (https://www.virtualbox.org/[_VirtualBox_])
+* A more user-oriented and less administrator-oriented perspective
+* This course covers Linux, but some of the content is also applicable to macOS (or other Unix variants).
+* The course materials cover more content than the course itself.
+* Requirements:
+[.step]
+** Proficient use of a PC (Windows, Linux) or a Mac
+** Preferably experience working on the command line (e.g. PowerShell)
+** Preferably some previous experience with Linux
+
+
+<<<
+== Contents
+[.step]
+1. Introduction
+2. Working with the Shell (Bash, Zsh)
+3. Working with Files and Directories
+4. Processes
+5. Working with Text (Files) (using commands such as `grep`, `sed`, and `awk`)
+6. Writing (Simple) Shell Scripts
+7. Linux on a Network
+8. Fundamentals of System Administration
+9. Containers
+
+
+== Linux for Power Users
+1. **Introduction**
+2. Working with the Shell (Bash, Zsh)
+3. Working with Files and Directories
+4. Processes
+5. Working with Text (Files)
+6. Writing (Simple) Shell Scripts
+7. Linux on a Network
+8. Fundamentals of System Administration
+9. Containers
+
+
+<<<
+== What is Unix?
+image::unix-license-plate.jpg[width=500,,  align="center"]
+[.small]#Source: Wikipedia (https://en.wikipedia.org/wiki/Live_Free_or_Die)#
+
+[.step]
+* a family of operating systems with similar architecture and similar features
+* most important family members today: Linux and macOS
+* as well as specifications for operating systems (Single UNIX Specification and POSIX)
+* and a culture of its own :-)
+* Many IT technologies have their origins in Unix or were popularized by Unix: TCP/IP, C/C++, regular expressions, pipes, and hierarchical file systems.
+
+
+<<<
+== A (Brief) History of Unix (1)
+image::thompson-ritchie.jpg[width=500,,  align="center"]
+[.small]#Source: Wikipedia (https://en.wikipedia.org/wiki/Unix)#
+
+[.step]
+* 1969: The first version of Unix (developed by Ken Thompson and Dennis Ritchie) is created at Bell Labs (AT&T's research division) => System V Unix (**Linux**, Solaris, HP-UX...)
+* 1975: The University of Berkeley develops its own version (based on the AT&T version) => BSD Unix (**macOS**, FreeBSD...)
+* 1983: The GNU Project is launched.
+
+
+<<<
+== A (Brief) History of Unix (2)
+[.step]
+* 1980s: Emergence of many commercial Unix variants (e.g. SunOS/Solaris from Sun Microsystems, HP-UX from HP, AIX from IBM, SINIX from Siemens, Xenix from Microsoft, NeXTSTEP from NeXT) and the commercial spread of Unix
+* 1991: Linus Torvalds releases the first version of Linux.
+* 1990s: The spread of Linux and the emergence of various Linux distributions (Red Hat, SUSE, Debian...)
+* 2001: Apple releases the first version of macOS (based on NeXTSTEP and FreeBSD).
+* 2007: Apple releases the first version of iOS.
+* Since the 2000s: Consolidation of commercial Unix variants / Replacement by Linux
+
+
+<<<
+== What is Linux?
+[.step]
+* a free and open-source Unix-like operating system for desktops, servers, and smartphones (Android)
+* originally developed by Linus Torvalds; the first version was released in 1991
+* is typically packaged as a distribution consisting of
+[.step]
+** the Linux kernel
+** system software such as daemons, shells, libraries, and tools, some of which are part of the https://de.wikipedia.org/wiki/GNU[GNU] project
+** a package manager
+** a windowing system (X11, Wayland)
+** a desktop environment (GNOME, KDE...)
+** applications such as office suites, browsers...
+
+
+<<<
+== How do I get a Linux system?
+[.step]
+* standard installation, possibly alongside an existing Windows installation (dual boot) - good option if you plan to use Linux primarily or frequently with a desktop environment
+* "traditional" virtual machine (e.g. https://www.virtualbox.org/[_VirtualBox_])
+* "lighter" and better-integrated virtual machine: https://learn.microsoft.com/en-us/windows/wsl/[_Windows Subsystem for Linux_] (WSL) or https://lima-vm.io/[_Lima_] for macOS — a good option if you only want to use Linux occasionally and/or only on the command line
+* computers / servers in a cloud
+
+
+<<<
+== Which distribution should I use?
+[.step]
+* Good distributions for beginners: https://linuxmint.com/[_Mint_] (Windows-like interface, lots of pre-installed software) or https://ubuntu.com/[_Ubuntu_]
+* Very up-to-date software: https://www.fedoraproject.org/[_Fedora_]
+* Very stable with mature software (more suited for servers): https://www.debian.org/[_Debian_]
+* Distribution for "hackers" (with many pre-installed tools): https://www.kali.org/[_Kali_]
+* Distribution for "security-conscious" users: https://www.qubes-os.org/[_Qubes OS_]
+
+
+<<<
+== Books
+[.step]
+* https://amzn.eu/d/044UM2k8[_The Linux Command Line_]
+* https://amzn.eu/d/52aBXLf[_How Linux Works_]
+// TODO:???
+
+
+<<<
+== Linux Architecture
+image::linux-architecture.svg[width=1400,,  align="center"]
+
+
+<<<
+== File System
+[.step]
+* File system = component in the kernel + data structures on the storage medium
+* All files and directories are organized in a tree that begins with `/` (the root directory).
+* They are uniquely identified by the _path_ = list of all parent directories + their own name; the separator is the forward slash `/`.
+* _Absolute_ path: starts with the root directory (`/`), _relative_ path: relative to the current directory
+* Multiple file systems (on different storage devices) can be located in different places as subdirectories in the tree (_mounted_).
+* In addition to regular files, there are also special pseudo-files: links, pipes, devices, and sockets
+* All files and directories are assigned to a user and a group and have access permissions (which do not apply to the root user).
+* Standard for the tree structure: https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard[_Filesystem Hierarchy Standard_]
+
+
+<<<
+== File System - Important Directories
+// @startmindmap
+// !theme reddress-lightblue
+// <style>
+// mindmapDiagram {
+//   node {
+//     FontSize 30
+//   }
+//   arrow {
+//       LineThickness 3
+//   }
+// }
+// legend {
+//   FontSize 30
+//   Padding 20
+//   Margin 20
+// }
+// </style>
+// 
+// legend right
+//   | <#00bfff>               | persistent |
+//   | <#32cd32>               | nicht persistent |
+// endlegend
+// 
+// + **/**
+// 
+// ++[#00bfff] **/usr**
+// +++[#00bfff] **/usr/bin**: Programme für Benutzer (/bin verlinkt darauf)
+// +++[#00bfff] **/usr/sbin**: Programme für das System (/sbin verlinkt darauf)
+// +++[#00bfff] **/usr/lib**: Programmbibliotheken (/lib verlinkt darauf)
+// +++[#00bfff] **/usr/local**: gleiche Hierarchie wie unter /usr, nur unabhängig von der Distro
+// 
+// ++[#00bfff] **/etc**: systemweite Konfigurationsdateien
+// 
+// ++[#00bfff] **/opt**: Programmpakete unabhängig von der Distro
+// 
+// ++[#00bfff] **/home**: Heimatverzeichnisse der Benutzer
+// +++[#00bfff] **/home/<Benutzer>/.local**: gleiche Hierarchie wie unter /usr, nur pro Benutzer
+// +++[#00bfff] **/home/<Benutzer>/.config**: Konfigurationsdateien pro Benutzer (teilweise)
+// 
+// ++[#00bfff] **/root**: Heimatverzeichnis von root
+// 
+// ++[#00bfff] **/boot**: Kernel und zugehörige Dateien
+// 
+// ++[#00bfff] **/var**: variable Daten von Programmen
+// +++[#00bfff] **/var/log**: Logdateien
+// +++[#00bfff] **/var/tmp**: temporäre Dateien (werden nicht gelöscht)
+// 
+// ++[#32cd32] **/tmp**: temporäre Dateien (werden möglicherweise beim Booten gelöscht)
+// 
+// ++[#32cd32] **/dev**: Gerätedateien
+// 
+// ++[#32cd32] **/run**: Laufzeitinformationen des Systems (z. B. Locks oder Sockets von Daemons)
+// 
+// ++[#32cd32] **/proc**: Infos über das System und die Prozesse
+// @endmindmap
+image::file-system-hierarchy.svg[width=1200,,  align="center"]
+
+
+<<<
+== User
+[.step]
+* To work with a Linux system, you need a user account (which is usually created during installation).
+* In addition, there are also system users for various purposes, such as daemons.
+* Users are identified by their unique name and, internally within the system, by a (usually) unique number => _User Identifier_ (UID)
+* Each user has its own home directory (_Home Directory_), usually located under `/home` (or `/Users` on macOS)
+* are managed either in the `/etc/passwd` and `/etc/shadow` files or in a directory service such as LDAP
+* are members of at least one group => primary group
+* can be members of additional groups (the limit is usually 65536) (configured in `/etc/group` or in a directory service)
+* Special user: _root_ with UID 0, the administrator, (usually) has full access to the system
+
+
+<<<
+== Groups
+[.step]
+* are identified by their unique name and, internally within the system, by a (usually) unique number => _Group Identifier_ (GID)
+* are managed either in the `/etc/group` file or in a directory service such as LDAP
+* Local groups (managed in `/etc/group`) can only contain users, *not* other groups.
+
+
+<<<
+== Lab: Test access to your Linux system
+**Tasks:**
+[.step]
+* Access your Linux system (e. g. WSL) the way you normally do.
+* When you see the shell prompt, type the command `id`. What output do you get?
+* Check if you can access the machine we use for some of the labs: Type `ssh level1@malbox.azd-abs-sbx-fx5td-gvwfrdsffm4.ec1.aws.aztec.cloud.allianz` (or copy the command from the slides) and log in with the password `level1`.
+
+<<<
+== Linux for Power Users
+1. General Information
+2. **Working with the Shell**
+3. Working with Files and Directories
+4. Processes
+5. Working with Text (Files)
+6. Writing (Simple) Shell Scripts
+7. Linux on a Network
+8. Fundamentals of System Administration
+9. Containers
+
+
+<<<
+== What is a shell?
+[.step]
+* is the command-line interface (CLI) of Linux for entering commands and running programs
+* is launched when you log in to the console of a Linux system, open a terminal program in a desktop environment, or log in to a system over the network
+* It also has built-in commands, control structures, and variables, and is a full-fledged programming language (see _Writing (Simple) Shell Scripts_)
+* Several alternatives: sh, ksh, (t)csh, **Bash**, **Zsh**
+
+
+<<<
+== Why Shell?
+[.step]
+* in some cases more efficient than a graphical user interface
+* Small tools can be combined to solve larger tasks => filters and pipelines
+* Tasks can be automated using scripts.
+* Documenting tasks is easier than with a graphical user interface.
+* Working on remote computers connected via the network is easier.
+* https://www.youtube.com/watch?v=0PxTAn4g20U
+
+
+<<<
+== Structure of a Command Line (1)
+image::command-syntax.svg[width=1200,,  align="center"]
+[.step]
+* The shell prompt asks you to enter a command.
+* A command line consists of one (or more => pipelines) command(s), options, and arguments.
+* Common syntax for describing commands:
+[.step]
+** Required arguments in angle brackets: `<file>`
+** Options or optional arguments in square brackets: `[-x]`
+** Alternatives separated by vertical bars: `file|directory`
+* Options begin with `-` (short form, one letter) or with `--` (long form, one word or multiple words connected by a dash), as per convention for commands and programs.
+
+
+<<<
+== Structure of a Command Line (2)
+[.step]
+* How are commands found? There are three ways:
+[.step]
+** The command is built into the shell (e.g. `cd`).
+** The command / program / script is specified with a path.
+** The command / program / script is specified without a path and is searched for in the _search path_ = list of directories containing programs / commands / scripts (environment variable `PATH`).
+* Shell runs non-built-in commands, programs, and scripts as separate processes.
+* Commands, programs, and scripts set the _exit status_ (success/failure) when they terminate => special variable `$?`; 0 indicates success, > 0 indicates failure (the exact values depend on the command, program, or script).
+* Running commands, programs, and scripts can be terminated by pressing Ctrl+C.
+* Exit Shell: Ctrl-d (or `exit`)
+
+
+<<<
+== Shell History
+[.step]
+* Shell "remembers" executed command lines (optionally also permanently in a file) => _shell history_
+* Scroll through the history: Up/down arrow keys
+* Search History: Ctrl-r
+* Complete a command from the history (Zsh only): Type the beginning + up arrow key
+
+
+<<<
+== Editing the Command Line
+[text-left]
+Command lines that have been entered or retrieved from the history can be edited. The default keyboard shortcuts for Bash and Zsh are listed here, but they can be changed.
+
+[cols="3,1"]
+|===
+| Jump to the beginning / end of the line | Ctrl-a / Ctrl-e
+| Delete a single character forward / backward | Ctrl-d / Backspace
+| Delete a word forward / backward (in Bash, up to the next space; in Zsh, you can configure which characters are considered part of a word (variable `WORDCHARS`)) | Esc-d / Ctrl-w
+| Delete line to the beginning / end | Ctrl-u / Ctrl-k
+| Reinsert deleted line / word | Ctrl-y
+|===
+
+
+<<<
+== Additional Features (1)
+[.step]
+* Commands can read from a file (using `<`) and write their output to a file (using `>`) or append it to an existing file (using `>>`).
+* Commands can be chained together using `|` to form _pipelines_ => The output of the first command is the input for the second command.
+* Commands can be run in the background by adding `&` at the end of the command line.
+* Ctrl-z pauses a running program; `bg` sends it to the background; `fg` brings it back to the foreground.
+* Shell can autocomplete commands by pressing the Tab key (files/directories, program names, options, variables).
+* Command lines can be saved as aliases (using the `alias` command) or as functions; see the chapter _Writing (Simple) Shell Scripts_.
+
+
+<<<
+== Additional Features (2)
+[.step]
+* Replace a command with its output (_Command Substitution_): `$()`
++
+[source, sh]
+----
+echo "Hello $(whoami)@$(hostname)"
+----
+* Use a command as a "file" for input or output (_Process Substitution_, if you can't use a pipeline): `<()` and `>()`
++
+[source, sh]
+----
+diff <(grep "bla" file1) <(grep "blub" file2)
+----
+
+
+<<<
+== Wildcards (1)
+[.step]
+* In the shell, you can work with incomplete file and directory names => search patterns or _wildcards_ (also known as _globbing_)
+* are evaluated by the shell, not by the commands
+* Example: `*.txt` => all files ending in `.txt`
+* icon:exclamation-circle[] Note the maximum length (2 MB) of a command line!
+
+
+<<<
+== Wildcards (2)
+|===
+| Syntax | Meaning
+
+| `?` | any single character
+| `*` | any number of characters
+| `[xyz]` | one of several possible characters, e.g. the letters x, y, or z
+| `[a-e]` | a range of characters, e.g. the letters a through e
+| `+[[:alpha:]]+`, `+[[:digit:]]+` | character classes, e.g. letters or digits
+| `+*.{jpg,png}+` | Alternatives, e.g. all files ending in either `.jpg` or `.png`
+| `+!(*.txt)+` (Bash with the `extglob` option) or `^*.txt` (Zsh with the `extendedglob` option) | Negation, e.g. all files that do not end in `.txt`
+|===
+
+
+<<<
+== Quoting / Escaping
+[.step]
+* Most special characters have a specific meaning in the shell (https://tldp.org/LDP/abs/html/special-chars.html[here] is the complete list for Bash).
+* Two options if you want to use them "normally":
+[.step]
+** Enclose them in (single or double) quotes (_quoting_)
+** Prefix them with a backslash (_escaping_)
+* Difference between single and double quotes:
+[.step]
+** Single: All special characters (including backslashes) lose their special meaning.
+** Double: Some special characters retain their special meanings, particularly `$` (variable expansion) and `\` (escaping); see https://www.gnu.org/software/bash/manual/html_node/Double-Quotes.html[here] for details.
+
+
+<<<
+== Environment Variables
+[.step]
+* Key-value pairs, or a special type of shell variable (see also the chapter _Writing (Simple) Shell Scripts_)
+* are used to configure the shell itself and the commands, programs, and scripts being executed (they are passed on to the processes started by the shell)
+* Set a variable (in `.bash_profile` / `.zprofile` if you want it to be set permanently; see the next slide): `export <VARIABLE>=<Value>`. The name is usually capitalized, and the value must be enclosed in quotes if it contains spaces and/or special characters.
+* Print a variable's value: `echo $<VARIABLE>`, e.g. `echo $PATH`
+* Delete a variable: `unset $<VARIABLE>`
+* Print all defined variables: `env`
+
+
+<<<
+== Shell Configuration Files
+[.step]
+* Files with a default configuration are located in `/etc` (without the leading dot); files with user-specific configurations are located in the user's home directory.
+* three different (relevant) files:
+[.step]
+** `.profile` / `.bash_profile` / `.zprofile` for _login_ shells (when logging in to the desktop environment or via SSH / `sudo`): Set environment variables (which are inherited by interactive shells) and run programs once upon login
+** `.bashrc` / `.zshrc` for _interactive_ shells (**not** in scripts): Set shell options, define aliases and functions, configure the shell prompt
+** `.zshenv` for _all_ shells (Zsh only): Set environment variables that you always want to have
+
+
+<<<
+== Examples of Configuration Files
+[source, sh]
+----
+# .bash_profile
+export PATH=~/.local/bin:$PATH  <1>
+export LANG=de_DE.UTF-8  <2>
+
+# .bashrc
+PS1='\u@\h $ '  <3>
+shopt -s extglob  <4>
+alias ll='ls -l'  <5>
+----
+<1> Adding a directory to the search path (`~` is the home directory)
+<2> Language settings
+<3> Configuring the prompt (`PS1` is not an environment variable because it has not been "exported")
+<4> Setting a shell option
+<5> Defining an alias
+
+
+<<<
+== `sudo`
+[.step]
+* Tool for running commands as root or as another user: `sudo [-u <user>] <command>`
+* Without a command but with the `-i` / `-s` options, you get a login / non-login shell with root privileges or the privileges of the other user.
+* is configured via the `/etc/sudoers` file (which users/groups are allowed to use `sudo`, whether a password is required, which commands are allowed to be executed, etc.)
+* Two related command:
+[.step]
+** Display username, UID, and group(s): `id`
+** Change password: `passwd`
+
+
+<<<
+== Which shell should I use?
+[.step]
+* Bash:
+[.step]
+** default shell in most Linux distributions
+** is always installed
+** the better option for shell scripts due to its widespread use
+** additional plugins and themes from https://ohmybash.nntoan.com/[_Oh My Bash_]
+* Zsh
+[.step]
+** default Shell in macOS and Kali Linux
+** more features, configuration options, plugins, and themes, for example from https://ohmyz.sh/[_Oh My Zsh_]
+* "more exotic" / experimental shells: https://fishshell.com/[_fish_], https://learn.microsoft.com/de-de/powershell/[_Microsoft PowerShell_], https://www.nushell.sh/[_Nushell_]
+
+
+<<<
+== Where can I get help?
+[.step]
+* Program help texts (usually `-h` or `--help`)
+* Suggestions for possible options by pressing the tab key
+* Man(ual) Pages
+[.step]
+** are (short) help pages for all commands, configuration files, library routines, and system routines available on a system
+** are divided into various sections (1: Commands, 2: System Routines, 3: Library Routines, 5: Configuration Files)
+** To view, use `man [chapter] <title>`; to search, use `man -k <term>`
+* Google, ChatGPT, GitHub Copilot..., possibly also integrated into the shell, e.g. https://github.com/loiccoyle/zsh-github-copilot or https://github.com/sigoden/aichat
+* Cheat sheets, such as https://cheat.sh/ or https://tldr.sh/
+
+
+<<<
+== Demo: Working Interactively with the Shell
+// Historie
+// Befehle vervollständigen
+// Man Pages
+// Ausgeben von Text
+// Editieren der Befehlszeile
+// Umleiten in eine Datei
+// Ausgeben von Umgebungsvariablen (PATH)
+// Ctrl-c mit `cat`
+
+<<<
+== Linux for Power Users
+1. General Information
+2. Working with the Shell
+3. **Working with Files and Directories**
+4. Processes
+5. Working with Text (Files)
+6. Writing (Simple) Shell Scripts
+7. Linux on a Network
+8. Fundamentals of System Administration
+9. Containers
+
+
+<<<
+== Important Commands (1)
+|===
+| Display the current directory (if it's not shown in the shell prompt) | `pwd`
+| Change to the home directory or a specific directory | `cd` / `cd <directory>`
+| List files and directories (with all information / _metadata_) | `ls -l` or `ls -l <directory>` (or use the alias `ll`)
+| List in reverse order by last modification date (newest last) | `ls -lrt`
+| List hidden files / directories | `ls -la`
+| Display information about the directory itself, not its contents | `ls -ld <directory>`
+|===
+
+
+<<<
+== Metadata - Output of `ls -l`
+image::file-metadata.svg[width=1200,,  align="center"]
+
+|===
+| 1st character in the output of `ls -l` | File type
+
+| - | regular file
+| d | directory
+| l | symbolic link => see next slide
+| b, c | device files => see next slide
+| p, s | pipes, sockets => see next slide
+|===
+
+
+<<<
+== Special Files
+[.step]
+* Links: References to other files/directories; two types of links
+[.step]
+** Hard links: an additional name for an existing file (both names refer to the same inode); hard links are only possible within a single filesystem and only for files (exceptions are `.` and `..`, as well as macOS); they can only be identified by the number of links
+** soft (symbolic) links: a special file that contains the path (absolute or relative) to the target
+* Hidden files/directories: begin with a period and are only displayed with `ls -a` (a convention used by shells and programs)
+* Device files / devices: used to access hardware such as hard drives (located in the `/dev` directory)
+* Pipes and sockets: are a means of communication between processes (not to be confused with sockets used for network communication)
+
+
+<<<
+== Special Directories
+[.step]
+* interpreted by the operating system (hard links):
+[.step]
+** current directory: `.`
+** parent directory: `..`
+* interpreted by the shell (and some programs, such as text editors):
+[.step]
+** home directory: `~`
+** another user's home directory: `~alice`
+** previous directory: `-`
+
+
+<<<
+== Access Rights (1)
+[.step]
+* separate access rights (also called _mode_) for the owner (_user_) of a file or directory, the _group_, and _other_ users
+* three different rights, represented as a letter or a number (the weight of the corresponding bit):
++
+|===
+| read | r | 4
+| write | w | 2
+| execute | x | 1
+|===
+
+* In addition, there are also the SUID (4, s), SGID (2, s), and Sticky (1, t) flags; see the slide _Meaning of the Flags_.
+* Specifying access rights using letters with `chmod`: 3 groups, each representing the combination of rights and flags for user, group and other, see examples below
+
+
+<<<
+== Access Rights (2)
+[.step]
+* Output of `ls -l`: 3 groups, each representing the combination of rights for user, group and other; minus signs indicate missing permissions; set flags appear in place of the execute permission, see examples below
+* Numeric representation of access rights: 4 digits between 0 and 7 (octal)
+[.step]
+** 2nd through the 4th digit = sum of permissions for user, group, and other
+** 1st digit = sum of the flags
+* Unlike in Windows, permissions are not inherited but are defined using a numeric mask (known as the _umask_), which specifies which permissions new files and directories should **not** have (the default value is 022 or 002) => The value of the mask is subtracted from 666 (files) or 777 (directories).
+* In addition to permissions for user, group and other, more granular permissions (for additional users and groups) can be assigned using https://www.redhat.com/en/blog/linux-access-control-lists[_Access Control Lists_] (ACLs) (as in Windows).
+
+
+<<<
+== Access Rights - Important Commands
+|===
+| Change owner/group (owner: root only; group: only the owner, who must also be a member of the new group, or root) | `chown <user> <file / directory>` / `chgrp <group> <file / directory>`
+| Change permissions (only the owner or root); permissions can be specified using letters or numerically—see below | `chmod <permissions> <file / directory>`
+| Display access permissions (also) numerically | `stat <file / directory>`
+| Display / change umask | `umask [value]`
+|===
+
+
+<<<
+== Access Rights - Example (1)
+|===
+| Permissions | Binary representation (bits) | Octal representation | `chmod` command | Output of `ls`
+
+| SUID flag set; full permissions for the owner, read and execute permissions for the group, and no permissions for anyone else
+| 100 111 101 000
+| 4750
+| `chmod u=rwxs,g=rx,o= <file>` or `chmod 4750 <file>`
+| `-rwsr-x---`
+|===
+
+
+<<<
+== Access Rights - Example (2)
+|===
+| Permissions | Binary representation (bits) | Octal representation | `chmod` command | Output of `ls`
+
+| Sticky flag set; read and write permissions for the owner and group; read permission for everyone else
+| 001 110 110 100
+| 1664
+| `chmod u=rw,g=rw,o=tr <file>` or `chmod 1664 <file>`
+| `-rw-rw-r-T`
+|===
+
+
+<<<
+== Difference Between Metadata and Content
+[cols="a,a", frame=none,,  grid=none]
+|===
+|
+--
+image::file-metadata-content.svg[width=800,,  align="center"]
+--
+
+|
+--
+[.step]
+* For every file or directory, there is a so-called _inode_ (an internal system data structure; green and blue boxes) with a number that is unique within each filesystem.
+* The inodes contain the metadata and point to the actual contents of the file or directory (gray boxes).
+* Contents of a directory: Mapping of filenames to inode numbers => The filename is **not** part of the metadata. +
+=> Renaming or deleting a file or directory changes the modification time of the parent directory. +
+=> You **do not** need write permissions on the file itself, only on the directory.
+--
+|===
+
+
+<<<
+== Meaning of the Access Rights
+[cols="1,2,2"]
+|===
+| Permission | File | Directory
+
+| Read (r) | Content can be read. | Content = Names of files/subdirectories can be read.
+| Write (w) | Content can be modified. | Files / subdirectories can be created / renamed / deleted, **but only if execute permission has also been granted**.
+| Execute (x) | File can be executed (if it is a program or script). | Files and subdirectories can be accessed (metadata and content), and you can navigate to the directory. Files and subdirectories can be created, renamed, or deleted, **but only if write permission has also been granted**.
+|===
+
+
+<<<
+== Meaning of the Flags
+[cols="1,2,2"]
+|===
+| Flag | Executable file | Directory
+
+| Set User ID (SUID) | Executed with the owner's permissions | -
+| Set Group ID (SGID) | Executed with the group's permissions | Newly created files and subdirectories inherit the directory's group (rather than the user's group).
+| Sticky | - | Files and subdirectories can only be deleted by the owner (or root) (and not by other users who have write permission on the directory).
+|===
+
+
+<<<
+== Timestamps
+[.step]
+* All files and directories have three different timestamps:
++
+[cols="1,3,1"]
+|===
+| Timestamp | Meaning | `ls` command
+
+| Change time (_ctime_) | Last modification of the **metadata** (creation, change of owner/group or permissions; also a change of the **name** even though the name **does not** belong to the metadata, an explanation can be found https://unix.stackexchange.com/questions/211123/why-does-renaming-a-file-with-mv-command-alter-an-inodes-change-date-time[here]) | `ls -lc`
+| Modification time (_mtime_) | Last modification of the **content** of the file or directory (by creating, renaming, or deleting files or subdirectories) | `ls -l`
+| Access time (_atime_) | Last read access (not always up to date) | `ls -lu`
+|===
+* The `touch` command can be used to change the mtime and atime of files and directories (a file is created if it does not exist).
+
+
+<<<
+== Important Commands - Viewing Text Files
+|===
+| Display the entire file | `cat <file>`
+| Display a file or a program's output page by page | `less <file>` / `<program> \| less` (help with `h`)
+| Display the first / last n (default: 10) lines | `head -n <n> <file>` / `tail -n <n> <file>`
+| "Follow" a file (display all newly appended lines) | `tail -f <file>` (exit with Ctrl-c)
+|===
+
+
+<<<
+== Important Commands - Editing Text Files
+[.step]
+* A good editor for beginners: https://www.nano-editor.org/[GNU Nano] (already installed on most systems)
+* Alternatives for Power Users - Command Line: https://www.vim.org/[Vim], https://www.gnu.org/software/emacs/[Emacs]
+* Alternatives for Power Users - GUI: https://www.geany.org/[Geany], https://kate-editor.org/de/[Kate], https://code.visualstudio.com/[Visual Studio Code]
+
+
+<<<
+== Important Commands - View Other Files
+For example, HTML, images...
+|===
+| Open a file with its associated program (as if by double-clicking) | `xdg-open <file>` / `open <file>` (macOS)
+| Determine file type | `file <file>`
+| Display a file's hexdump (hexadecimal representation of the bytes) | `hexdump -C <file>` / `xxd <file>`
+| Display the first / last n (default: 10) bytes | `head -c <n> <file>` / `tail -c <n> <file>`
+| Output only the strings contained in the file | `strings <file>`
+|===
+
+
+<<<
+== Important Commands - Copying Files and Directories (`cp`) (1)
+|===
+| Copy individual files | `cp bla.txt blub.txt` |
+| Copy multiple files to a directory | `cp bla.txt blub.txt huhu/` | The directory must exist.
+| Copy an entire directory (including subdirectories, if any) | `cp -r bla blub` | If the destination directory does not exist, it is created; otherwise, the source directory is copied into the destination directory **as a subdirectory**.
+|===
+[.text-left]
+icon:warning[] `cp` and `mv` overwrite existing files without asking!
+
+
+<<<
+== Important Commands - Copying Files and Directories (`cp`) (2)
+|===
+| Copy the contents of a directory to an existing directory | `cp -r bla/. blub/` | including hidden files and directories
+| Back up or "archive" a directory | `cp -a bla bla.bak` | Owner, group, permissions, timestamps, and links are preserved.
+| Overwrite existing files only if they are older | `cp -u ...` |
+|===
+
+
+<<<
+== Important Commands - Renaming/Moving Files and Directories (`mv`)
+|===
+| Rename individual files / directories | `mv bla.txt blub.txt` | The destination must not exist.
+| Move file(s) / directory(ies) to a directory | `mv bla.txt blub/ huhu/` | The destination directory must exist.
+| Move the contents of a directory to another directory | `mv bla/* blub/` | The destination directory must exist; hidden files and directories are included with `bla/.*`
+|===
+
+
+<<<
+== Important Commands - Deleting Files and Directories (`rm`) (1)
+[cols="1,1,3"]
+|===
+| Delete file(s)
+| `rm bla.txt`
+a|
+Only removes the entry from the directory, overwrites the metadata (inode), and frees up the storage space (blocks) occupied by the file; it **does not** overwrite the actual data +
+=> You **do not** need write permission on the file itself to delete it, only on the directory. +
+=> Files can be recovered using special tools if the storage space has not yet been reused (https://en.wikipedia.org/wiki/File_carving[_File Carving_]).
+
+| Delete file(s) by overwriting the data
+| `shred bla.txt`
+| Write permission on the file is required.
+|===
+
+
+<<<
+== Important Commands - Deleting Files and Directories (`rm`) (2)
+|===
+| Delete read-only file(s) without prompting | `rm -f bla.txt`
+| Delete files only after confirmation (interactively) | `rm -i *`
+| Delete a directory and its contents (including subdirectories, recursively) | `rm -r blub/`
+|===
+
+
+<<<
+== Important Commands - Creating/Deleting Directories
+|===
+| Create a directory | `mkdir <directory>`
+| Create a directory tree (all directories in the path are created if they do not yet exist) | `mkdir -p <path>`
+| Delete an empty directory (especially useful in scripts when you want to ensure that a non-empty directory is **not** deleted) | `rmdir <directory>`
+|===
+
+
+<<<
+== Important Commands - Creating Links
+|===
+| Create a hard link (only within a single file system) | `ln <source> <target>`
+| Create a soft (symbolic) link | `ln -s <source> <target>`
+|===
+[.text-left]
+icon:warning[] For a symbolic link with a **relative** path as its source, the path is interpreted **relative to the directory where the target is located**! With the `-r` option, `ln` determines the correct path itself.
+
+
+<<<
+== Demo: Working with the File System
+
+
+<<<
+== Important Commands - Finding Files and Directories (`find`)
+[.step]
+* `find` searches for files and directories based on various criteria (name, size, permissions) in one or more directories, including all subdirectories (recursively).
+* can perform actions on any file or directory
+* general syntax: `find <start directory(ies)> <search criteria> <actions>`
+
+
+<<<
+== `find` - Search Criteria
+[.text-left]
+are logically anded by default and can be ored using `-o`
+
+|===
+| Name (including wildcards) | `-name`
+| Modification date | `-mtime`
+| Size | `-size`
+| Type (file = `f`, directory = `d`, ...) | `-type`
+| Permissions (numeric) | `-perm`
+| Owner | `-user`
+| Group | `-group`
+|===
+
+
+<<<
+== `find` - Actions
+|===
+| List files/directories | `-ls` | same as `ls -l`
+| Delete files/directories (recursively) | `-delete` |
+| Execute a command | `-exec <command> \{\} \;` | `{}` is the placeholder for the name of the file or directory; backslashes are necessary because the curly braces and semicolon also have special meanings in the shell.
+|===
+
+
+<<<
+== `find` - Examples
+[cols="1,1"]
+|===
+| List all files in the `/usr/bin` directory that belong to the root user and have the SUID bit set (`-4000` means that only the SUID bit needs to be set, the remaining bits do not matter).
+| `find /usr/bin -type f -user root -perm -4000 -ls`
+
+| All text files in the `/home` directory that were last modified at least one week ago and are larger than 1MB should be compressed.
+| `find /home -type f -name '*.txt' -mtime +7 -size +1M -exec gzip \{\} \;`
+
+// TODO: Weitere Beispiele
+|===
+
+
+<<<
+== File Archives
+[.step]
+* Archives are files that contain multiple files or entire directory trees.
+* are used for backups and for transferring files and directories (e.g. when downloading programs)
+* Linux supports two common types of archives:
++
+[cols="1,5"]
+|===
+| tar
+a|
+* "Classic" format / program for Linux / Unix
+* Archives are uncompressed, but can be compressed using programs such as `gzip` or `bzip2` (or with the `-z` / `-j` options).
+* File extension: `.tar` (uncompressed), `.tar.gz`, `.tgz`, or `.tar.bz2` (compressed)
+  
+| ZIP
+  a|
+* The most commonly used format on Windows
+* The archives are compressed.
+* File extension: `.zip`
+|===
+
+
+<<<
+== File Archives - Important Commands (1)
+[cols="1,1,1,2"]
+|===
+| Task | tar | ZIP | Note
+
+| Create a (compressed) archive
+| `tar -czvf <archive> <file(s) / directory(ies)>`
+| `zip -r <archive> <file(s) / directory(ies)>`
+| With the `-z` option, `tar` compresses the archive using `gzip`; with the `-j` option, it uses `bzip2`.
+
+| List the contents of an archive
+| `tar -tzvf <archive>`
+| `unzip -l <archive>`
+|
+|===
+
+
+<<<
+== File Archives - Important Commands (2)
+[cols="1,1,1,2"]
+|===
+| Task | tar | ZIP | Note
+
+| Extract the contents of an archive into a specific directory
+| `tar -xzvf <archive> -C <directory>`
+| `unzip -d <directory> <archive>`
+| Without the `-C` or `-d` options, the contents are extracted into the current directory. +
+icon:warning[] Existing files will be overwritten without prompting!
+
+| Extract individual files
+| `tar -xzf <archive> <file(s)>`
+| `unzip <archive> <file(s)>`
+| Files must be specified with their (relative) path and will be extracted to that path (directories will be created if they do not yet exist).
+|===
+
+
+<<<
+== Lab: Scavenger Hunt
+[.text-left]
+This lab is a kind of scavenger hunt (or a "https://de.wikipedia.org/wiki/Capture_the_Flag#Computersicherheit"[_Capture the Flag_] game). The game consists of 5 levels. In each level, the goal is to find one or more secrets in the form of strings. The game is located in the `~/Schnitzeljagd/` directory, with one subdirectory per level (`level1/` through `level5/`). Each subdirectory contains a `README.txt` file with (brief) instructions.
+
+// TODO: Lesbare Geheimnisse?
+// TODO: Einloggen auf localhost mit SSH und unterschiedlichen Benutzern?
+
+[.text-left]
+**Task:** Complete Levels 1 through 3.
+
+Have fun! Want more? https://overthewire.org/wargames/
+
+
+<<<
+== Linux for Power Users
+1. General Information
+2. Working with the Shell
+3. Working with Files and Directories
+4. **Processes**
+5. Working with Text (Files)
+6. Writing (Simple) Shell Scripts
+7. Linux on a Network
+8. Fundamentals of System Administration
+9. Containers
+
+
+<<<
+== Processes (1)
+[.step]
+* are programs that are executed by the system or are waiting to be executed / for an event to occur
+* have (at a given point in time) unique numbers => _Process Identifier_ (PID)
+* always have a parent process from which they inherit certain properties and objects (such as open files and environment variables) => tree structure
+* The root of the tree is the `systemd` process (or `init` / `launchd`) with PID 1 (which is started by the system at boot time).
+* are managed by the _scheduler_ and are assigned in turn to the processor(s) or processor cores.
+* are always assigned to a user from whom they inherit their permissions
+
+
+<<<
+== Processes (2)
+[.step]
+* By default, they have three different input/output channels, which they inherit from the parent process: standard input (_stdin_), standard output (_stdout_), and standard error (_stderr_)
+* can consist of multiple _threads_ that can run in parallel on multiple processors or processor cores
+* Processes are always in one of the following states:
+[.step]
+** running \(R) => The process is currently running or is ready to run (is in the queue; the number of processes in the queue is the system load).
+** suspended (S) => The process is waiting for an event (e.g. user input, network I/O, or a timer expiring) and can be woken up by signals (see below).
+** uninterruptible sleep (D) => The process is waiting for a mass storage I/O operation to complete.
+** stopped (T, t) => The process was paused (using Ctrl-Z in the shell or by a debugger).
+** _Zombie_ (Z) => The process has terminated, but information is still retained in the kernel (for the parent process).
+
+
+<<<
+== Processes - Memory Management
+[.step]
+* Each process has its own _virtual memory_ (4 GB on 32-bit systems, 256 TB on 64-bit systems), which contains the program code (of the program and any program libraries it may use) and the data.
+* Virtual memory is much larger than physical RAM (on 64-bit systems) => _paging_
+[.step]
+** Program segments and data are loaded into memory only when needed—that is, the first time they are accessed.
+** When memory is scarce, the memory used for program components and data that are not currently in use is reused.
+** Data that has been modified but is not currently in use is moved to the _swap_ area of the hard drive(s), and modified data in the _cache_ (a temporary storage area in RAM for mass storage devices) is written to the files.
+** If that isn't enough, Linux forcibly terminates individual processes that are using a lot of memory (the so-called https://medium.com/@msmkumar.eee/751cf7823de8[_OOM Killer_]).
+
+
+<<<
+== Processes - Daemons
+[.step]
+* are processes that run in the background and provide services
+* are usually started when the system boots
+* Important services / daemons:
++
+|===
+| `systemd` | The first process (with PID 1) to start after a system boots; it starts all other daemons and services
+| `journald` / `rsyslogd` / `syslog-ng` | Centralized logging (log files in `/var/log`)
+| `sshd` | Secure Shell server for logging in over the network
+// TODO: Weitere wichtige Dämonen?
+|===
+
+
+<<<
+== Processes - Signals (1)
+[.step]
+* are a way to trigger specific actions in a process
+* are sent to a process by the user using `kill -<signal> <PID>` / `pkill -<signal> <process name>` or, in the event of an error, by the operating system itself
+* For background processes in the shell, you can use `kill -<signal> %<number>` instead of the PID; this uses the number assigned by the shell.
+* Different signals trigger different actions; see the next slide. The signals sent by the operating system are shown in _italics_ => The process is normally terminated.
+
+
+<<<
+== Processes - Signals (2)
+[cols="1,4"]
+|===
+| Signal | Action
+
+| SIGTERM (15) | terminates a process gracefully (the default for `kill`)
+| SIGKILL (9) | forcibly terminates a process
+| SIGINT (2) | interrupts a process (Ctrl-C in the shell)
+| SIGTSTP (17) | suspends a process (Ctrl-z in the shell)
+| SIGHUP  (1) | causes a daemon (in most cases) to reload its configuration
+| _SIGSEGV_ (11) | invalid memory access (_Segmentation Fault_)
+| _SIGPIPE_ (13) | attempt to write to a pipe whose other end (the program reading from the pipe) no longer exists
+|===
+
+
+<<<
+== Processes - Important Commands (1)
+|===
+| List all processes with key information / attributes | `ps -ef` | `-e` selects all processes; `-f` displays key information
+| List all processes belonging to a specific user | `ps -u <username or UID> -f` |
+| List all processes running a specific program | `ps -C <program name> -f` | The name must be specified in full.
+| List a process with a specific PID | `ps -p <PID> -f` |
+|===
+
+
+<<<
+== Processes - Important Commands (2)
+|===
+| Output with a more useful list of attributes | `ps -e -o user,pid,ppid,lstart,state,vsz,rsz,%cpu,%mem,args` | The available attributes are listed in the man page; you can also use this with `-u`, `-C`, or `-p`.
+| List all processes containing a specific string in the command line (program + arguments) | `pgrep -af <string>` |
+|===
+
+
+<<<
+== Output of `ps` (1)
+// TODO: Namen in eckigen Klammern erklären
+[source, sh]
+----
+UID PID    PPID  C STIME TTY TIME CMD
+mvhs 950 1  0 Jan 16 ? 00:00:13 /usr/lib/systemd/systemd --user
+
+USER PID    PPID STARTED S    VSZ   RSZ %CPU %MEM COMMAND
+mvhs 950 1 Fri Jan 16 10:59:45 2026 S  25796 14096  0.0  0.3 /usr/lib/systemd/systemd --user
+----
+
+|===
+| Attribute for `-o` | Column | Meaning
+
+| `user` | `UID`, `USER` | User
+| `pid` | `PID` | Process PID
+| `ppid` | `PPID` | Parent process PID
+| `lstart` | `STIME`, `STARTED` | Start time
+| `state` | `S` | State
+|===
+
+
+<<<
+== Output of `ps` (2)
+|===
+| Attribute for `-o` | Column | Meaning
+
+| `vsz`, `rsz` | `VSZ`, `RSZ` | Virtual / physical memory used, in KiB
+| `%cpu`, `%mem` | `%CPU`, `%MEM` | relative CPU / memory usage
+| `args` | `CMD`, `COMMAND` | Command with arguments
+|===
+
+
+<<<
+== Demo: Working with Processes
+
+
+<<<
+== Linux for Power Users
+1. General Information
+2. Working with the Shell
+3. Working with Files and Directories
+4. Processes
+5. **Working with Text (Files)**
+6. Writing (Simple) Shell Scripts
+7. Linux on a Network
+8. Fundamentals of System Administration
+9. Containers
+
+
+<<<
+== Why text?
+[.step]
+* Even today, a great deal of data is still stored as text, such as application data (https://en.wikipedia.org/wiki/JSON[JSON], https://en.wikipedia.org/wiki/XML[XML]), program code, configuration (https://en.wikipedia.org/wiki/INI_file[INI files], https://en.wikipedia.org/wiki/YAML[YAML]), documentation (https://en.wikipedia.org/wiki/Markdown[Markdown], https://en.wikipedia.org/wiki/AsciiDoc[AsciiDoc]).
+* Text is the universal data format in Linux (files, program input and output).
+* Working with text (files) is often easier than working with binary data or databases (and sometimes faster, too).
+* Linux/Unix has very powerful tools for working with text; all of these tools can be used with files or in pipelines (using standard input and output).
+* Tools allow you to automate tasks and work with large numbers of files (unlike editors).
+* There are often three steps in a pipeline: filter, transform, and aggregate
+
+
+<<<
+== Search - `grep`
+[.step]
+* Searches files, directories (recursively), or standard input (in a pipeline) **line by line** for a fixed string or a _regular expression_ (see slide below)
+* often the _filter_ step in a pipeline
+* is equivalent to `WHERE` in SQL
+* Usage: `grep [options] <search string|regular expression> [<file(s)>|<directory(ies)>]`
+
+
+<<<
+== `grep` - Important Options (1)
+[cols="1,3,3"]
+|===
+
+| `-F` | Search for a fixed string | Can be omitted if the search string consists only of letters and/or numbers
+| `-P` | Search for a regular expression | The regular expression is a PCRE; see the slide below.
+| `-i` | Ignore case |
+| `-r` | Search directory(ies) recursively |
+| `-c` | Output only the number of matches |
+|===
+
+
+<<<
+== `grep` - Important Options (2)
+[cols="1,3,3"]
+|===
+
+| `-l` | Output only the names of files that contain at least one match |
+| `-v` | Output lines that **do not** contain the search string or regular expression | When used with `-l`, the names of files that contain at least one line that **does not** contain the search string or regular expression are output.
+| `-A<n>`, `-B<n>` | Output n lines after / before each match (for context) |
+|===
+
+
+<<<
+== Regular Expressions
+[.step]
+* are patterns for searching for and validating strings
+* describe the structure of a string without specifying it in full, similar to wildcards in the shell
+* Example: An uppercase letter followed by any number of lowercase letters, followed by one or more digits => `^[A-Z][a-z]*\d+$`
+* can be used in text editors (find/replace), tools such as `grep`, and all modern programming languages
+* various dialects, the most common dialect is _Perl Compatible Regular Expressions_ (PCRE)
+* Tutorials: https://developer.mozilla.org/de/docs/Web/JavaScript/Guide/Regular_expressions[Mozilla], https://perldoc.perl.org/perlretut[Perl], https://docs.python.org/3/library/re.html[Python]
+* https://developer.mozilla.org/de/docs/Web/JavaScript/Guide/Regular_expressions/Cheatsheet[Cheat Sheet]
+
+
+// TODO: reguläre Ausdrücke erklären?
+
+
+<<<
+== Find and Replace - `sed` / `perl`
+[.step]
+* often the _transform_ step in a pipeline
+* `sed` is suitable for simple cases, namely line-by-line processing and fixed strings.
++
+[source, sh]
+----
+$ sed -e 's/<from>/<to>/g'
+----
+* The `-i` option performs "in-place" replacement in a file (applies to `sed` and `perl`).
++
+[source, sh]
+----
+$ sed -i -e 's/<from>/<to>/g' <file>
+----
+* `perl` can search for regular expressions, even across multiple lines.
+[.step]
+** Search and replace using regular expressions.
++
+[source, sh]
+----
+$ perl -pe 's/<from>/<to>/g'
+----
+** Search/replace across multiple lines; `-0777` causes the file to be read all at once rather than line by line; with the `s` flag the `.` in the regular expression also matches line breaks.
++
+[source, sh]
+----
+$ perl -0777 -pi -e 's/<from>/<to>/gs' <file>
+----
+
+
+<<<
+== Extract Strings from Lines - `cut` / `awk` / `perl`
+[.step]
+* often the _transform_ step in a pipeline
+* is equivalent to `SELECT` in SQL
+* single column(s) with a fixed delimiter; column index `n` starts at 1; separate multiple columns with commas; the default delimiter is a tab for `cut` and _whitespace_ for `awk` (spaces, tabs)
++
+[source, sh]
+----
+$ cut -d<delimiter> -f<n>
+$ awk -F<delimiter> '{print $<n>}'
+----
+* single column(s), separated by a regular expression; column index `n` starts at 0; separate multiple columns with commas
++
+[source, sh]
+----
+$ perl -F<regular expression> -le 'BEGIN{$, = " "} print $F[<n>]'
+----
+* regular expression; the parentheses around the expression assign the matched string to the variable `$1`
++
+[source, sh]
+----
+$ perl -nle '/(<regular expression>)/; print $1'
+----
+
+
+<<<
+== _Optinal_: Filter Lines Based on an extracted string - `perl`
+[.step]
+* often the _filter_ step in a pipeline
+* is equivalent to `WHERE` in SQL
+* Output rows in which a specific column matches a regular expression
++
+[source, sh]
+----
+$ perl -F<regular expression> -le 'print if $F[<n>] =~ /<regular expression>/'
+----
+
+* Compare a specific column numerically; comparison operators are `==`, `!=`, `<`, `>`, `\<=`, `>=`
++
+[source, sh]
+----
+$ perl -F<regular expression> -le 'print if $F[<n>] == <number>'
+----
+
+* Compare a regular expression numerically
++
+[source, sh]
+----
+$ perl -nle '/(<regular expression>)/; print if $1 == <number>'
+----
+
+
+<<<
+== Sort - `sort`
+[.step]
+* sorts the specified file or standard input, using the entire line as the key
+* often the final step in a pipeline
+* is equivalent to `ORDER BY`, possibly with `DISTINCT`, in SQL
+* Usage: `sort [options] [file]`
+* Important options
++
+[cols="1,3"]
+|===
+
+| `-u` | Output only unique lines / values
+| `-r` | Sort in descending order
+| `-n` | Sort numerically
+| `-t<delimiter> -k<n>` | Sort by column `n` (starting at 1), with columns separated by the specified delimiter (default: whitespace)
+|===
+
+
+<<<
+== Aggregate
+[.step]
+* often the final step in a pipeline
+* various alternatives:
+[.step]
+** Count lines: (`COUNT()` in SQL): `wc -l`
+** Output only unique lines along with their frequency (`GROUP BY` with `COUNT()` in SQL): `uniq -c`; rows must already be sorted
+** Sum lines (`SUM() in SQL`): `awk '{sum += $0} END{print sum}'`
+
+
+<<<
+== Compare Files / Directories - `diff` / `comm`
+[.step]
+* Compare files: `diff <file 1> <file 2>` (the `-w` option ignores differences in _whitespace_ (spaces, tabs, line breaks))
+* Compare the output of two commands (using process substitution): `diff <(<command 1>) <(command 2)>`
+* Compare directories (recursively): `diff -r <directory 1> <directory 2>`
+* Output lines that appear only in the first / second file (files must be sorted): `comm -23 <file 1> <file 2>` / `comm -13 <file 1> <file 2>`
+* An alternative to `diff` with nicer output: https://terminaltrove.com/delta/[`delta`]
+
+
+// TODO: split?
+// TODO: join?
+// TODO: paste?
+
+
+<<<
+== _Optional_: JSON (1)
+[.step]
+* is a simple, text-based data format that is widely used today
+* is used for
+[.step]
+** storing application data
+** configuration files
+** log files
+** transmitting data between web applications (that run in the browser) and web servers
+* good descriptions of the syntax: https://en.wikipedia.org/wiki/JSON#Syntax and https://stackoverflow.blog/2022/06/02/a-beginners-guide-to-json-the-data-format-for-the-internet/
+
+
+<<<
+== _Optional_: JSON (2)
+[.step]
+* JSON data can be filtered using tools such as https://jqlang.org/[_jq_], https://www.duckdb.org/[_DuckDB_], and https://de.wikipedia.org/wiki/PowerShell[_Microsoft PowerShell_], as well as with all common programming languages.
+* JSON and the corresponding tools are sometimes easier to use, more readable, and more robust than unstructured text and tools such as `grep`, `sed`, `awk`, and `perl`.
+* Some Linux tools can format their output as JSON, and the output of many other tools can be converted to JSON using https://github.com/kellyjonbrazil/jc[`jc`] (certain files, such as `/etc/passwd`, are also supported).
+
+
+<<<
+== _Optional_: JSON Structure
+[source, json]
+----
+[ <1>
+    { <2>
+        "first_name": "Jane", <3>
+        "last_name": "Doe",
+        "phone_numbers": [ <4>
+            {
+                "type": "Work",
+                "number": "+49 89 123456"
+            },
+            {
+                "type": "Cell",
+                "number": "+49 176 123456"
+            }
+        ]
+    }
+]
+----
+<1> Lists in square brackets; the individual items are separated by commas
+<2> Objects = lists of key-value pairs enclosed in curly braces; the pairs are separated by commas
+<3> The key and value are separated by a colon; strings are enclosed in quotes.
+<4> Lists and objects can be nested => hierarchical data structure
+
+
+<<<
+== _Optional_: JSON - Examples
+[.step]
+* Example for `jc` and `jq`: Displaying (only) the timestamps of all files in a directory
++
+[source, sh]
+----
+jc ls -l | jq '.[] | .date'
+----
+* Example for `jc` and DuckDB / SQL: Summing the sizes of all files in a directory that start with "z":
++
+[source, sh]
+----
+jc ls -l /usr/bin | duckdb -c "select sum(size) from read_json('/dev/stdin') where filename like 'z%';"
+----
+
+
+<<<
+== Lab: Working with Text — Searching / Filtering / Aggregating
+// TODO: Übung in Schnitzeljagd integrieren?
+[.text-left]
+**Tasks:**
+[.step]
+* Filter the output of `journalctl` for `systemd` log messages and count these messages.
+* Group the log messages by program and output the number of messages per program, sorted in descending order.
+
+
+<<<
+== Lab: Scavenger Hunt
+[.text-left]
+**Task:** Complete levels 4 and 5.
+
+
+<<<
+== Linux for Power Users
+1. General Information
+2. Working with the Shell
+3. Working with Files and Directories
+4. Processes
+5. Working with Text (Files)
+6. **Writing (Simple) Shell Scripts**
+7. Linux on a Network
+8. Fundamentals of System Administration
+9. Containers
+
+
+<<<
+== Shell Scripts
+[.step]
+* are a sequence of commands with arguments and options
+* may contain in addition variables and control structures
+* may also contain comments; they begin with `#` and continue until the end of the line
+* are executed by the shell in exactly the same way as commands entered interactively (with all features such as pipelines, input/output redirection, and background processes)
+* They are a full-fledged programming language, but are only suitable to a limited extent for larger programming tasks (better use Python or Perl for those)
+* The various shells implement different "dialects" that are not fully compatible => On Linux (and also macOS), you should use Bash for scripts (regardless of which shell you use interactively).
+
+
+<<<
+== Variables
+[.step]
+* can store strings or integers, but are actually type-agnostic (numbers are also stored internally as strings, and strings can be used in arithmetic expressions without causing errors)
+* In addition, there are also lists and maps (key-value pairs), but we won't be covering them in this course.
+* do not need to be declared
+
+
+<<<
+== Using Variables
+[source, shell]
+----
+s=abc  <1>
+x=1
+nlines=$(wc -l /tmp/blablub.txt)  <2>
+echo $abc  <3>
+(( x=$x+1 ))  <4>
+echo "x = $x"  <5>
+----
+<1> Assignment: If the string contains spaces or special characters, you must use quotes.
+<2> _Command substitution_: The output of the command is assigned to the variable.
+<3> Access: Prefix the name with a dollar sign.
+<4> Arithmetic expression: Variables that contain a string are converted to 0.
+<5> _Variable expansion_: The value of the variable is inserted into the string, but only in strings enclosed in double quotes.
+
+
+<<<
+== Variable Transformations
+[cols="1,2"]
+|===
+| Extract a substring | `${<variable>:<position>:<length>}`, where the position starts at 1.
+| Find / replace | `${<variable>/<for>/<with>}`
+| Length of a string | `${#<variable>}`
+|===
+
+[.text-left]
+This does **not** change the variable => assign the value to a new variable or use it in a comparison.
+
+
+<<<
+== Control Structures (1)
+[.step]
+* Branches execute certain instructions (a block of code) based on one or more conditions: `if` – `elif` – `else`
+* Loops repeat certain instructions.
+* There are two types of loops in the shell:
+[.step]
+** Loop continues as long as a condition is true: `while`
+** Loop runs (_iterates_) through all the elements of a sequence: `for`
+* Possible sequences:
+[.step]
+** List of values in the script (separated by spaces)
+** Files / directories found using a wildcard expression
+// TODO: weitere Möglichkeiten erwähnen?
+
+
+<<<
+== Control Structures (2)
+[.step]
+* Things that can be used as conditions in `if` and `while` statements:
+[.step]
+** Comparisons of variables against a value => slide _Comparison Operators_
+** Tests on directories and files => slide _Tests_
+** Program exit statuses
+* Conditions can be negated using `!`.
+* Conditions can be combined using `&&` (and) or `||` (or).
+
+
+<<<
+== Branches
+[source, sh]
+----
+if [[ $x < 0 ]]; then  <1>
+    echo "x is less than 0 ($x)"  <2>
+elif [[ $x > 0 ]]; then  <3>
+    echo "x is greater than 0 ($x)"
+else  <4>
+    echo "x is equal to 0 ($x)"
+fi  <5>
+----
+<1> The first branch begins with `if`, followed by the condition in double square brackets, followed by a semicolon and `then`.
+<2> A code block can consist of one or more lines.
+<3> Additional branches may follow, starting with `elif`.
+<4> There may be an `else` branch that is executed if none of the other conditions are met (an `else` is followed by **no** `then`).
+<5> The structure is closed with `fi`.
+
+
+<<<
+== `for` loops
+[source, sh]
+----
+for name in Alice Bob Charlie; do  <1>
+    echo "Hello $name"  <2>
+done  <3>
+for file in *.txt; do  <4>
+    ...
+done
+----
+<1> A loop with fixed values; `name` is the loop variable to which the values are assigned one after another. The code block begins with `do`.
+<2> A code block can consist of one or more lines.
+<3> The loop is terminated with `done`.
+<4> A loop with a wildcard expression
+
+<<<
+== `while` loops
+[source, sh]
+----
+x=5
+while [[ $x -ge 0 ]]; do  <1>
+    echo $x  <2>
+    (( x=$x-1 ))
+done  <3>
+while IFS= read -r line; do  <4>
+    ...
+done < bla.txt
+----
+<1> A loop with a condition. The code block begins with `do`.
+<2> A code block can consist of one or more lines.
+<3> The loop is terminated with `done`.
+<4> A loop that reads lines from a file (or, using process substitution, from a program) until all lines have been read or the program terminates. `line` is the loop variable to which the lines are assigned one after another (`IFS=` ensures that whitespace at the beginning and end of the line is preserved; with `-r`, backslashes are preserved).
+
+
+<<<
+== Comparison Operators
+[.text-left]
+The general syntax is `[[ <variable> <operator> <value> ]]`.
+
+|===
+| Equality / Inequality | `==` / `!=`
+| Check if a variable contains a specific string | `== \*<string>*`, enclose the string in quotes if it contains spaces or special characters
+| Comparison with a regular expression (not PCREs, but a simplified version) | `=~`
+| Greater than / Less than | `-gt` / `>` / `-lt` / `<`
+| Greater than or equal to / Less than or equal to | `-ge` / `-le`
+|===
+
+
+<<<
+== Tests
+[.text-left]
+In addition to comparisons, there are also tests that check files or directories for specific properties. The general syntax is `[[ <test> <file or directory> ]]`.
+
+[cols="3,1"]
+|===
+| Does the file or directory exist? | `-e`
+| Is the file actually a file? | `-f`
+| Is the directory actually a directory? | `-d`
+| Is the file executable by the user? | `-x`
+|===
+
+
+<<<
+== Text Output
+[.step]
+* Simple: `echo`
+* More convenient (more formatting options), safer (for variables that start with `-` or contain backslashes), and more portable (same behavior in all shells and on macOS as well): `printf <format string> [<list of variables>]`
++
+|===
+
+| Print the value of a variable | `printf 'Hello %s' $name`
+| Same as above, but with a line break at the end | `printf 'Hello %s\n' $name`
+| Print two numbers right-aligned in columns each 5 characters wide | `printf '%5d \| %5d\n' $x $y`
+// TODO: weitere Beispiele?
+|===
+
+
+<<<
+== Functions
+[.step]
+* encapsulate a specific functionality = code block that can be used at various locations in the script (by calling the function)
+* can have arguments and a return value
+* Functions are also useful as "aliases" with arguments.
+* Example: Adding two values
++
+[source, sh]
+----
+sum() {  <1>
+    s=$(( $1+$2 ))  <2>
+    printf $s  <3>
+}
+sum 5 6  <4>
+----
+<1> Definition of the function (arguments are not specified)
+<2> Accessing the arguments via `$1`, `$2`... (as in a script)
+<3> Returning values using `echo` / `printf` (**not** using `return`)
+<4> Calling the function like a program
+
+
+<<<
+== Example 1 - Creating a Report for Directories
+[.step]
+* **Task**: For all subdirectories in a directory, determine the amount of disk space used and the number of files contained.
+* **Topics**:
+[.step]
+** Variables
+** `for` loops
+** Branches
+** Tests
+** Command substitution
+
+
+<<<
+== Example 1 - Step 1
+[source, sh]
+----
+#!/bin/bash  <1>
+
+
+
+
+cd $1  <2>
+for entry in *; do  <3>
+
+
+
+
+
+done
+----
+<1> https://de.wikipedia.org/wiki/Shebang[_Shebang_ line], which tells Linux that the script should be run using Bash.
+<2> Change to the directory for which the report is to be generated. `$1` is the first command-line argument of the script.
+<3> Loop through all subdirectories and files in the directory.
+
+
+<<<
+== Example 1 - Step 2
+[source, sh]
+----
+#!/bin/bash
+
+
+
+
+cd $1
+for entry in *; do
+    if [[ -d $entry ]]; then  <1>
+
+
+
+    fi
+done
+----
+<1> Is a directory entry a subdirectory?
+
+
+<<<
+== Example 1 - Step 3
+[source, sh]
+----
+#!/bin/bash
+
+
+
+
+cd $1
+for entry in *; do
+    if [[ -d $entry ]]; then
+        num_files=$(find $entry -type f | wc -l)  <1>
+        used_space=$(du -hs $entry | cut -f1)  <2>
+
+    fi
+done
+----
+<1> Number of files
+<2> Used disk space
+
+
+<<<
+== Example 1 - Step 4
+[source, sh]
+----
+#!/bin/bash
+
+
+
+
+cd $1
+for entry in *; do
+    if [[ -d $entry ]]; then
+        num_files=$(find $entry -type f | wc -l)
+        used_space=$(du -hs $entry | cut -f1)
+        echo "The subdirectory $entry contains $num_files files and uses $used_space disk space"  <1>
+    fi
+done
+----
+<1> Output per subdirectory
+
+
+<<<
+== Example 1 - Step 5
+[source, sh]
+----
+#!/bin/bash
+if [[ $# != 1 ]]; then  <1>
+    echo "Usage: $0 <directory>"  <2>
+    exit 1  <3>
+fi
+cd $1 || exit 1  <4>
+for entry in *; do
+    if [[ -d $entry ]]; then
+        num_files=$(find $entry -type f | wc -l)
+        used_space=$(du -hs $entry | cut -f1)
+        echo "Subdirectory $entry contains $num_files files and uses $used_space disk space"
+    fi
+done
+----
+<1> Was the script called with an argument (`$#` contains the number of arguments)?
+<2> `$0` is the name of the script, exactly as it was invoked by the user.
+<3> Terminate the script with the _exit status_ 1
+<4> If `cd` fails (because the directory does not exist or the user does not have permission), `exit` is executed (shortcut for `if ! cd ...`).
+
+
+<<<
+== Example 2 - Monitoring Log Files
+[.step]
+* **Task**: A log file is to be monitored, and a command is to be executed when a specific message appears.
+* **Topics**:
+[.step]
+** `while` loop
+** Read a program's output line by line
+** Check the exit status of commands
+
+
+<<<
+== Example 2 - Step 1
+[source, sh]
+----
+#!/bin/bash
+
+
+while IFS= read -r line; do  <1>
+
+
+
+
+done < <(tail -f "$1")  <2>
+----
+<1> Reading line by line...
+<2> ...the output of a program (in this case, `tail`). The log file is the first argument of the script.
+
+
+<<<
+== Example 2 - Step 2
+[source, sh]
+----
+#!/bin/bash
+
+
+while IFS= read -r line; do
+    if printf '%s' "$line" | grep "$2"; then  <1>
+
+
+    fi
+done < <(tail -f "$1")
+----
+<1> Check whether the read line contains a specific string (the script's second argument). The quotes around `$1`, `$line`, and `$2` ensure that the script can handle spaces in the filename, the line, and the search string.
+
+
+<<<
+== Example 2 - Step 3
+[source, sh]
+----
+#!/bin/bash
+
+
+while IFS= read -r line; do
+    if printf '%s' "$line" | grep "$2"; then
+        printf "String '%s' found in log file %s\n" "$2" "$1"
+        ping -c1 localhost  <1>
+    fi
+done < <(tail -f "$1")
+----
+<1> Run a program (in this case, `ping`; see the chapter "Linux on a Network")
+
+
+<<<
+== Example 2 - Step 4
+[source, sh]
+----
+#!/bin/bash
+set -o errexit  <1>
+set -o pipefail
+while IFS= read -r line; do
+    if printf '%s' "$line" | grep "$2"; then
+        printf "String '%s' found in log file %s\n" "$2" "$1"
+        ping -c1 localhost
+    fi
+done < <(tail -f "$1")
+----
+<1> The script terminates automatically if a command fails (exit status > 0; see also https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html[here]), which is helpful for making scripts more robust.
+
+
+<<<
+== Linux for Power Users
+1. General Information
+2. Working with the Shell
+3. Working with Files and Directories
+4. Processes
+5. Working with Text (Files)
+6. Writing (Simple) Shell Scripts
+7. **Linux on a Network**
+8. Fundamentals of System Administration
+9. Containers
+
+
+<<<
+== Network - Introduction
+[.step]
+* Network functionality in Linux is implemented through
+[.step]
+** Network interfaces = hardware (e.g. network card) + device drivers in the kernel
+** Network stack in the kernel that implements protocols such as IP and TCP
+** Demons that provide network services such as web servers or SSH
+* "Network drives" are typically implemented in Linux using the _Network File System_ (NFS); Windows shares (CIFS) are also supported.
+
+
+<<<
+== Configuring the Network
+[.step]
+* Network interfaces have one or more IP addresses and the corresponding network _routes_ (gateways) assigned to them.
+* Interfaces are usually configured automatically / dynamically (using the DHCP protocol).
+* _Name resolution_ (mapping host / computer names to IP addresses) is typically handled by the _Domain Name System_ (DNS); the DNS servers used are also configured via DHCP.
+* Alternatively, the network can also be configured manually / statically:
+[.step]
+** Configuration files for configuring the interfaces; the filename(s) and format depend on the Linux distribution (e.g. Ubuntu / Debian: `/etc/network/interfaces`, RedHat / CentOS / Fedora: `/etc/sysconfig/network-scripts/ifcfg-ethX`) and the software used to manage the network (e.g. https://wiki.archlinux.org/title/NetworkManager[_NetworkManager_] or https://wiki.archlinux.org/title/Systemd-networkd[_systemd-networkd_]).
+** Mapping of host / computer names to IP addresses in the `/etc/hosts` file (rarely used these days)
+** The `/etc/resolv.conf` file for configuring DNS servers.
+
+
+<<<
+== Networking - Important Commands (1)
+|===
+
+| List network interfaces with MAC addresses, IP address(es), and subnet masks +
+(Names, e.g. `eth0`, depend on the hardware type and Linux distribution) | `ip addr`
+| Start / stop network interfaces | `ip link set <interface> up` or `ip link set <interface> down`
+| List all network routes | `ip route`
+| Determine the route to a specific destination (IP address) | `ip route get <IP address>`
+|===
+
+
+<<<
+== Networking - Important Commands (2)
+|===
+
+| Check if a computer is reachable on the network | `ping <hostname or IP address>`
+| List all network connections and open ports on the local computer along with their associated processes | `netstat -pan` or `ss -pan`
+| List only open (in the _LISTEN_ state) TCP or UDP ports on the local computer along with their associated processes | `netstat\|ss -tlpn` or `netstat\|ss -ulpn`
+| Determine the IP address associated with a host or computer name (“resolve name”) | `host <hostname>` (DNS only) or `getent hosts <hostname>` (also `/etc/hosts` and other sources such as `systemd-resolved`)
+|===
+
+
+<<<
+== _Optional_: Access to a remote computer - SSH (1)
+[.step]
+* _Secure Shell_ (SSH) allows you to work on a computer connected via the network.
+* You can log in and work interactively (in the shell) or execute individual commands: `ssh <user>@<hostname or IP address> [<command>]`
+* Authentication is performed using a password or a cryptographic key.
+[.step]
+** You generate a key pair consisting of a public and a private key using the `ssh-keygen` command, which creates the files `id_rsa` (private) and `id_rsa.pub` (public) in the `~/.ssh/` directory.
+** You must keep the private key secret (permission 0700 for the directory and 0600 for the file) and you should protect it with a _passphrase_.
+** The public key must be added to the `~/.ssh/authorized_keys` file on the **target computer** (this can be done using the `ssh-copy-id` command).
+* Computers (hosts) also have a key pair; the public key is automatically added to the local file `~/.ssh/known_hosts` the first time you log in.
+
+
+<<<
+== _Optional_: Accessing a Remote Computer - SSH (2)
+[.step]
+* You can also transfer / copy files using SSH:
+[.step]
+** `scp` (like `cp`)
++
+[source, sh]
+----
+$ scp <local file> <user>@<hostname or IP address>:<path on the destination computer>
+----
+** Interactively with `sftp` (just like with `ftp`)
+* A more convenient and powerful alternative (based on SSH): `rsync`
+[.step]
+** Only differences / changes are transferred.
+** a lot of additional options
+** well-suited for backups or for keeping multiple systems in sync
+
+
+<<<
+== _Optional_: `netcat`
+[.step]
+* command-line tool for testing and troubleshooting networks at the transport layer (UDP / TCP)
+* can connect to any UDP and TCP port and can be started as a server
+* reads data from standard input, sends it via UDP or TCP, and writes received data to standard output
+* useful, among other things, for testing whether a connection to a specific port is possible (or, for example, is blocked by a firewall)
+* Examples:
+[.step]
+** Check if a certain TCP or UDP port on a computer can be reached: `nc -v <hostname or IP address> <port number>` or `nc -uv` for UDP
+** TCP connection between two computers: `nc -vl <hostname or IP address> <port number>` (server) and `nc -v <hostname or IP address> <port number>` (client)
+
+
+<<<
+== _Optional_: `dig`
+[.step]
+* Command-line client for DNS, similar to `host` (or `nslookup`), but with more features
+* provides a more detailed output (which is easy to parse); you can query a particular DNS server or request a specific record type
+* Useful for troubleshooting and automating tasks in scripts
+* Examples:
+[.step]
+** Reverse lookup (find the name associated with an IP address): `dig -x 8.8.8.8`
+** Find the mail server for a domain: `dig -t MX allianz.de`
+** Trace recursive name resolution: `dig +trace allianz.de`
+
+
+<<<
+== _Optional_: `curl`
+[.step]
+* Command-line client for HTTP(S)
+* can be used for testing (e.g. to check if a specific URL is accessible), for troubleshooting, and for automating tasks in scripts (such as transferring files or using a web service (API))
+* supports all HTTP methods (GET, POST...) and all common authentication types; headers can be set, and data can be sent and received
+* Status information and received headers are printed to standard output.
+* The data to be sent can be read from standard input or from a file, and the received data can be written to standard output or to a file.
+* Examples:
+[.step]
+** Downloading a file: `curl -O https://httpbin.org/robots.txt`
+** Sending data in JSON format to an API: `curl --json '{"bla": "blub"}' https://httpbin.org/post`
+
+
+<<<
+== _Optional_: Lab: Working on a Network
+[.text-left]
+**Tasks:**
+[.step]
+* Ask your partner to find out the IP address of their VM.
+* Check whether this IP address is accessible.
+* Ask your partner to check whether the TCP port for SSH (22) is open on their VM.
+* Log in to your partner's VM using SSH and the username and password ("mvhs" / "mvhs123").
+* Generate an SSH key pair, copy the public key to your partner's VM, and log in using the SSH key.
+* Copy a file to your partner's VM.
+
+
+<<<
+== Linux for Power Users
+1. General Information
+2. Working with the Shell
+3. Working with Files and Directories
+4. Processes
+5. Working with Text (Files)
+6. Writing (Simple) Shell Scripts
+7. Linux on a Network
+8. **Fundamentals of System Administration**
+9. Containers
+
+
+<<<
+== Starting and Stopping a System
+[.step]
+* At any given time, a Linux system is in a specific state, known as a _run level_ or _target_.
+* The `reboot` command boots the system (run level 6), and the `poweroff` command shuts it down (run level 0).
+
+
+<<<
+== Starting and Stopping a System - Run Levels
+[cols="1,1,3"]
+|===
+| Run level | Name | Description
+
+| 0 | Halt | The system is halted / shut down.
+| 1 | Single-user mode | The system is running, but only with the necessary services and without networking, for maintenance.
+| 3 | Multi-user mode | System is running with all (configured) services and network access, but without a GUI; standard for servers.
+| 5 | Graphical mode | Same as 3, plus GUI (desktop environment); standard for workstations
+| 6 | Reboot | System is booting.
+|===
+
+
+<<<
+== Starting and Stopping a System - `systemd` (1)
+[.step]
+* When a system boots, a process with PID 1 is started after the kernel starts: `systemd` (`launchd` on macOS). This process
+[.step]
+** configures the system (devices, network, name resolution)
+** starts the services (daemons) that are configured in the `/etc/systemd/system` or `/etc/systemd/user` directory for each run level or target (as symbolic links in a directory named `<target name>.wants/`).
+** stops these services again when the corresponding run level or target is exited
+** automatically restarts services in the event of an error (process has terminated)
+
+
+<<<
+== Starting and Stopping a System - `systemd` (2)
+[.step]
+* Each service can be configured in the so-called _unit files_:
+[.step]
+** Run level / target in which the service should run
+** Environment variables
+** Scripts / programs to be run before / after startup / shutdown
+** Resource limits (CPU, memory, disk space)
+* Command for managing services: `systemctl`
+[.step]
+** View all running services: `systemctl status`
+** View / start / stop a specific service: `systemctl status|start|stop <name of the service>`
+** Enable / disable a specific service: `systemctl enable|disable --now <name of the service>` (`--now` also starts / stops the service)
+
+
+<<<
+== `systemd` Timers (1)
+[.step]
+* allow programs / scripts to be run periodically at specific times (by `systemd`), even if the user is not logged in
+* are often used to automatically perform maintenance tasks (e.g. backups, deleting temporary files)
+* are executed with the respective user's permissions
+* replace _cron jobs_ on modern Linux systems
+
+
+<<<
+== `systemd` Timers (2)
+[.step]
+* two configuration files per program / script:
+[.step]
+** Configuration of the program / script (which program / script, options, environment variables) => `<name>.service`
++
+[source, ini]
+----
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/find /tmp -mtime +30 -delete
+----
+** Configuration of the time(s) at which the program / script should run (in https://man7.org/linux/man-pages/man7/systemd.time.7.html[this] format) => `<name>.timer`
++
+[source, ini]
+----
+[Timer]
+OnCalendar=*-*-* 8:00:00 PM
+
+[Install]
+WantedBy=timers.target
+----
+
+
+<<<
+== `systemd` Timers (3)
+[.step]
+* They can be created system-wide (files under `/usr/lib/systemd/system/`, edit with `systemctl edit --full --force <file>`) or for a specific user (files under `~/.config/systemd/user/`, edit with `systemctl --user edit --full --force <file>`)
+* Good tutorials: https://wiki.archlinux.org/title/Systemd/Timers and https://unix.stackexchange.com/a/688512
+* Output (standard output / standard error) is collected by the `journald` daemon and can be viewed using `journalctl`.
+
+
+<<<
+== Logging (1)
+[.step]
+* Log messages from the kernel, services, and users are collected by the `journald` daemon and written (in binary form) to files in `/var/log/journal` (up to 10% of available disk space or 4 GiB).
+* can be viewed using `journalctl` (also as JSON, see lab _Working with Text_)
+* many filtering options, including
++
+|===
+
+| Time period (also shortcuts like `today`, same format as with `systemd` timers) | `--since` (`-S`) / `--until` (`-U`)
+| Service | `--unit` (`-u`)
+| _Facility_ (`kern`, `user`, `auth`, ...) | `--facility`
+| Priority (from `debug` to `emerg`) | `--priority` (`-p`)
+|===
+
+
+<<<
+== Logging (2)
+[.step]
+* Users can write their own log messages using the `logger` command (e.g. in scripts).
+* In some cases, there may also be log files in `/var/log` that are not written by `journald`.
+
+
+<<<
+== Demo: `systemd` and Logging
+
+
+// TODO: systemd Timer anlegen als Übung?
+
+
+<<<
+== Storage Media and File Systems
+[.step]
+* Storage devices (hard drives, disk arrays, CDs/DVDs, USB flash drives) are accessed via device files (in the `/dev` directory).
+* Storage devices must use a file system supported by Linux (ext4, FAT32, ISO 9660...).
+* _Mounting_ makes the storage device visible as a subdirectory (the _mount point_) in the directory tree; the reverse process is _unmounting_.
+* There are several ways to mount a storage device:
+[.step]
+** by `systemd` during boot; device files and their corresponding mount points must be listed in the `/etc/fstab` file
+** automatically (by a daemon) when the storage medium (CDs, DVDs, USB flash drives, removable hard drives) is inserted or connected; these media are usually mounted under `/media` or `/run/media`
+** manually using the `mount` command (e.g. `mount /dev/sdb1 /data`); unmount with `umount`
+* A device can only be unmounted if no one is currently accessing any files or directories on the device (including as the current directory).
+
+
+<<<
+== Package Manager - Introduction
+[.step]
+* are designed to make it as easy as possible to install (and uninstall) software from a trusted source
+* The various Linux distributions use (in some cases) different package managers => Ubuntu / Mint / Debian / Kali: _APT_, Fedora / CentOS / RedHat: _DNF_; see https://www.linode.com/docs/guides/linux-package-management-overview/#comparison-of-package-managers[here] for the complete list.
+
+
+<<<
+== Package Managers - Concepts
+[.step]
+* Software is bundled into a single package (executable programs, libraries, scripts, configuration files) and, if necessary, adapted for the respective distribution (e.g. file paths).
+* Dependencies are defined for each package (which additional packages are required), and these may be installed automatically alongside with the package.
+* There is a _repository_ (provided by the distribution) containing all available packages (on an installation medium such as a CD, DVD, or USB drive, or on a server). Additional repositories (e.g. from open-source projects or software vendors) can be added.
+* Every system has a database containing all installed packages.
+* All installed packages can be updated with a single command, which takes dependencies into account (for example, if a particular app does not work with the latest version of a library).
+
+
+<<<
+== Package Manager - Important Commands
+|===
+
+| Search for a package (in the repository, also wildcards are supported) | `apt\|dnf list <search string>`
+| Install a package (with dependencies) | `apt\|dnf install <package>`
+| Uninstall a package | `apt\|dnf remove <package>`
+| List installed packages | `apt\|dnf list --installed`
+| Update all installed packages | `apt\|dnf upgrade`
+| Update the list of packages available in the repository (APT only) | `apt update`
+|===
+
+
+<<<
+== Demo: Package Manager
+
+
+<<<
+== Troubleshooting (1)
+[.step]
+* Which process is using the most CPU, memory, or (disk or network) I/O bandwidth? `csysdig` (Alternatives: `top`, `htop`, `iotop`, `iftop`, https://github.com/draios/sysdig/wiki/How-to-Install-Sysdig-for-Linux[guide] for installing Sysdig)
+* Which process has a specific file or network connection (port) open? `sysdig` or `lsof`
++
+[source, sh]
+----
+$ sysdig -c lsof fd.name=/etc/host
+$ lsof /etc/hosts
+$ sysdig -c lsof fd.port=53
+$ lsof -i :53
+----
+* Which files or network connections does a specific process have open? `sysdig`, `lsof`, or the `/proc` filesystem (see below)
++
+[source, sh]
+----
+$ sysdig -c lsof proc.name=sshd
+$ sysdig -c lsof proc.pid=12345
+$ lsof -p 12345
+$ ls -l /proc/12345/fd
+----
+
+
+<<<
+== Troubleshooting (2)
+[.step]
+* How full is a storage device (a mount point)? `df -h <mount point>`
+* How much space does a directory take up? `du -hs <directory>`
+* Which (sub)directory takes up the most space?
++
+[source, sh]
+----
+$ du -h --max-depth 1 <directory> | sort -rh
+----
+
+
+<<<
+== Troubleshooting (3)
+[.step]
+* Who is currently logged in? `who`
+* History of a user's logins: `last <username>` (accesses the binary file `/var/log/wtmp`)
+* What commands has a user executed? Shell history, the `.bash_history` and `.zsh_history` files in the user's home directory
+* Which files or (sub)directories were last modified in a specific directory?
++
+[source, sh]
+----
+$ find . -printf '%T@ %M %u %g %s %p\n' | \
+sort -rn | \
+awk '{print strftime("%Y-%m-%d %H:%M:%S", $1), $2, $3, $4, $5, $6}' | \
+head
+----
+
+
+<<<
+== Demo: Troubleshooting
+
+
+<<<
+== `/proc` file system
+[.step]
+* is a _virtual_ file system that is created and updated by the kernel during system runtime
+* mainly useful for debugging and troubleshooting
+* Content, which is provided in individual files, some of which are located in subdirectories:
+[.step]
+** Information about hardware such as the CPU and memory (`/proc/cpuinfo` and `/proc/meminfo`)
+** Information about running processes (one subdirectory per process), such as the command line used to start the process (`/proc/<PID>/cmdline`) and the set environment variables (`/proc/<PID>/environ`)
+** Kernel parameters that can be changed while the system is running, such as network settings (`/proc/sys/...`)
+* Files can be read using `cat` and modified using `echo ... > /proc/sys/...`.
+
+
+<<<
+== Backup
+[.step]
+* Back up data to another computer / synchronize multiple computers (via SSH): https://man7.org/linux/man-pages/man1/rsync.1.html[_rsync_]
+* Back up data to the cloud (many supported providers): https://rclone.org/[_rclone_]
+* Back up data locally or to the cloud, with versioning and deduplication: https://restic.net/[_restic_]
+* Back up / clone entire disks / partitions: https://clonezilla.org/[_Clonezilla_]
+
+
+<<<
+== Additional Administration Tools
+[.step]
+* Graphical user interfaces: https://webmin.com/[Webmin] or https://cockpit-project.org/[Cockpit]
+* https://en.wikipedia.org/wiki/Infrastructure_as_code[_Infrastructure as Code_] (more suitable for a large number of similar computers): https://www.ansible.com/[Ansible], https://www.chef.io/[Chef], https://www.puppet.com/[Puppet]
+
+
+<<<
+== Linux for Power Users
+1. General Information
+2. Working with the Shell
+3. Working with Files and Directories
+4. Processes
+5. Working with Text (Files)
+6. Writing (Simple) Shell Scripts
+7. Linux on a Network
+8. Fundamentals of System Administration
+9. **Containers**
+
+
+<<<
+== Containers
+[.step]
+* are **virtual** instances of the operating system, all of which run on the same actual system
+[.step]
+** They all use the same kernel.
+** Each has its own file system (which allows for different distributions).
+** Each has its own _namespace_ for processes (PIDs), users, and the network => processes and users appear to be "on their own" within a container.
+* Resource usage (CPU, memory, disk space) can be limited.
+* are typically used with tools such as https://www.docker.com/[_Docker_], https://podman.io/[_Podman_], or https://github.com/containerd/nerdctl[_nerdctl_], as well as https://docs.docker.com/desktop/[_Docker Desktop_] or https://podman-desktop.io/[_Podman Desktop_]
+* Tools for managing a large number of containers: https://docs.docker.com/compose/[_Docker Compose_] (better suited for a smaller number on a single machine, e.g. for development) or https://kubernetes.io/[_Kubernetes_] (more suitable for a larger number of containers on clusters of computers)
+
+
+<<<
+== Why Containers?
+[.step]
+* Applications can be isolated from one another.
+* Applications can be delivered "pre-installed," that is, along with the necessary libraries, configuration files, and any required runtime environment (such as the Java Virtual Machine or the Python interpreter).
+* Containers are more lightweight than virtual machines and may expose a smaller attack surface (because they contain only the necessary programs and data).
+* Containers are also useful for setting up test environments / networks on a single computer (e.g. a developer's workstation).
+
+
+<<<
+== Container Images
+[.step]
+* represent the container's file system in compressed form (a special type of `tar.gz` archive)
+* Some include only the application and its dependencies (_distroless_), but often a Linux distribution is used as the basis (is explained well https://serverfault.com/a/951888[here]).
+* You can create them yourself (e.g. using Docker or Podman) and store them locally, or download them from _container registries_ such as https://hub.docker.com/[_Docker Hub_].
+* _Dockerfiles_ are the build instructions for images.
+* Images cannot be modified => Changes made in a running container are discarded when the container is stopped.
+
+
+<<<
+== _Optional_: Run containers (1)
+[.step]
+* Start a container: `podman run [options] <image>[:<version>] [command]`
+* Important options:
++
+|===
+
+| `-d` | Start the container in the background (detached)
+| `-it` | Start it with standard input and a (pseudo-)terminal for interactive use, e.g. a shell
+| `-v <path on the host>:<path in the container>` | Make a file or directory on the host available in the container; paths must be absolute
+| `-p <port on the host>:<port in the container>` | Make the container’s open network port(s) available on the host
+|===
+
+
+<<<
+== _Optional_: Run containers (2)
+[.step]
+* List running containers: `podman ps`
+* Stop a container: `podman kill <ID or name>`
+* Start a program (e.g. a shell) in a running container:
+[.step]
+** The program **is** present in the container image: `podman exec [-it] <ID or name> <program and arguments>`
+** The program is **not** present in the container image: `nsenter -t $(podman inspect -f '{{.State.Pid}}' <ID or name>) <namespace> <program and arguments>`
+* Access the file system of a running container via the `/proc` file system: `/proc/$(podman inspect -f '{{.State.Pid}}' <ID or name>)/root/`
+
+
+<<<
+== _Optional_: Build images
+[.step]
+* A Dockerfile describes how an image is to be constructed (what software to install, what files to add and so on).
+* Example (see the https://docs.docker.com/reference/dockerfile/[Reference Documentation] for all options):
++
+[source, docker]
+----
+FROM fedora:latest
+RUN dnf install -y xyz
+ENTRYPOINT ["sleep", "infinity"]
+----
+* Build the image: `podman build -t <name> <directory>`; you must specify the directory containing the Dockerfile and any other files that may be required
+
+
+<<<
+== _Optional_: Demo on Containers and Images
+
+
+<<<
+== Thank you very much!
+Made with &#x2764;&#xFE0F;, https://asciidoc.org/[_AsciiDoc_], https://asciidoctor.org/[_Asciidoctor_], https://revealjs.com/[_reveal.js_], https://github.com/paxtonhare/demo-magic[_Demo Magic_] and lots of &#x2615;&#xFE0F;
+
+
+<<<
+== Appendix A: Lab Solutions
+// TODO: Lösung für Schnitzeljagd?
+// TODO: Sind Beispiele für Arbeiten mit Text zu kompliziert? Evtl. doch CSV-Dateien mit MSISDNs verwenden?
+
+
+<<<
+== Lab: Working with Text - Searching / Filtering (1)
+* **Task**: Filter the output of `journalctl` for `systemd` log messages and count these messages.
+* **Solution**:
+** using `grep`, naive approach. The entire line is searched for the string `systemd`, which can lead to false positives. The `-c` option returns the count.
++
+[source, sh]
+----
+$ sudo journalctl -S today | grep systemd
+----
+
+** using `grep` and a regular expression. This ensures that the string `systemd` is found only when it appears as a program name.
++
+[source, sh]
+----
+$ sudo journalctl -S today | grep -P 'systemd\[\d+\]'
+----
+
+
+<<<
+== Lab: Working with Text - Searching / Filtering (2)
+* **Solution**:
+** using Perl. Only the fifth column, which contains the program name, is searched. You have to use a regular expression because `journalctl` appends the PID to the name. Adding `| wc -l` at the end gives you the count.
++
+[source, sh]
+----
+$ sudo journalctl -S today | perl -nale 'print if $F[4] =~ /systemd\[\d+\]/'
+----
+
+** using JSON and `jq`. If you omit `| .MESSAGE`, the complete objects—including all attributes—are outputted.
++
+[source, sh]
+----
+$ sudo journalctl -S today -o json | jq 'select(.SYSLOG_IDENTIFIER == "systemd") | .MESSAGE'
+----
+
+** using JSON and DuckDB. You can get the count with `select count(*)`.
++
+[source, sh]
+----
+$ sudo journalctl -S today -o json | \
+    duckdb -c "select MESSAGE from read_json('/dev/stdin') where SYSLOG_IDENTIFIER = 'systemd';"
+----
+
+
+<<<
+== Lab: Working with Text - Aggregation
+* **Task**: Group the log messages by program and output the number of messages per program, sorted in descending order.
+* **Solution**:
+** using `cut`:
++
+[source, sh]
+----
+$ sudo journalctl -S today | cut -d' ' -f5 | sort | uniq -c | sort -rn
+----
+
+** Using `cut`, program names without the PIDs:
++
+[source, sh]
+----
+$ sudo journalctl -S today | cut -d' ' -f5 | cut -d'[' -f1 | sort | uniq -c | sort -rn
+----
+
+** Using Perl, program names without the PIDs:
++
+[source, sh]
+----
+$ sudo journalctl -S today | perl -nale '$F[4] =~ /([a-zA-Z]+)/; print $1' | sort | uniq -c | sort -rn
+----
+
+** Using JSON and DuckDB:
++
+[source, sh]
+----
+$ sudo journalctl -S today -o json | \
+    duckdb -c "select SYSLOG_IDENTIFIER, count(*) from read_json('/dev/stdin') group by 1 order by 2 desc;"
+----
+
+
+// TODO: Adapt to the Allianz setup
+<<<
+== Lab: Working in a Network (1)
+* **Task**: Ask your partner to find out the IP address of their VM.
+* **Solution**:
++
+[source, sh]
+----
+$ ip addr
+----
+
+* **Task**: Check whether this IP address is accessible.
+* **Solution**:
++
+[source, sh]
+----
+$ ping 192.168.x.x
+----
+
+* **Task**: Ask your partner to check whether the TCP port for SSH (22) is open on their VM.
+* **Solution**:
++
+[source, sh]
+----
+$ sudo netstat / ss -pan | grep :22  # all ports (-a)
+$ sudo netstat / ss -tlpn | grep :22  # filters by the relevant ports: only TCP ports (-t) in the LISTEN state (-l)
+----
+
+
+<<<
+== Lab: Working in a Network (2)
+* **Task**: Log in to your partner's VM using SSH and the username and password ("mvhs" / "mvhs123").
+* **Solution**:
++
+[source, sh]
+----
+$ ssh mvhs@192.168.x.x
+----
+
+* **Task**: Generate an SSH key pair, copy the public key to your partners's VM, and log in using the SSH key.
+* **Solution**:
++
+[source, sh]
+----
+$ ssh-keygen  # Generate a key pair; enter a passphrase
+$ ssh-copy-id mvhs@192.168.x.x  # Copy the public key to the target system
+$ ssh mvhs@192.168.x.x  # Enter the *passphrase*, not the password
+----
+
+* **Task**: Copy a file to your partner's VM.
+* **Solution**:
++
+[source, sh]
+----
+$ scp /etc/hosts mvhs@192.168.x.x:/tmp/
+----
