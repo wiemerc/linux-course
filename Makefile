@@ -1,5 +1,7 @@
 .PHONY: all build-container start-container stop-container install html preview pdf zip translate clean
 
+LANG ?= de
+
 all: html pdf
 
 build-container:
@@ -18,18 +20,17 @@ install:
 	python3 -m venv .venv
 	.venv/bin/pip install polib deepl
 
-html: linux-power-users.html
+html: linux-power-users.$(LANG).html
 
-pdf: linux-power-users.pdf uebungen.pdf
+pdf: linux-power-users.$(LANG).pdf
 
 zip: pdf
-	zip -r linux-power-users-`date +%Y%m%d` linux-power-users.pdf uebungen.pdf scripts/
+	zip -r linux-power-users-`date +%Y%m%d` linux-power-users.$(LANG).pdf scripts/
 
 usb: html
-	cp -r images scripts linux-power-users.adoc linux-power-users.html uebungen.adoc /Volumes/CONSTI/Kurse/linux-power-users/
+	cp -r images/*.$(LANG).* scripts linux-power-users.$(LANG).adoc linux-power-users.$(LANG).html /Volumes/CONSTI/Kurse/linux-power-users/
 
-# Run this target only once and rename `linux-power-users.en.adoc` to `linux-power-users.adoc` once you're satisfied with the
-# translation (in a separate branch).
+# Run this target only once to do the initial translation with DeepL
 translate:
 	po4a po4a.cfg
 	cp po/linux-power-users.pot po/linux-power-users.en.po
@@ -46,7 +47,7 @@ clean:
 %.pdf: %.adoc
 	podman exec pdf-builder asciidoctor-pdf -a pdf-page-size=A4 -a pdf-page-layout=landscape -a pdf-theme=default-sans -a source-highlighter=rouge /data/$^
 
-linux-power-users.pdf: linux-power-users.html
+linux-power-users.$(LANG).pdf: linux-power-users.$(LANG).html
 	podman exec pdf-builder cp /data/$^ /root/reveal.js/index.html
 	podman exec pdf-builder cp -r /data/images /root/reveal.js/
-#	open http://localhost:8000/?print-pdf
+#	xdg-open http://localhost:8000/?print-pdf
