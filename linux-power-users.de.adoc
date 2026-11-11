@@ -616,7 +616,7 @@ image::file-metadata.de.svg[width=1200, align="center"]
 [.step]
 ** 2. bis 4. Zahl = Summe der Rechte für User, Group und Other
 ** 1. Zahl = Summe der Flags
-* Berechtigungen werden im Gegensatz zu Windows nicht vererbt, sondern werden über eine numerische Maske (die sogenannte _umask_) festgelegt, die bestimmt, welche Rechte neue Dateien / Verzeichnisse **nicht** bekommen sollen (Default-Wert ist 022 oder 002) => Wert der Maske wird von 666 (Dateien) bzw. 777 (Verzeichnisse) abgezogen.
+* Berechtigungen werden im Gegensatz zu Windows nicht vererbt, sondern werden über eine numerische Maske (die sogenannte _umask_) festgelegt, die bestimmt, welche Rechte neue Dateien / Verzeichnisse **nicht** bekommen sollen (Default-Wert ist 0022 oder 0002) => Wert der Maske wird von 0666 (Dateien) bzw. 0777 (Verzeichnisse) abgezogen.
 * Zusätzlich zu den Berechtigungen für User, Group und Other können feingranularere Berechtigungen (für weitere Benutzer und Gruppen) mit Hilfe von https://www.redhat.com/en/blog/linux-access-control-lists[_Access Control Lists_] (ACLs) vergeben werden (wie bei Windows).
 
 
@@ -814,11 +814,11 @@ entfernt nur den Eintrag im Verzeichnis, überschreibt die Metadaten (Inode) und
 <<<
 == Wichtige Befehle - Links anlegen
 |===
-| harten Link anlegen (nur innerhalb eines Dateisystems) | `ln <Quelle> <Ziel>`
-| weichen (symbolischen) Link anlegen | `ln -s <Quelle> <Ziel>`
+| harten Link anlegen (nur innerhalb eines Dateisystems) | `ln <Ziel> <Name>`
+| weichen (symbolischen) Link anlegen | `ln -s <Ziel> <Name>`
 |===
 [.text-left]
-icon:warning[] Bei einem symbolischen Link mit einem **relativen** Pfad als Quelle wird der Pfad **relativ zu dem Verzeichnis, in dem sich das Ziel befindet**, interpretiert! Mit der Option `-r` ermittelt `ln` selber den richtigen Pfad.
+icon:warning[] Bei einem symbolischen Link mit einem **relativen** Pfad als Ziel wird der Pfad **relativ zu dem Verzeichnis, in dem der Link angelegt wird**, interpretiert! Mit der Option `-r` ermittelt `ln` selber den richtigen Pfad.
 
 
 <<<
@@ -1041,8 +1041,8 @@ Viel Spass! Lust auf mehr? https://overthewire.org/wargames/
 |===
 | alle Prozesse mit den wichtigsten Informationen / Attributen auflisten | `ps -ef` | `-e` selektiert alle Prozesse, `-f` gibt die wichtigsten Informationen aus
 | alle Prozesse eines bestimmten Benutzers auflisten | `ps -u <Benutzername oder UID> -f` |
-| alle Prozesse auflisten, die ein bestimmtes Programm ausführen | `ps -C <Name des Programms> -f` | Name muss vollständig angegeben werden.
 | Prozess mit einer bestimmten PID auflisten | `ps -p <PID> -f` |
+| alle Prozesse auflisten, die ein bestimmtes Programm ausführen | `ps -C <Name des Programms> -f` | Name muss vollständig übereinstimmen.
 |===
 
 
@@ -1050,6 +1050,7 @@ Viel Spass! Lust auf mehr? https://overthewire.org/wargames/
 == Prozesse - Wichtige Befehle (2)
 |===
 | Ausgabe mit einer sinnvolleren Liste von Attributen | `ps -e -o user,pid,ppid,lstart,state,vsz,rsz,%cpu,%mem,args` | Die verfügbaren Attribute sind in der Man Page aufgeführt, lässt sich auch mit `-u`, `-C` oder `-p` verwenden.
+| alle Prozesse mit einem bestimmten String im Programmnamen auflisten | `pgrep -a <String>` |
 | alle Prozesse mit einem bestimmten String in der Kommandozeile (Programm + Argumente) auflisten | `pgrep -af <String>` |
 |===
 
