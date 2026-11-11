@@ -585,7 +585,7 @@ image::file-metadata.en.svg[width=1200,,  align="center"]
 [.step]
 ** 2nd through the 4th digit = sum of permissions for user, group, and other
 ** 1st digit = sum of the flags
-* Unlike in Windows, permissions are not inherited but are defined using a numeric mask (known as the _umask_), which specifies which permissions new files and directories should **not** have (the default value is 022 or 002) => The value of the mask is subtracted from 666 (files) or 777 (directories).
+* Unlike in Windows, permissions are not inherited but are defined using a numeric mask (known as the _umask_), which specifies which permissions new files and directories should **not** have (the default value is 0022 or 0002) => The value of the mask is subtracted from 0666 (files) or 0777 (directories).
 * In addition to permissions for user, group and other, more granular permissions (for additional users and groups) can be assigned using https://www.redhat.com/en/blog/linux-access-control-lists[_Access Control Lists_] (ACLs) (as in Windows).
 
 
@@ -783,11 +783,11 @@ Only removes the entry from the directory, overwrites the metadata (inode), and 
 <<<
 == Important Commands - Creating Links
 |===
-| Create a hard link (only within a single file system) | `ln <source> <target>`
-| Create a soft (symbolic) link | `ln -s <source> <target>`
+| Create a hard link (only within a single file system) | `ln <target> <name>`
+| Create a soft (symbolic) link | `ln -s <target> <name>`
 |===
 [.text-left]
-icon:warning[] For a symbolic link with a **relative** path as its source, the path is interpreted **relative to the directory where the target is located**! With the `-r` option, `ln` determines the correct path itself.
+icon:warning[] For a symbolic link with a **relative** path as its target, the path is interpreted **relative to the directory where the link is created**! With the `-r` option, `ln` determines the correct path itself.
 
 
 <<<
@@ -1010,8 +1010,8 @@ Have fun! Want more? https://overthewire.org/wargames/
 |===
 | List all processes with key information / attributes | `ps -ef` | `-e` selects all processes; `-f` displays key information
 | List all processes belonging to a specific user | `ps -u <username or UID> -f` |
-| List all processes running a specific program | `ps -C <program name> -f` | The name must be specified in full.
 | List a process with a specific PID | `ps -p <PID> -f` |
+| List all processes running a specific program | `ps -C <program name> -f` | The name is matched exactly.
 |===
 
 
@@ -1019,6 +1019,7 @@ Have fun! Want more? https://overthewire.org/wargames/
 == Processes - Important Commands (2)
 |===
 | Output with a more useful list of attributes | `ps -e -o user,pid,ppid,lstart,state,vsz,rsz,%cpu,%mem,args` | The available attributes are listed in the man page; you can also use this with `-u`, `-C`, or `-p`.
+| List all processes containing a specific string in the program name | `pgrep -a <string>` |
 | List all processes containing a specific string in the command line (program + arguments) | `pgrep -af <string>` |
 |===
 
@@ -1896,7 +1897,7 @@ $ scp <local file> <user>@<hostname or IP address>:<path on the destination comp
 **Tasks:**
 [.step]
 * Ask your partner to find out the IP address of their VM.
-* Check whether this IP address is accessible.
+* Check whether this IP address is reachable.
 * Ask your partner to check whether the TCP port for SSH (22) is open on their VM.
 * Log in to your partner's VM using SSH and the username and password ("mvhs" / "mvhs123").
 * Generate an SSH key pair, copy the public key to your partner's VM, and log in using the SSH key.
@@ -2259,7 +2260,7 @@ ENTRYPOINT ["sleep", "infinity"]
 
 
 <<<
-== _Optional_: Demo on Containers and Images
+== _Optional_: Demo: Containers and Images
 
 
 <<<
