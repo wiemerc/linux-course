@@ -13,30 +13,30 @@ clear
 pei 'cd /tmp'
 pei umask
 
-pei 'mkdir mvhs/'
-pei 'touch mvhs/mvhs.txt'
-pei 'ls -ld mvhs/  # Berechtigungen = 777 - umask'
-pei 'ls -l mvhs/  # Berechtigungen = 666 - umask'
+pei 'mkdir bla/'
+pei 'touch bla/blub.txt'
+pei 'ls -ld bla/  # Berechtigungen = 777 - umask'
+pei 'ls -l bla/  # Berechtigungen = 666 - umask'
 wait
 
-pei 'cd mvhs'
-pei 'chmod u=r,g=r,o= mvhs.txt'
-pei 'ls -lc mvhs.txt'
-pei 'echo "Hallo MVHS :-)" > mvhs.txt'
+pei 'cd bla'
+pei 'chmod u=r,g=r,o= blub.txt'
+pei 'ls -lc blub.txt'
+pei 'echo "Hallo MVHS :-)" > blub.txt'
 wait
 
 pei 'ls -ld  # Zeitstempel vorher'
 pei 'ls -l'
 wait
-pei 'mv mvhs.txt blablub.txt'
+pei 'mv blub.txt blablub.txt'
 pei 'ls -ld  # Zeitstempel hat sich geändert.'
 pei 'ls -l  # Zeitstempel hat sich *nicht* geändert.'
 wait
 
 pei 'cd ..'
-pei 'rmdir mvhs/'
-pei 'rm -r mvhs/'
-pei 'rm -rf mvhs/'
+pei 'rmdir bla/'
+pei 'rm -r bla/'
+pei 'rm -rf bla/'
 wait
 
 rm -rf bla blub
@@ -62,5 +62,5 @@ pei 'ln -s bla/zero blub/link'
 pei 'ls -l blub/link'
 pei 'cat blub/link'
 pei 'rm blub/link'
-pei 'ln -sr bla/zero blub/link  # ln ermittelt selber den richtigen Pfad für die Quelle.'
+pei 'ln -sr bla/zero blub/link  # ln ermittelt selber den richtigen Pfad für das Ziel.'
 pei 'ls -l blub/link'

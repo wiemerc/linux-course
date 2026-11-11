@@ -19,13 +19,13 @@ podman system prune --all --force > /dev/null
 cat > Dockerfile-distroless <<EOF
 FROM scratch
 COPY /usr/bin/sleep /usr/bin/
-COPY /lib/ld-linux-aarch64.so.1 /lib/
+COPY $(ldd /usr/bin/sleep | grep ld-linux | perl -nale 'print $F[0]') $(dirname $(ldd /usr/bin/sleep | grep ld-linux | perl -nale 'print $F[0]'))/
 COPY /lib64/libc.so.6 /lib64/
 ENTRYPOINT ["/usr/bin/sleep", "infinity"]
 EOF
 pei "cat Dockerfile-distroless"
 wait
-pei "podman build -t distroless-test -f /home/mvhs/Dockerfile-distroless /"
+pei "podman build -t distroless-test -f /home/$(id -un)/Dockerfile-distroless /"
 pei "podman run -d --name distroless-test --rm distroless-test"
 pei "podman top distroless-test"
 wait

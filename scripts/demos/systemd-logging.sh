@@ -5,19 +5,19 @@ TYPE_SPEED=8
 
 clear
 pei 'ls -ld /etc/systemd/system/*.wants'
-pei 'ls -l /etc/systemd/system/multi-user.target.wants'
+pei 'ls -l /etc/systemd/system/sysinit.target.wants'
 wait
 
 clear
-pei 'cat /usr/lib/systemd/system/sshd.service'
+pei 'cat /usr/lib/systemd/system/systemd-resolved.service'
 wait
 
 clear
-pei 'systemctl status sshd.service'
-pei 'sudo systemctl reload sshd.service'
-pei 'sudo journalctl --since "5 minutes ago" -u sshd.service'
+pei 'systemctl status systemd-resolved.service'
+pei 'sudo systemctl reload systemd-resolved.service'
+pei 'sudo journalctl --since "5 minutes ago" -u systemd-resolved.service'
 wait
 
 clear
-pei 'logger -p user.notice "Hallo MVHS :-)"'
+pei 'logger -p user.notice "Hello Linux :-)"'
 pei 'sudo journalctl --facility user --since "5 minutes ago" -o verbose'

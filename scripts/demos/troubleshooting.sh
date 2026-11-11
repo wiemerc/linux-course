@@ -16,5 +16,5 @@ pei 'sudo ls -l /proc/$(pgrep -x sshd)/fd'
 wait
 
 clear
-pei 'last mvhs'
+pei 'last $(id -un)'
 pei 'tail ~/.bash_history  # wird normalerweise erst beim Ausloggen aktualisiert'

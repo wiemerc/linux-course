@@ -8,8 +8,8 @@ pei 'ps -ef'
 wait
 
 clear
-pei 'ps -u mvhs -f'
-pei 'ps -u mvhs -o user,pid,ppid,lstart,stat,vsz,rsz,%cpu,%mem,args'
+pei 'ps -u $(id -un) -f'
+pei 'ps -u $(id -un) -o user,pid,ppid,lstart,stat,vsz,rsz,%cpu,%mem,args'
 wait
 
 clear
@@ -18,6 +18,6 @@ pei 'pgrep -af systemd'
 wait
 
 pei 'sleep infinity &'
-pei 'pgrep -af sleep'
-pei 'pkill -f sleep'
-pei 'pgrep -af sleep'
+pei 'pgrep -a sleep'
+pei 'pkill sleep'
+pei 'pgrep -a sleep'
