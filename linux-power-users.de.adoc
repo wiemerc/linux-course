@@ -175,7 +175,7 @@ image::thompson-ritchie.jpg[width=500, align="center"]
 
 <<<
 == Architektur von Linux
-image::linux-architecture.svg[width=1400, align="center"]
+image::linux-architecture.de.svg[width=1400, align="center"]
 
 
 <<<
@@ -248,7 +248,7 @@ image::linux-architecture.svg[width=1400, align="center"]
 // 
 // ++[#32cd32] **/proc**: Infos über das System und die Prozesse
 // @endmindmap
-image::file-system-hierarchy.svg[width=1200, align="center"]
+image::file-system-hierarchy.de.svg[width=1200, align="center"]
 
 
 <<<
@@ -315,7 +315,7 @@ image::file-system-hierarchy.svg[width=1200, align="center"]
 
 <<<
 == Aufbau einer Befehlszeile (1)
-image::command-syntax.svg[width=1200, align="center"]
+image::command-syntax.de.svg[width=1200, align="center"]
 [.step]
 * Shell-Prompt fordert zu Eingabe eines Befehls auf.
 * Befehlszeile besteht aus einem (oder mehreren => Pipelines) Befehl(en), Optionen und Argumenten.
@@ -553,7 +553,7 @@ alias ll='ls -l'  <5>
 
 <<<
 == Metadaten - Ausgabe von `ls -l`
-image::file-metadata.svg[width=1200, align="center"]
+image::file-metadata.de.svg[width=1200, align="center"]
 
 |===
 | 1. Buchstabe in Ausgabe von `ls -l` | Dateityp
@@ -662,7 +662,7 @@ image::file-metadata.svg[width=1200, align="center"]
 |===
 |
 --
-image::file-metadata-content.svg[width=800, align="center"]
+image::file-metadata-content.de.svg[width=800, align="center"]
 --
 
 |
@@ -2298,7 +2298,7 @@ ENTRYPOINT ["sleep", "infinity"]
 **Unterlagen als PDF:**
 
 // QR code created with https://www.qrcode-monkey.com/
-image::download-link.svg[width=600, align="center"]
+image::download-link.de.svg[width=600, align="center"]
 Made with &#x2764;&#xFE0F;, https://asciidoc.org/[_AsciiDoc_], https://asciidoctor.org/[_Asciidoctor_], https://revealjs.com/[_reveal.js_], https://github.com/paxtonhare/demo-magic[_Demo Magic_] and lots of &#x2615;&#xFE0F;
 
 

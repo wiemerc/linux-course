@@ -144,7 +144,7 @@ image::thompson-ritchie.jpg[width=500,,  align="center"]
 
 <<<
 == Linux Architecture
-image::linux-architecture.svg[width=1400,,  align="center"]
+image::linux-architecture.en.svg[width=1400,,  align="center"]
 
 
 <<<
@@ -179,45 +179,45 @@ image::linux-architecture.svg[width=1400,,  align="center"]
 //   Margin 20
 // }
 // </style>
-// 
+
 // legend right
 //   | <#00bfff>               | persistent |
-//   | <#32cd32>               | nicht persistent |
+//   | <#32cd32>               | not persistent |
 // endlegend
-// 
+
 // + **/**
-// 
+
 // ++[#00bfff] **/usr**
-// +++[#00bfff] **/usr/bin**: Programme für Benutzer (/bin verlinkt darauf)
-// +++[#00bfff] **/usr/sbin**: Programme für das System (/sbin verlinkt darauf)
-// +++[#00bfff] **/usr/lib**: Programmbibliotheken (/lib verlinkt darauf)
-// +++[#00bfff] **/usr/local**: gleiche Hierarchie wie unter /usr, nur unabhängig von der Distro
-// 
-// ++[#00bfff] **/etc**: systemweite Konfigurationsdateien
-// 
-// ++[#00bfff] **/opt**: Programmpakete unabhängig von der Distro
-// 
-// ++[#00bfff] **/home**: Heimatverzeichnisse der Benutzer
-// +++[#00bfff] **/home/<Benutzer>/.local**: gleiche Hierarchie wie unter /usr, nur pro Benutzer
-// +++[#00bfff] **/home/<Benutzer>/.config**: Konfigurationsdateien pro Benutzer (teilweise)
-// 
-// ++[#00bfff] **/root**: Heimatverzeichnis von root
-// 
-// ++[#00bfff] **/boot**: Kernel und zugehörige Dateien
-// 
-// ++[#00bfff] **/var**: variable Daten von Programmen
-// +++[#00bfff] **/var/log**: Logdateien
-// +++[#00bfff] **/var/tmp**: temporäre Dateien (werden nicht gelöscht)
-// 
-// ++[#32cd32] **/tmp**: temporäre Dateien (werden möglicherweise beim Booten gelöscht)
-// 
-// ++[#32cd32] **/dev**: Gerätedateien
-// 
-// ++[#32cd32] **/run**: Laufzeitinformationen des Systems (z. B. Locks oder Sockets von Daemons)
-// 
-// ++[#32cd32] **/proc**: Infos über das System und die Prozesse
+// +++[#00bfff] **/usr/bin**: Programs for users (/bin links to it)
+// +++[#00bfff] **/usr/sbin**: Programs for the system (/sbin links to it)
+// +++[#00bfff] **/usr/lib**: Program libraries (/lib links to it)
+// +++[#00bfff] **/usr/local**: Same hierarchy as under /usr, but independent from the distro
+
+// ++[#00bfff] **/etc**: System-wide config files
+
+// ++[#00bfff] **/opt**: Program packages independent from the distro
+
+// ++[#00bfff] **/home**: Home directories of the users
+// +++[#00bfff] **/home/<Benutzer>/.local**: Same hierarchy as under /usr, but per user
+// +++[#00bfff] **/home/<Benutzer>/.config**: Config files per user (partly)
+
+// ++[#00bfff] **/root**: Root's home directory
+
+// ++[#00bfff] **/boot**: Kernel and associated files
+
+// ++[#00bfff] **/var**: Modifiable program data
+// +++[#00bfff] **/var/log**: Log files
+// +++[#00bfff] **/var/tmp**: Temporary files (will not be deleted)
+
+// ++[#32cd32] **/tmp**: Temporary files (may be deleted on boot)
+
+// ++[#32cd32] **/dev**: Device files
+
+// ++[#32cd32] **/run**: Runtime data of the system (e. g. locks or sockets of daemons)
+
+// ++[#32cd32] **/proc**: Information about the system and the processes
 // @endmindmap
-image::file-system-hierarchy.svg[width=1200,,  align="center"]
+image::file-system-hierarchy.en.svg[width=1200,,  align="center"]
 
 
 <<<
@@ -284,7 +284,7 @@ image::file-system-hierarchy.svg[width=1200,,  align="center"]
 
 <<<
 == Structure of a Command Line (1)
-image::command-syntax.svg[width=1200,,  align="center"]
+image::command-syntax.en.svg[width=1200,,  align="center"]
 [.step]
 * The shell prompt asks you to enter a command.
 * A command line consists of one (or more => pipelines) command(s), options, and arguments.
@@ -522,7 +522,7 @@ alias ll='ls -l'  <5>
 
 <<<
 == Metadata - Output of `ls -l`
-image::file-metadata.svg[width=1200,,  align="center"]
+image::file-metadata.en.svg[width=1200,,  align="center"]
 
 |===
 | 1st character in the output of `ls -l` | File type
@@ -631,7 +631,7 @@ image::file-metadata.svg[width=1200,,  align="center"]
 |===
 |
 --
-image::file-metadata-content.svg[width=800,,  align="center"]
+image::file-metadata-content.en.svg[width=800,,  align="center"]
 --
 
 |
