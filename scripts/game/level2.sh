@@ -8,7 +8,8 @@ set -o errexit
 # set -o pipefail
 
 
-#> Das Geheimnis befindet sich in der einzigen Datei in diesem Verzeichnis, die Text enthält.
+#de> Das Geheimnis befindet sich in der einzigen Datei in diesem Verzeichnis, die Text enthält.
+#en> You can find the secret in the only file in this directory that contains text.
 
 
 head -c 17 < /dev/zero > ./datei1

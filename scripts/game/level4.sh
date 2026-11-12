@@ -8,7 +8,8 @@ set -o errexit
 # set -o pipefail
 
 
-#> Das Geheimnis befindet sich in der Datei `geheimnisse.txt` und beginnt mit drei Ziffern, gefolgt von einem Punkt und 6 Kleinbuchstaben.
+#de> Das Geheimnis befindet sich in der Datei `geheimnisse.txt` und beginnt mit drei Ziffern, gefolgt von einem Punkt und sechs Kleinbuchstaben.
+#en> You can find the secret in the file `geheimnisse.txt` and it starts with three digits, followed by a dot and six lowercase letters.
 
 
 for i in $(seq 1 52); do
