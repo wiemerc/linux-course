@@ -935,10 +935,9 @@ icon:warning[] Bestehende Dateien werden ohne Nachfrage überschrieben!
 <<<
 == Übung: Schnitzeljagd
 [.text-left]
-Diese Übung ist eine Art Schnitzeljagd (oder auch ein https://de.wikipedia.org/wiki/Capture_the_Flag#Computersicherheit[_Capture the Flag_]-Spiel). Das Spiel besteht aus 5 Stufen. In jeder Stufe geht es darum, ein oder mehrere Geheimnis(se) in Form von Strings zu finden. Das Spiel befindet sich im Verzeichnis `~/Schnitzeljagd/` mit einem Unterverzeichnis pro Stufe (`level1/` bis `level5/`). In jedem Unterverzeichnis gibt es eine Datei `README.txt` mit einer (kurzen) Anleitung.
+Diese Übung ist eine Art Schnitzeljagd (oder auch ein https://de.wikipedia.org/wiki/Capture_the_Flag#Computersicherheit[_Capture the Flag_]-Spiel). Das Spiel besteht aus 5 Stufen. In jeder Stufe geht es darum, ein oder mehrere Geheimnis(se) in Form von Strings zu finden. Das Spiel befindet sich auf dem Server TODO mit einem Benutzer _levelx_ pro Stufe. Auf dem Server muss man sich mit SSH einloggen (z. B. mit Putty), das Passwort ist der Benutzername. Im Heimatverzeichnis des jeweiligen Benutzers gibt es eine Datei `README.txt` mit einer (kurzen) Anleitung, die auch nach dem Einloggen angezeigt wird.
 
 // TODO: Lesbare Geheimnisse?
-// TODO: Einloggen auf localhost mit SSH und unterschiedlichen Benutzern?
 
 [.text-left]
 **Aufgabe:** Lösen Sie die Level 1 bis 3.
