@@ -8,7 +8,8 @@ set -o errexit
 # set -o pipefail
 
 
-#> Das Geheimnis befindet sich in den beiden Dateien in diesem Verzeichnis, deren Namen mit einem Sonderzeichen beginnen.
+#de> Das Geheimnis befindet sich in den beiden Dateien in diesem Verzeichnis, deren Namen mit einem Sonderzeichen beginnen.
+#en> You can find the secret in the two files in this directory whose names begin with a special character.
 
 
 (LC_ALL=C tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 16; echo) > ./.geheimnis1.txt

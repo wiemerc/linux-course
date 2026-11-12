@@ -8,7 +8,8 @@ set -o errexit
 # set -o pipefail
 
 
-#> Das Geheimnis befindet sich in einer Datei, die nur vom Besitzer gelesen und geschrieben werden kann und genau 17 Bytes gross ist.
+#de> Das Geheimnis befindet sich in einer Datei, die nur vom Besitzer gelesen und geschrieben werden kann und genau 17 Bytes gross ist.
+#en> You can find the secret in a file in this directory that can only be read and written by its owner and is exactly 17 bytes in size.
 
 
 for i in $(seq 1 10); do
