@@ -1895,12 +1895,11 @@ $ scp <local file> <user>@<hostname or IP address>:<path on the destination comp
 [.text-left]
 **Tasks:**
 [.step]
-* Ask your partner to find out the IP address of their VM.
+* Log in to the game server and find out its IP address.
 * Check whether this IP address is reachable.
-* Ask your partner to check whether the TCP port for SSH (22) is open on their VM.
-* Log in to your partner's VM using SSH and the username and password ("mvhs" / "mvhs123").
-* Generate an SSH key pair, copy the public key to your partner's VM, and log in using the SSH key.
-* Copy a file to your partner's VM.
+* Check whether the TCP port for SSH (22) is open on the game server.
+* Generate an SSH key pair, copy the public key to the game server, and log in using the SSH key.
+* Copy a file to the game server.
 
 
 <<<
@@ -2352,10 +2351,9 @@ $ sudo journalctl -S today -o json | \
 ----
 
 
-// TODO: Adapt to the Allianz setup
 <<<
 == Lab: Working in a Network (1)
-* **Task**: Ask your partner to find out the IP address of their VM.
+* **Task**: Log in to the game server and find out its IP address.
 * **Solution**:
 +
 [source, sh]
@@ -2363,15 +2361,15 @@ $ sudo journalctl -S today -o json | \
 $ ip addr
 ----
 
-* **Task**: Check whether this IP address is accessible.
+* **Task**: Check whether this IP address is reachable.
 * **Solution**:
 +
 [source, sh]
 ----
-$ ping 192.168.x.x
+$ ping x.x.x.x
 ----
 
-* **Task**: Ask your partner to check whether the TCP port for SSH (22) is open on their VM.
+* **Task**: Check whether the TCP port for SSH (22) is open on the game server.
 * **Solution**:
 +
 [source, sh]
@@ -2383,28 +2381,20 @@ $ sudo netstat / ss -tlpn | grep :22  # filters by the relevant ports: only TCP 
 
 <<<
 == Lab: Working in a Network (2)
-* **Task**: Log in to your partner's VM using SSH and the username and password ("mvhs" / "mvhs123").
-* **Solution**:
-+
-[source, sh]
-----
-$ ssh mvhs@192.168.x.x
-----
-
-* **Task**: Generate an SSH key pair, copy the public key to your partners's VM, and log in using the SSH key.
+* **Task**: Generate an SSH key pair, copy the public key to the game server, and log in using the SSH key.
 * **Solution**:
 +
 [source, sh]
 ----
 $ ssh-keygen  # Generate a key pair; enter a passphrase
-$ ssh-copy-id mvhs@192.168.x.x  # Copy the public key to the target system
-$ ssh mvhs@192.168.x.x  # Enter the *passphrase*, not the password
+$ ssh-copy-id level1@x.x.x.x  # Copy the public key to the target system
+$ ssh level1@x.x.x.x  # Enter the *passphrase*, not the password
 ----
 
-* **Task**: Copy a file to your partner's VM.
+* **Task**: Copy a file to the game server.
 * **Solution**:
 +
 [source, sh]
 ----
-$ scp /etc/hosts mvhs@192.168.x.x:/tmp/
+$ scp /etc/hosts level1@x.x.x.x:/tmp/
 ----

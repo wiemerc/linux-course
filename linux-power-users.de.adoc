@@ -1926,12 +1926,11 @@ $ scp <lokale Datei> <Benutzer>@<Hostname oder IP-Adresse>:<Pfad auf dem Zielrec
 [.text-left]
 **Aufgaben:**
 [.step]
-* Bitten Sie Ihren Nachbarn, die IP-Adresse seiner VM zu ermitteln.
-* Prüfen Sie, ob diese IP-Adresse erreichbar ist.
-* Bitten Sie Ihren Nachbarn zu prüfen, ob der TCP-Port für SSH (22) in seiner VM geöffnet ist.
-* Loggen Sie sich mit SSH und Benutzer / Passwort ("mvhs" / "mvhs123") in der VM Ihres Nachbarn ein.
-* Erstellen Sie sich ein SSH-Schlüsselpaar, kopieren Sie den öffentlichen Schlüssel auf die VM Ihres Nachbarn und loggen Sie sich mit dem SSH-Schlüssel ein.
-* Kopieren Sie eine Datei auf die VM Ihres Nachbarn.
+* Logge dich auf dem Spiel-Server ein und ermittle seine IP-Adresse.
+* Prüfe, ob diese IP-Adresse erreichbar ist.
+* Prüfe, ob der TCP-Port für SSH (22) auf dem Spiel-Server geöffnet ist.
+* Erstelle dir ein SSH-Schlüsselpaar, kopiere den öffentlichen Schlüssel auf den Spiel-Server und logge dich mit dem SSH-Schlüssel ein.
+* Kopiere eine Datei auf den Spiel-Server.
 
 
 <<<
@@ -2387,10 +2386,9 @@ $ sudo journalctl -S today -o json | \
 ----
 
 
-// TODO: an der MVHS testen
 <<<
 == Übung: Arbeiten im Netzwerk (1)
-* **Aufgabe**: Bitten Sie Ihren Nachbarn, die IP-Adresse seiner VM zu ermitteln.
+* **Aufgabe**: Logge dich auf dem Spiel-Server ein und ermittle seine IP-Adresse.
 * **Lösung**:
 +
 [source,sh]
@@ -2398,15 +2396,15 @@ $ sudo journalctl -S today -o json | \
 $ ip addr
 ----
 
-* **Aufgabe**: Prüfen Sie, ob diese IP-Adresse erreichbar ist.
+* **Aufgabe**: Prüfe, ob diese IP-Adresse erreichbar ist.
 * **Lösung**:
 +
 [source,sh]
 ----
-$ ping 192.168.x.x
+$ ping x.x.x.x
 ----
 
-* **Aufgabe**: Bitten Sie Ihren Nachbarn zu prüfen, ob der TCP-Port für SSH (22) in seiner VM geöffnet ist.
+* **Aufgabe**: Prüfe, ob der TCP-Port für SSH (22) auf dem Spiel-Server geöffnet ist.
 * **Lösung**:
 +
 [source,sh]
@@ -2418,28 +2416,20 @@ $ sudo netstat / ss -tlpn | grep :22  # filtert nach den relevanten Ports: nur T
 
 <<<
 == Übung: Arbeiten im Netzwerk (2)
-* **Aufgabe**: Loggen Sie sich mit SSH und Benutzer / Passwort ("mvhs" / "mvhs123") in der VM Ihres Nachbarn ein.
-* **Lösung**:
-+
-[source,sh]
-----
-$ ssh mvhs@192.168.x.x
-----
-
-* **Aufgabe**: Erstellen Sie sich ein SSH-Schlüsselpaar, kopieren Sie den öffentlichen Schlüssel auf die VM Ihres Nachbarn und loggen Sie sich mit dem SSH-Schlüssel ein.
+* **Aufgabe**: Erstelle dir ein SSH-Schlüsselpaar, kopiere den öffentlichen Schlüssel auf den Spiel-Server und logge dich mit dem SSH-Schlüssel ein.
 * **Lösung**:
 +
 [source,sh]
 ----
 $ ssh-keygen  # Erzeugen eines Schlüsselpaares, Passphrase eingeben
-$ ssh-copy-id mvhs@192.168.x.x  # öffentlichen Schlüssel auf das Zielsystem kopieren
-$ ssh mvhs@192.168.x.x  # *Passphrase*, nicht das Passwort eingeben
+$ ssh-copy-id level1@x.x.x.x  # öffentlichen Schlüssel auf das Zielsystem kopieren
+$ ssh level1@x.x.x.x  # *Passphrase*, nicht das Passwort eingeben
 ----
 
-* **Aufgabe**: Kopieren Sie eine Datei auf die VM Ihres Nachbarn.
+* **Aufgabe**: Kopiere eine Datei auf den Spiel-Server.
 * **Lösung**:
 +
 [source,sh]
 ----
-$ scp /etc/hosts mvhs@192.168.x.x:/tmp/
+$ scp /etc/hosts level1@x.x.x.x:/tmp/
 ----
