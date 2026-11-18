@@ -524,7 +524,7 @@ alias ll='ls -l'  <5>
 // Editieren der Befehlszeile
 // Umleiten in eine Datei
 // Ausgeben von Umgebungsvariablen (PATH)
-// Ctrl-c mit `cat`
+// Ctrl-c mit `tail -f`
 
 <<<
 == Linux für Power User
@@ -984,15 +984,26 @@ Viel Spass! Lust auf mehr? https://overthewire.org/wargames/
 
 
 <<<
-== Prozesse - Speicherverwaltung
+== Prozesse - Speicherverwaltung (1)
 [.step]
-* Jeder Prozess hat seinen eigenen _virtuellen Speicher_ (4GB bei 32-Bit-Systemen, 256TB bei 64-Bit-Systemen), in dem sich der Programmcode (des Programms und von evtl. verwendeten Programmbibliotheken) und die Daten befinden.
-* Virtueller Speicher ist viel grösser als der physikalische RAM-Speicher (bei 64-Bit-Systemen) => _Paging_
+* RAM = der _Schreibtisch_ (von Programmen genutzter Speicher) + der Fussboden (freier Speicher, der als Cache genutzt wird): schnell erreichbar, aber klein
+* Plattenspeicher (Dateien, Swap-Bereich) = der _Aktenschrank_: riesig, aber jeder Gang dorthin dauert lange
+* Der Speicher ist in _Seiten_ (_Pages_, meist 4 KB) unterteilt = die _Blätter_. Sie liegen normalerweise entweder auf dem Schreibtisch oder sind in Ordnern im Aktenschrank abgeheftet.
+* _Page Cache_ (ebenfalls im RAM) = Blätter, die auf dem Fussboden liegen, falls man sie nochmal braucht. Die CPU kann nur mit dem arbeiten, was auf dem Schreibtisch oder auf dem Fussboden liegt.
+* Jeder Prozess arbeitet so, als hätte er einen riesigen eigenen Schreibtisch (_virtueller Speicher_: 4 GB bei 32-Bit-Systemen, 256 TB bei 64-Bit-Systemen). Der Kernel entscheidet, welche Blätter tatsächlich auf dem echten Schreibtisch liegen.
+* (Major) _Page Fault_ = Zugriff auf ein Blatt, das weder auf dem Schreibtisch noch auf dem Fussboden liegt: Der Kernel holt es aus dem Aktenschrank, was sehr langsam ist.
+
+
+<<<
+== Prozesse - Speicherverwaltung (2)
 [.step]
-** Programmteile und Daten werden erst bei Bedarf, d. h. beim ersten Zugriff in den Speicher geladen.
-** Bei Speicherknappheit wird der Speicher für momentan nicht genutzte Programmteile und Daten wiederverwendet.
-** Geänderte, aber momentan nicht genutzte Daten werden in den _Swap_-Bereich der Festplatte(n) ausgelagert und geänderte Daten im _Cache_ (Zwischenspeicher im RAM für die Massenspeicher) in die Dateien geschrieben.
-** Falls das nicht ausreicht beendet Linux zwangsweise einzelne Prozesse, die viel Speicher belegen (der sogenannte https://medium.com/@msmkumar.eee/751cf7823de8[_OOM Killer_]).
+* _Demand Paging_ = Blätter erst bei Bedarf holen: Programmcode und Daten werden seitenweise beim ersten Zugriff geladen. Ein grosses Programm startet schnell, weil der Grossteil nie auf dem Schreibtisch landet.
+* RAM ist voll: Zuerst werden die Blätter auf dem Fussboden weggeräumt, dann die am längsten nicht benutzten Blätter auf dem Schreibtisch. Was damit passiert hängt von der Art des Blatts ab:
+[.step]
+** Programmcode, unveränderte Daten im Cache => Blatt kann einfach weggeworfen werden, das Original liegt ja noch im Aktenschrank.
+** Geänderter Daten im Cache => Blatt wird zuerst in die Datei zurückgeschrieben.
+** Geänderte Daten ohne Datei dahinter => Blatt wird in den _Swap_-Bereich ausgelagert = zusätzliche Kiste im Aktenschrank.
+* Sowohl RAM als auch der Swap-Bereich sind voll: Der https://medium.com/@msmkumar.eee/751cf7823de8[_OOM Killer_] beendet zwangsweise einen Prozess, der viel Speicher belegt, und gibt damit seinen ganzen Stapel Blätter frei.
 
 
 <<<

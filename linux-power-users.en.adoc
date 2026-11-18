@@ -950,15 +950,26 @@ Have fun! Want more? https://overthewire.org/wargames/
 
 
 <<<
-== Processes - Memory Management
+== Processes - Memory Management (1)
 [.step]
-* Each process has its own _virtual memory_ (4 GB on 32-bit systems, 256 TB on 64-bit systems), which contains the program code (of the program and any program libraries it may use) and the data.
-* Virtual memory is much larger than physical RAM (on 64-bit systems) => _paging_
+* RAM = the _desk_ (memory in use by programs) + floor (spare memory used as cache): fast and within reach, but small
+* Disk storage (files, swap area) = the _file cabinet_: huge, but every trip to it is slow
+* Memory is divided into _pages_ (usually 4 KB) = the _sheets of paper_. They normally either lie on the desk or are filed in binders in the cabinet.
+* _Page cache_ (also in RAM) = sheets lying on the floor, in case they're needed again. The CPU can only work with what is on the desk or on the floor.
+* Each process works as if it had a huge desk of its own (_virtual memory_: 4 GB on 32-bit systems, 256 TB on 64-bit systems). The kernel decides which sheets actually lie on the real desk.
+* (Major) _page fault_ = accessing a sheet that is not on the desk or on the floor: The kernel fetches it from the cabinet. This is slow, which is why a system that constantly shuffles sheets back and forth (called _thrashing_) becomes extremely sluggish.
+
+
+<<<
+== Processes - Memory Management (2)
 [.step]
-** Program code and data are loaded (on a page basis) into memory only when needed - that is, the first time they are accessed.
-** When memory is scarce, the memory used for program code and data that is not currently in use is reused.
-** Data that has been modified but is not currently in use is moved to the _swap_ area of the hard drive(s), and modified data in the _cache_ (a temporary storage area in RAM for mass storage devices) is written to the files.
-** If that isn't enough, Linux forcibly terminates individual processes that are using a lot of memory (the so-called https://medium.com/@msmkumar.eee/751cf7823de8[_OOM Killer_]).
+* _Demand paging_ = fetching sheets only when needed: A program's code and data are loaded page by page the first time they are accessed. A large program starts quickly because most of it never reaches the desk.
+* RAM is full: First the sheets on the floor are cleared away, then the sheets on the desk unused longest. What happens to them depends on the kind of sheet:
+[.step]
+** Program code, cached but unmodified file contents => sheet can simply be thrown away, because the original is still in the cabinet.
+** Cached and modified file content => sheet is first written back to the file.
+** Modified data without a file behind it => sheet is filed in the _swap_ area = additional box in the cabinet.
+* Both RAM and the swap area are full: The https://medium.com/@msmkumar.eee/751cf7823de8[_OOM Killer_] forcibly terminates a process that uses a lot of memory, which frees up its whole stack of sheets.
 
 
 <<<
