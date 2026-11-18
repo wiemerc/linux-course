@@ -1,7 +1,7 @@
 FROM debian
 
 WORKDIR /root
-RUN apt update && apt install -y git make nodejs npm ruby
+RUN apt update && apt install -y git make nodejs npm ruby ruby-dev
 RUN gem install asciidoctor-pdf rouge
 RUN git clone https://github.com/hakimel/reveal.js.git
 RUN cd reveal.js && npm install
