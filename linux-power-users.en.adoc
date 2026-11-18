@@ -53,6 +53,7 @@
 9. Containers
 
 
+<<<
 == Linux for Power Users
 1. **Introduction**
 2. Working with the Shell (Bash, Zsh)
@@ -901,7 +902,7 @@ icon:warning[] Existing files will be overwritten without prompting!
 <<<
 == Lab: Scavenger Hunt
 [.text-left]
-This lab is a kind of scavenger hunt (or a "https://de.wikipedia.org/wiki/Capture_the_Flag#Computersicherheit"[_Capture the Flag_] game). The game consists of 5 levels. In each level the goal is to find one or more secrets in the form of strings. The game is hosted on the server malbox.azd-abs-sbx-fx5td-gvwfrdsffm4.ec1.aws.aztec.cloud.allianz, with one user, _levelx_, per level. To access the server, you must log in via SSH (e.g. using PuTTY); the password is the same as the username. In each user's home directory there is a file named `README.txt` containing brief instructions, which is also displayed after you log in.
+This lab is a kind of scavenger hunt (or a https://de.wikipedia.org/wiki/Capture_the_Flag#Computersicherheit[_Capture the Flag_] game). The game consists of 5 levels. In each level the goal is to find one or more secrets in the form of strings. The game is hosted on the server malbox.azd-abs-sbx-fx5td-gvwfrdsffm4.ec1.aws.aztec.cloud.allianz, with one user, _levelx_, per level. To access the server, you must log in via SSH (e.g. using PuTTY); the password is the same as the username. In each user's home directory there is a file named `README.txt` containing brief instructions, which is also displayed after you log in.
 
 // TODO: Lesbare Geheimnisse?
 
@@ -2263,7 +2264,6 @@ ENTRYPOINT ["sleep", "infinity"]
 
 <<<
 == Thank you very much!
-Made with &#x2764;&#xFE0F;, https://asciidoc.org/[_AsciiDoc_], https://asciidoctor.org/[_Asciidoctor_], https://revealjs.com/[_reveal.js_], https://github.com/paxtonhare/demo-magic[_Demo Magic_] and lots of &#x2615;&#xFE0F;
 
 
 <<<

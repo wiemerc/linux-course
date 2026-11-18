@@ -51,9 +51,3 @@ clean:
 
 %.pdf: %.adoc
 	podman exec pdf-builder asciidoctor-pdf -a pdf-page-size=A4 -a pdf-page-layout=landscape -a pdf-theme=default-sans -a source-highlighter=rouge /data/$^
-
-# TODO: Some slides that are very full are empty in the PDF file.
-linux-power-users.$(LANG).pdf: linux-power-users.$(LANG).html
-	podman exec pdf-builder cp /data/$^ /root/reveal.js/index.html
-	podman exec pdf-builder cp -r /data/images /root/reveal.js/
-	xdg-open http://localhost:8000/?print-pdf
