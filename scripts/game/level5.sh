@@ -6,8 +6,12 @@ set -o errexit
 set -o pipefail
 
 
-#de> Das Geheimnis befindet sich in der Datei `geheimnis.txt`, wurde aber mit einer Verschiebechiffre verschlüsselt => Alle Buchstaben müssen um 13 Stellen im Alphabet verschoben werden => a wird zu n usw.
-#en> You can find the secret in the file `geheimnis.txt`, but it has been encrypted using a shift cipher => All letters must be shifted 13 places in the alphabet => “a” becomes “n” and so on.
+#de> Das Geheimnis ist die Summe der Zahlen in den Dateien im Verzeichnis `numbers`.
+#en> The secret is the sum of the numbers in the files in the directory `numbers`.
 
 
-echo linuxisttoll | sed y/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ/nopqrstuvwxyzabcdefghijklmNOPQRSTUVWXYZABCDEFGHIJKLM/ > geheimnis.txt
+rm -rf numbers
+mkdir numbers
+for i in $(seq 1 100); do
+    od -An -N2 -tu2 /dev/urandom | tr -d ' ' > numbers/num$i.txt
+done
