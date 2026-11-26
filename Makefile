@@ -1,6 +1,7 @@
 .PHONY: all build-container start-container stop-container install html preview pdf zip translate clean
 
 LANG ?= de
+VARIANT ?= mvhs
 
 all: html pdf
 
@@ -47,7 +48,7 @@ clean:
 	rm -f *.html *.pdf
 
 %.html: %.adoc
-	npx asciidoctor-revealjs $^
+	npx asciidoctor-revealjs -a variant=$(VARIANT) $^
 
 %.pdf: %.adoc
-	podman exec pdf-builder asciidoctor-pdf -a pdf-page-size=A4 -a pdf-page-layout=landscape -a pdf-theme=default-sans -a source-highlighter=rouge /data/$^
+	podman exec pdf-builder asciidoctor-pdf -a variant=$(VARIANT) -a pdf-page-size=A4 -a pdf-page-layout=landscape -a pdf-theme=default-sans -a source-highlighter=rouge /data/$^
