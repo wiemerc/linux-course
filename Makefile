@@ -26,7 +26,7 @@ html: linux-power-users.$(LANG).html
 preview: linux-power-users.$(LANG).html
 	rm -r /mnt/c/temp/linux-course
 	mkdir /mnt/c/temp/linux-course
-	cp -r linux-power-users.$(LANG).html images /mnt/c/temp/linux-course/
+	cp -r linux-power-users.$(LANG).html images theme /mnt/c/temp/linux-course/
 
 pdf: linux-power-users.$(LANG).pdf
 

@@ -1,0 +1,167 @@
+/**
+ * reveal.js theme mimicking https://invisiblethingslab.com/
+ * Terminal look on a light grey background: dark green headings,
+ * dashed green rules, monospace everywhere, black text, light code boxes.
+ * Use with: :revealjs_customtheme: theme/itl.css
+ */
+
+:root {
+  --itl-bg: #e6e6e6;
+  --itl-fg: #000;
+  --itl-green: #4d7a00;
+  --itl-blue: #0b5cad;
+  --itl-orange: #b25a14;
+  --itl-yellow: #8a5a00;
+  --itl-purple: #8a3f7e;
+  --itl-red: #ac4142;
+  --itl-gray: #666;
+  --itl-mono: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", "DejaVu Sans Mono", Consolas, Terminal, monospace;
+  --itl-glow: none;
+}
+
+html, body, .reveal-viewport { background: var(--itl-bg); }
+body { background-color: var(--itl-bg); }
+
+.reveal {
+  font-family: var(--itl-mono);
+  font-size: 34px;
+  font-weight: normal;
+  line-height: 1.4;
+  color: var(--itl-fg);
+}
+.reveal ::selection { background: var(--itl-green); color: #fff; text-shadow: none; }
+.reveal ::-moz-selection { background: var(--itl-green); color: #fff; text-shadow: none; }
+
+.reveal .slides section, .reveal .slides section > section { text-align: left; }
+
+/* Headings: green, monospace, glowing */
+.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+  margin: 0 0 20px 0;
+  font-family: var(--itl-mono);
+  font-weight: normal;
+  color: var(--itl-green);
+  letter-spacing: -0.03em;
+  line-height: 1.3;
+  text-transform: none;
+  text-shadow: var(--itl-glow);
+}
+.reveal h1 { font-size: 2.2em; }
+.reveal h2 {
+  font-size: 1.7em;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--itl-green);
+}
+.reveal h3 { font-size: 1.3em; }
+.reveal h4 { font-size: 1.05em; }
+.reveal h5 { font-size: .9em; text-transform: uppercase; }
+.reveal h6 { font-size: .9em; text-transform: uppercase; color: #777; }
+
+/* Title slide: big and centered */
+.reveal .slides section.title { text-align: center; padding-top: 340px; box-sizing: border-box; }
+.reveal .slides section.title h1 {
+  font-size: 3.6em; margin: 0; border: 0;
+}
+.reveal .slides section.title h2 { border: 0; }
+.reveal .slides section.title .author,
+.reveal .slides section.title .revnumber,
+.reveal .slides section.title .revdate { font-size: 1.2em; color: var(--itl-gray); }
+
+/* Text */
+.reveal p { margin: 0 0 .8em 0; }
+.reveal strong, .reveal b { color: #000; font-weight: bold; }
+.reveal em { color: #444; font-style: italic; }
+.reveal small { color: var(--itl-gray); }
+
+.reveal a, .reveal a:hover {
+  color: var(--itl-blue);
+  text-decoration: none;
+}
+.reveal a:hover { text-decoration: underline; }
+
+.reveal hr { height: 0; border: 0; border-bottom: 1px dashed var(--itl-green); }
+
+.reveal blockquote {
+  width: auto; margin: 20px 0; padding: 0 0 0 16px;
+  background: none; box-shadow: none; font-style: normal;
+  color: #444; border-left: 1px dotted #888;
+}
+
+/* Lists: ">" bullets instead of discs */
+.reveal ul { list-style: none; margin: 0 0 0 1.2em; padding: 0; display: block; }
+.reveal ul > li { position: relative; }
+.reveal ul > li::before {
+  content: ">"; position: absolute; left: -1.2em;
+  color: var(--itl-green); text-shadow: var(--itl-glow);
+}
+/* 2nd level: ">>" */
+.reveal ul ul { margin-left: 1.7em; }
+.reveal ul ul > li::before { content: ">>"; left: -1.7em; }
+.reveal ol { margin: 0 0 0 1.5em; display: block; }
+.reveal ol > li::marker { color: var(--itl-green); }
+.reveal li { line-height: 1.4; margin-bottom: .2em; }
+.reveal li > ul, .reveal li > ol { margin-top: .2em; }
+.reveal dt { font-style: italic; font-weight: bold; color: var(--itl-yellow); }
+.reveal dd { margin-left: 1.5em; }
+
+/* Code */
+.reveal pre {
+  width: 100%; margin: 15px 0; font-family: var(--itl-mono); font-size: .65em;
+  background: var(--itl-bg); border: 1px solid #aaa;
+  border-radius: 2px; box-shadow: none; color: #24292e;
+}
+.reveal pre code {
+  font-family: var(--itl-mono); padding: 10px 14px; max-height: 800px;
+  background: transparent; color: #24292e; word-wrap: normal;
+}
+.reveal code {
+  font-family: var(--itl-mono); text-transform: none;
+}
+.reveal :not(pre) > code {
+  background: var(--itl-bg); border: 1px solid #aaa;
+  border-radius: 2px; padding: 0 5px; color: var(--itl-purple); font-size: .9em;
+}
+/* highlight.js sets its own background; keep ours */
+.reveal pre code.hljs { background: transparent; }
+
+/* Tables */
+.reveal table { width: 100%; margin: 0 0 20px 0; border-collapse: collapse; }
+.reveal table th {
+  text-align: left; font-weight: normal; color: var(--itl-green);
+  border-bottom: 1px dashed var(--itl-green); padding: 5px 10px;
+}
+.reveal table td { text-align: left; padding: 5px 10px; border-bottom: 1px solid rgba(0,0,0,.1); }
+.reveal table thead th, .reveal table tr:last-child td { border-bottom-color: var(--itl-green); }
+.reveal table tbody tr:last-child td { border-bottom: 0; }
+
+/* Images: screenshots usually have a light background, so frame them */
+.reveal section img {
+  margin: 15px 0; background: none; border: 1px solid rgba(0,0,0,.25);
+  box-shadow: none; max-width: 100%;
+}
+.reveal .imageblock { margin: 0; }
+.reveal .imageblock .title, .reveal .title {
+  color: var(--itl-gray); font-size: .7em; font-style: normal; font-weight: normal;
+}
+
+/* AsciiDoc admonitions */
+.reveal .admonitionblock > table { border: 1px dashed var(--itl-green); }
+.reveal .admonitionblock td.icon { color: var(--itl-orange); text-align: center; }
+.reveal .admonitionblock td.content { color: var(--itl-fg); }
+.reveal .admonitionblock td { border: 0; }
+
+/* Misc asciidoc bits */
+.reveal .listingblock .title, .reveal .exampleblock .title { color: var(--itl-gray); }
+.reveal kbd {
+  font-family: var(--itl-mono); font-size: .8em; color: var(--itl-fg);
+  background: #f8f8f8; border: 1px solid #aaa; border-radius: 3px; padding: 0 5px;
+}
+
+/* UI chrome */
+.reveal .controls { color: var(--itl-green); }
+.reveal .progress { background: rgba(77,122,0,.15); color: var(--itl-green); height: 4px; }
+.reveal .progress span { background: var(--itl-green); box-shadow: none; }
+.reveal .slide-number {
+  color: var(--itl-green); background: transparent;
+  font-family: var(--itl-mono); font-size: 16px;
+}
+.reveal .fragment.highlight-current-green.current-fragment { color: var(--itl-green); }
