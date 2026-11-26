@@ -74,6 +74,7 @@
 9. Container
 
 
+ifeval::["{variant}" == "mvhs"]
 <<<
 == Über mich
 [.step]
@@ -82,6 +83,7 @@
 * sehr viel Erfahrung mit Unix und Linux
 * arbeite bei der Allianz Technology im Bereich Cloud-Infrastruktur / DevOps
 * Mastodon: https://mastodon.social/@wiemerc0x32 / GitHub: https://github.com/wiemerc
+endif::[]
 
 
 == Linux für Power User
@@ -194,9 +196,9 @@ image::linux-architecture.de.svg[width=1400, align="center"]
 <<<
 == Dateisystem -  wichtige Verzeichnisse
 // @startmindmap
-// !theme reddress-lightblue
 // <style>
 // mindmapDiagram {
+//   BackgroundColor transparent
 //   node {
 //     FontSize 30
 //   }
@@ -210,43 +212,43 @@ image::linux-architecture.de.svg[width=1400, align="center"]
 //   Margin 20
 // }
 // </style>
-// 
+
 // legend right
-//   | <#00bfff>               | persistent |
-//   | <#32cd32>               | nicht persistent |
+//   | <#99E6FF>               | persistent |
+//   | <#ADEBAD>               | nicht persistent |
 // endlegend
-// 
+
 // + **/**
-// 
-// ++[#00bfff] **/usr**
-// +++[#00bfff] **/usr/bin**: Programme für Benutzer (/bin verlinkt darauf)
-// +++[#00bfff] **/usr/sbin**: Programme für das System (/sbin verlinkt darauf)
-// +++[#00bfff] **/usr/lib**: Programmbibliotheken (/lib verlinkt darauf)
-// +++[#00bfff] **/usr/local**: gleiche Hierarchie wie unter /usr, nur unabhängig von der Distro
-// 
-// ++[#00bfff] **/etc**: systemweite Konfigurationsdateien
-// 
-// ++[#00bfff] **/opt**: Programmpakete unabhängig von der Distro
-// 
-// ++[#00bfff] **/home**: Heimatverzeichnisse der Benutzer
-// +++[#00bfff] **/home/<Benutzer>/.local**: gleiche Hierarchie wie unter /usr, nur pro Benutzer
-// +++[#00bfff] **/home/<Benutzer>/.config**: Konfigurationsdateien pro Benutzer (teilweise)
-// 
-// ++[#00bfff] **/root**: Heimatverzeichnis von root
-// 
-// ++[#00bfff] **/boot**: Kernel und zugehörige Dateien
-// 
-// ++[#00bfff] **/var**: variable Daten von Programmen
-// +++[#00bfff] **/var/log**: Logdateien
-// +++[#00bfff] **/var/tmp**: temporäre Dateien (werden nicht gelöscht)
-// 
-// ++[#32cd32] **/tmp**: temporäre Dateien (werden möglicherweise beim Booten gelöscht)
-// 
-// ++[#32cd32] **/dev**: Gerätedateien
-// 
-// ++[#32cd32] **/run**: Laufzeitinformationen des Systems (z. B. Locks oder Sockets von Daemons)
-// 
-// ++[#32cd32] **/proc**: Infos über das System und die Prozesse
+
+// ++[#99E6FF] **/usr**
+// +++[#99E6FF] **/usr/bin**: Programme für Benutzer (/bin verlinkt darauf)
+// +++[#99E6FF] **/usr/sbin**: Programme für das System (/sbin verlinkt darauf)
+// +++[#99E6FF] **/usr/lib**: Programmbibliotheken (/lib verlinkt darauf)
+// +++[#99E6FF] **/usr/local**: gleiche Hierarchie wie unter /usr, nur unabhängig von der Distro
+
+// ++[#99E6FF] **/etc**: systemweite Konfigurationsdateien
+
+// ++[#99E6FF] **/opt**: Programmpakete unabhängig von der Distro
+
+// ++[#99E6FF] **/home**: Heimatverzeichnisse der Benutzer
+// +++[#99E6FF] **/home/<Benutzer>/.local**: gleiche Hierarchie wie unter /usr, nur pro Benutzer
+// +++[#99E6FF] **/home/<Benutzer>/.config**: Konfigurationsdateien pro Benutzer (teilweise)
+
+// ++[#99E6FF] **/root**: Heimatverzeichnis von root
+
+// ++[#99E6FF] **/boot**: Kernel und zugehörige Dateien
+
+// ++[#99E6FF] **/var**: variable Daten von Programmen
+// +++[#99E6FF] **/var/log**: Logdateien
+// +++[#99E6FF] **/var/tmp**: temporäre Dateien (werden nicht gelöscht)
+
+// ++[#ADEBAD] **/tmp**: temporäre Dateien (werden möglicherweise beim Booten gelöscht)
+
+// ++[#ADEBAD] **/dev**: Gerätedateien
+
+// ++[#ADEBAD] **/run**: Laufzeitinformationen des Systems (z. B. Locks oder Sockets von Daemons)
+
+// ++[#ADEBAD] **/proc**: Infos über das System und die Prozesse
 // @endmindmap
 image::file-system-hierarchy.de.svg[width=1200, align="center"]
 
@@ -258,7 +260,7 @@ image::file-system-hierarchy.de.svg[width=1200, align="center"]
 * Zusätzlich gibt es auch System-Benutzer für verschiedene Zwecke, z. B. Dämonen.
 * Benutzer werden durch ihren eindeutigen Namen und systemintern durch eine (normalerweise) eindeutige Nummer identifiziert => _User Identifier_ (UID)
 * besitzen jeweils ein eigenes Heimatverzeichnis (_Home Directory_), normalerweise unter `/home` (oder `/Users` auf macOS)
-* werden entweder in den Dateien `/etc/passwd` und `/etc/shadow` oder in einem Verzeichnisdienst wie LDAP verwaltet
+* werden entweder in den Dateien `/etc/passwd` und `/etc/shadow` oder in einem Verzeichnisdienst wie LDAP oder Active Directory verwaltet
 * sind mindestens Mitglied einer Gruppe => primäre Gruppe
 * können in weiteren (Limit ist meistens 65536) Gruppen Mitglied sein (in `/etc/group` oder in einem Verzeichnisdienst konfiguriert)
 * Spezieller Benutzer: _root_ mit der UID 0, Administrator, hat (normalerweise) Vollzugriff auf das System
@@ -268,7 +270,7 @@ image::file-system-hierarchy.de.svg[width=1200, align="center"]
 == Gruppen
 [.step]
 * werden durch ihren eindeutigen Namen und systemintern durch eine (normalerweise) eindeutige Nummer identifiziert => _Group Identifier_ (GID)
-* werden entweder in der Datei `/etc/group` oder in einem Verzeichnisdienst wie LDAP verwaltet
+* werden entweder in der Datei `/etc/group` oder in einem Verzeichnisdienst verwaltet
 * Lokale Gruppen (in `/etc/group` verwaltet) können nur Benutzer, *nicht* andere Gruppen enthalten.
 
 
@@ -310,7 +312,7 @@ image::file-system-hierarchy.de.svg[width=1200, align="center"]
 * Aufgaben können durch Skripte automatisiert werden.
 * Dokumentation von Aufgaben ist einfacher als bei einer GUI.
 * Arbeiten auf entfernten, über das Netzwerk verbundenen Rechnern, ist einfacher.
-* https://www.youtube.com/watch?v=0PxTAn4g20U
+* https://app.safeshare.tv/watch/390057b9-0874-4299-a465-1352fb49674a
 
 
 <<<
@@ -336,8 +338,8 @@ image::command-syntax.de.svg[width=1200, align="center"]
 ** Befehl / Programm / Skript wird mit Pfad angegeben.
 ** Befehl / Programm / Skript wird ohne Pfad angegeben und im _Suchpfad_  = Liste von Verzeichnissen mit Programmen / Befehlen / Skripten gesucht (Umgebungsvariable `PATH`).
 * Shell führt nicht eingebaute Befehle / Programme / Skripte als separate Prozesse aus.
-* Befehle / Programme / Skripte setzen beim Beenden den _Exit Status_ (Erfolg / Fehler) => spezielle Variable `$?`, 0 bedeutet Erfolg, > 0 bedeutet Fehler (die genauen Werte sind abhängig vom Befehl / Programm / Skript).
-* Laufende Befehle / Programm / Skripte können mit Ctrl-c beendet werden.
+* Befehle / Programme / Skripte setzen beim Beenden den _Exit Status_ (Erfolg / Fehler) => spezielle Variable `$?`. 0 bedeutet Erfolg, Werte > 0 bedeuten einen Fehler (die genauen Werte sind abhängig vom Befehl / Programm / Skript).
+* Laufende Befehle / Programm / Skripte können (meistens) mit Ctrl-c beendet werden.
 * Shell beenden: Ctrl-d (oder `exit`)
 
 
@@ -346,13 +348,13 @@ image::command-syntax.de.svg[width=1200, align="center"]
 [.step]
 * Shell "merkt" sich ausgeführte Befehlszeilen (optional auch dauerhaft in einer Datei) => _Shell-Historie_
 * Blättern in der Historie: Pfeiltasten nach oben / unten
-* Suchen in der Historie: Ctrl-r
-* Befehlszeile aus der Historie vervollständigen (nur Zsh): Anfang eingeben + Pfeiltaste nach oben
+* Inkrementell in der Historie suchen: Ctrl-r und anfangen zu tippen
+* Befehlszeile vervollständigen (nur Zsh): Anfang eingeben + Pfeiltaste nach oben
 
 
 <<<
 == Editieren der Befehlszeile
-[text-left]
+[.text-left]
 Eingegebene oder aus der Historie zurückgeholte Befehlszeilen lassen sich editieren. Angegeben sind die Standard-Tastenkombinationen in Bash und Zsh, lassen sich ändern.
 
 [cols="3,1"]
@@ -404,11 +406,12 @@ diff <(grep bla datei1) <(grep blub datei2)
 
 <<<
 == Wildcards (2)
+[cols="1,2"]
 |===
 | Syntax | Bedeutung
 
-| `?` | ein beliebiges Zeichen
-| `*` | eine beliebige Anzahl von Zeichen
+| `?` | ein beliebiges Zeichen ausser dem Punkt (um versteckte Dateien / Verzeichnisse nicht zu treffen)
+| `*` | eine beliebige Anzahl von Zeichen ausser dem Punkt
 | `[xyz]` |  eines mehrerer möglicher Zeichen, z. B. die Buchstaben x, y oder z
 | `[a-e]` | Bereich von Zeichen, z. B. die Buchstaben a bis e
 | `+[[:alpha:]]+`, `+[[:digit:]]+` | Zeichenklassen, z. B. Buchstaben oder Ziffern
@@ -545,7 +548,7 @@ alias ll='ls -l'  <5>
 | aktuelles Verzeichnis anzeigen (wenn es nicht im Shell-Prompt steht) | `pwd`
 | in das Heimatverzeichnis / ein bestimmtes Verzeichnis wechseln | `cd` / `cd <Verzeichnis>`
 | Dateien und Verzeichnisse (mit allen Informationen / _Metadaten_) auflisten | `ls -l` bzw. `ls -l <Verzeichnis>` (oder mit dem Alias `ll`)
-| umgekehrt sortiert nach Datum der letzten Änderung auflisten (neueste zuletzt) | `ls -lrt`
+| umgekehrt sortiert nach Zeitpunkt der letzten Änderung auflisten (neueste zuletzt) | `ls -lrt`
 | versteckte Dateien / Verzeichnisse auflisten | `ls -la`
 | Informationen über das Verzeichnis selber und nicht den Inhalt anzeigen | `ls -ld <Verzeichnis>`
 |===
@@ -573,7 +576,7 @@ image::file-metadata.de.svg[width=1200, align="center"]
 [.step]
 ** harte Links: zusätzlicher Name für eine bestehende Datei (beide Namen verweisen auf die gleiche Inode), harte Links sind nur innerhalb eines Dateisystems und nur für Dateien möglich, Ausnahmen sind `.` und `..` und macOS), sind nur durch die Anzahl der Links erkennbar
 ** weiche (symbolische) Links: spezielle Datei, die den Pfad (absolut oder relativ) zum Ziel enthält
-* versteckte Dateien / Verzeichnisse: beginnen mit einem Punkt, werden nur mit `ls -a` angezeigt (Konvention von Shells und Programmen)
+* versteckte Dateien / Verzeichnisse: beginnen mit einem Punkt, werden nur mit `ls -a` angezeigt und von `?` und `*` nicht getroffen (Konvention von Shells und Programmen)
 * Gerätedateien / Devices: dienen zum Zugriff auf Hardware wie Festplatten (befinden sich im Verzeichnis `/dev`)
 * Pipes und Sockets: sind ein Mittel zur Kommunikation zwischen Prozessen (nicht zu verwechseln mit den Sockets zur Netzwerkkommunikation)
 
@@ -595,7 +598,7 @@ image::file-metadata.de.svg[width=1200, align="center"]
 <<<
 == Zugriffsrechte (1)
 [.step]
-* separate Zugriffsrechte (auch _Mode_ genannt) für den Besitzer einer Datei / eines Verzeichnisses (_User_), die Gruppe (_Group_) und sonstige Benutzer (_Other_)
+* separate Zugriffsrechte / Berechtigungen (auch _Mode_ genannt) für den Besitzer einer Datei / eines Verzeichnisses (_User_), die Gruppe (_Group_) und sonstige Benutzer (_Other_)
 * drei unterschiedliche Rechte, als Buchstabe oder als Zahl (Wertigkeit des entsprechenden Bits) dargestellt:
 +
 |===
@@ -605,13 +608,13 @@ image::file-metadata.de.svg[width=1200, align="center"]
 |===
 
 * Zusätzlich gibt es auch noch die Flags SUID (4, s), SGID (2, s) und Sticky (1, t), siehe Folie _Bedeutung der Flags_.
-* Angabe der Zugriffsrechte mit Buchstaben bei `chmod`: 3 Gruppen, jeweils die Kombination der Rechte und Flags für User, Group und Other, siehe Beispiele unten
+* Symbolische Darstellung (mit Buchstaben) - `chmod`-Syntax: 3 Gruppen, jeweils die Kombination der Rechte und Flags für User, Group und Other, siehe Beispiele unten
 
 
 <<<
 == Zugriffsrechte (2)
 [.step]
-* Ausgabe von `ls -l`: 3 Gruppen, jeweils die Kombination der Rechte für User, Group und Other, Minuszeichen stehen für nicht vorhandene Rechte, gesetzte Flags stehen an der Stelle des Ausführrechts, siehe Beispiele unten
+* Symbolische Darstellung - `ls -l`-Syntax: 3 Gruppen, jeweils die Kombination der Rechte für User, Group und Other, Minuszeichen stehen für nicht vorhandene Rechte, gesetzte Flags stehen an der Stelle des Ausführrechts, siehe Beispiele unten
 * numerische Darstellung der Zugriffsrechte: 4 Zahlen zwischen 0 und 7 (oktal)
 [.step]
 ** 2. bis 4. Zahl = Summe der Rechte für User, Group und Other
@@ -770,7 +773,7 @@ icon:warning[] `cp` und `mv` überschreiben existierende Dateien ohne Nachfrage!
 <<<
 == Wichtige Befehle - Dateien / Verzeichnisse umbenennen / verschieben (`mv`)
 |===
-| einzelne Dateien / Verzeichnisse umbenennen | `mv bla.txt blub.txt` | Ziel darf nicht existieren.
+| einzelne Dateien / Verzeichnisse umbenennen | `mv bla.txt blub.txt` | Ziel darf nicht existieren (oder es wird überschrieben).
 | Datei(en) / Verzeichnis(se) in ein Verzeichnis verschieben | `mv bla.txt blub/ huhu/` | Zielverzeichnis muss existieren.
 | Inhalt eines Verzeichnisses in ein Verzeichnis verschieben | `mv bla/* blub/` | Zielverzeichnis muss existieren, versteckte Dateien / Verzeichnisse mit `bla/.*`
 |===
@@ -839,8 +842,8 @@ icon:warning[] Bei einem symbolischen Link mit einem **relativen** Pfad als Ziel
 sind standardmässig und-verknüpft, können mit `-o` oder-verknüpft werden
 
 |===
-| Name (auch mit Wildcards) | `-name`
-| Änderungsdatum | `-mtime`
+| Name (auch mit Wildcards) / ohne Gross- / Kleinschreibung zu beachten | `-name` / `-iname`
+| Änderungszeitpunkt| `-mtime`
 | Grösse | `-size`
 | Typ (Datei = `f`, Verzeichnis = `d`, ...) | `-type`
 | Berechtigungen (numerisch) | `-perm`
@@ -937,7 +940,7 @@ icon:warning[] Bestehende Dateien werden ohne Nachfrage überschrieben!
 [.text-left]
 Diese Übung ist eine Art Schnitzeljagd (oder auch ein https://de.wikipedia.org/wiki/Capture_the_Flag#Computersicherheit[_Capture the Flag_]-Spiel). Das Spiel besteht aus 5 Stufen. In jeder Stufe geht es darum, ein oder mehrere Geheimnis(se) in Form von Strings zu finden. Das Spiel befindet sich auf dem Server TODO mit einem Benutzer _levelx_ pro Stufe. Auf dem Server muss man sich mit SSH einloggen (z. B. mit Putty), das Passwort ist der Benutzername. Im Heimatverzeichnis des jeweiligen Benutzers gibt es eine Datei `README.txt` mit einer (kurzen) Anleitung, die auch nach dem Einloggen angezeigt wird.
 
-// TODO: Lesbare Geheimnisse?
+// TODO: Geheimnisse als Passwoerter fuer den naechsten Level
 
 [.text-left]
 **Aufgabe:** Lösen Sie die Level 1 bis 3.
@@ -963,7 +966,7 @@ Viel Spass! Lust auf mehr? https://overthewire.org/wargames/
 [.step]
 * sind Programme, die vom System ausgeführt werden oder auf ihre Ausführung / ein Ereignis warten
 * besitzen (zu einem bestimmten Zeitpunkt) eindeutige Nummern => _Process Identifier_ (PID)
-* haben immer einen Eltern-Prozess, von dem sie bestimmte Eigenschaften und Objekte (wie geöffnete Dateien und Umgebungsvariablen) erben => Baumstruktur
+* haben immer einen Eltern-Prozess (ausser der oberste Prozess), von dem sie bestimmte Eigenschaften und Objekte (wie geöffnete Dateien und Umgebungsvariablen) erben => Baumstruktur
 * Wurzel des Baumes ist der `systemd`-Prozess (oder `init` / `launchd`) mit der PID 1 (wird vom System beim Booten gestartet).
 * werden vom _Scheduler_ verwaltet und abwechselnd dem Prozessor / den Prozessoren bzw. den Prozessorkernen zugeteilt
 * sind immer einem Benutzer zugeordnet, dessen Rechte sie bekommen
@@ -978,7 +981,7 @@ Viel Spass! Lust auf mehr? https://overthewire.org/wargames/
 [.step]
 ** laufend \(R) => Prozess wird gerade ausgeführt oder ist bereit, ausgeführt zu werden (befindet sich in der Warteschlange, Anzahl der Prozesse in der Warteschlange ist die Last des Systems).
 ** unterbrechbar schlafend (S) => Prozess wartet auf ein Ereignis (z. B. Benutzereingabe, Netzwerk-IO oder Ablauf eines Timers) und kann durch Signale (siehe unten) aufgeweckt werden.
-** nicht unterbrechbar schlafend (D) => Prozess wartet auf die Beendigung einer Massenspeicher-IO-Operation.
+** nicht unterbrechbar schlafend (D) => Prozess wartet auf die Beendigung einer Plattenspeicher-IO-Operation.
 ** gestoppt (T, t) => Prozess wurde angehalten (durch Ctrl-z in der Shell oder von einem Debugger).
 ** _Zombie_ (Z) => Prozess ist beendet aber Informationen werden noch im Kernel gehalten (für den Elternprozess).
 
@@ -1141,11 +1144,12 @@ mvhs         950       1 Fri Jan 16 10:59:45 2026 S  25796 14096  0.0  0.3 /usr/
 [cols="1,3,3"]
 |===
 
-| `-F` | nach festem String suchen | kann man weglassen wenn Suchstring nur aus Buchstaben und / oder Zahlen besteht
+| `-F` | nach fixem String suchen | kann man weglassen wenn Suchstring nur aus Buchstaben und / oder Zahlen besteht
 | `-P` | nach regulärem Ausdruck suchen | Regulärer Ausdruck ist ein PCRE, siehe Folie unten.
 | `-i` | Gross- / Kleinschreibung nicht beachten |
 | `-r` | Verzeichnis(se) rekursiv durchsuchen |
 | `-c` | nur die Anzahl der Treffer ausgeben |
+| `-o` | nur den gefundenen String ausgeben | manchmal sinnvoll wenn man nach einem regulärem Ausdruck sucht
 |===
 
 
@@ -1322,7 +1326,7 @@ $ perl -nle '/(<regulärer Ausdruck>)/; print if $1 == <Zahl>'
 == _Optional_: JSON (2)
 [.step]
 * JSON-Daten können mit Tools wie https://jqlang.org/[_jq_], https://www.duckdb.org/[_DuckDB_] und https://de.wikipedia.org/wiki/PowerShell[_Microsoft Powershell_] sowie mit allen gängigen Programmiersprachen gefiltert, umgewandelt und verarbeitet werden.
-* JSON + entsprechende Tools sind teilweise einfacher, lesbarer und robuster zu verwenden als unstrukturierter Text + Tools wie `grep`, `sed`, `awk` und `perl`.
+* JSON + entsprechende Tools sind teilweise einfacher zu verwenden und führen zu lesbareren und robusteren Lösungen als unstrukturierter Text + Tools wie `grep`, `sed`, `awk` und `perl`.
 * Linux-Tools bieten zum Teil die Möglichkeit, ihre Ausgabe als JSON zu formatieren, die Ausgabe von vielen anderen Tools kann mit https://github.com/kellyjonbrazil/jc[`jc`] in JSON umgewandelt werden (auch bestimmte Dateien wie `/etc/passwd` werden unterstützt).
 
 
@@ -1438,11 +1442,14 @@ echo "x = $x"  <5>
 
 <<<
 == Variablen-Transformationen
-[cols="1,2"]
 |===
-| Teilstring extrahieren | `${<Variable>:<Position>:<Länge>}`, Position beginnt bei 1.
-| Suchen / Ersetzen | `${<Variable>/<nach>/<durch>}`
-| Länge eines Strings | `${#<Variable>}`
+| Transformation | Bash | Externer Befehl
+
+| Teilstring extrahieren, Position beginnt bei 1 | `${<Variable>:<Position>:<Länge>}` | `cut -c<Start>-<Ende> <<< "$<Variable>"`
+| Suchen / Ersetzen | `${<Variable>/<nach>/<durch>}` | `sed -e 's/<nach>/<durch>/' <<< "$<Variable>"`
+| in Grossbuchstaben umwandeln | `${<Variable>^^}` | `tr '[:lower:]' '[:upper:]' <<< "$<Variable>"`
+| in Kleinbuchstaben umwandeln | `${<Variable>,,}` | `tr '[:upper:]' '[:lower:]' <<< "$<Variable>"`
+| Länge eines Strings | `${#<Variable>}` | `wc -c <<< "$<Variable>"`
 |===
 
 [.text-left]
@@ -1563,7 +1570,7 @@ Zusätzlich zu den Vergleichen gibt es auch noch Tests, die Dateien / Verzeichni
 == Textausgabe
 [.step]
 * einfach: `echo`
-* komfortabler (mehr Möglichkeiten zur Formatierung), sicherer (bei Variablen, die mit `-` beginnen oder Backslashes enthalten) und portabler (gleiches Verhalten in allen Shells und auch auf macOS): `printf <Format-String> [<Liste von Variablen>]`
+* komfortabler (mehr Möglichkeiten zur Formatierung), sicherer (bei Variablen, die mit `-` beginnen oder Backslashes enthalten) und portabler (gleiches Verhalten in allen Shells / Unix-Varianten (auch macOS)): `printf <Format-String> [<Liste von Variablen>]`
 +
 |===
 
@@ -1627,7 +1634,7 @@ for entry in *; do  <3>
 
 done
 ----
-<1> https://de.wikipedia.org/wiki/Shebang[_Shebang_-Zeile], die Linux mitteilt, dass das Skript mit der Bash ausgeführt werden soll.
+<1> https://de.wikipedia.org/wiki/Shebang[_Shebang_-Zeile], die Linux mitteilt, dass das Skript mit der Bash ausgeführt werden soll (nicht zwingend notwendig aber empfohlen).
 <2> Wechseln in das Verzeichnis, für das der Report erstellt werden soll. `$1` ist das erste Kommandozeilenargument des Skripts.
 <3> Schleife über alle Unterverzeichnisse und Dateien in dem Verzeichnis
 
@@ -1834,7 +1841,7 @@ done < <(tail -f "$1")
 [.step]
 ** Konfigurationsdateien für die Konfiguration der Interfaces, Dateiname(n) und Format sind abhängig von der Linux-Distribution (z. B. Ubuntu / Debian: `/etc/network/interfaces`, RedHat / CentOS / Fedora: `/etc/sysconfig/network-scripts/ifcfg-ethX`) bzw. der zur Verwaltung des Netzwerks verwendeten Software (z. B. https://wiki.archlinux.org/title/NetworkManager[_NetworkManager_] oder https://wiki.archlinux.org/title/Systemd-networkd[_systemd-networkd_]).
 ** Zuordnung von Host- / Rechnernamen zu IP-Adressen in der Datei `/etc/hosts` (heute nur noch selten genutzt)
-** Datei `/etc/resolv.conf` für die Konfiguration der DNS-Server.
+** Datei `/etc/resolv.conf` für die Konfiguration der DNS-Server (neben anderen Quellen).
 
 
 <<<
@@ -1865,7 +1872,7 @@ done < <(tail -f "$1")
 [.step]
 * Die _Secure Shell_ (SSH) ermöglicht das Arbeiten auf einem über das Netzwerk verbundenen Rechner.
 * Man kann sich einloggen und interaktiv (in der Shell) arbeiten oder einzelne Befehle ausführen: `ssh <Benutzer>@<Hostname oder IP-Adresse> [<Befehl>]`
-* Authentifizierung erfolgt mit Password oder einem kryptografischen Schlüssel.
+* Authentifizierung erfolgt mit Password oder einem kryptografischen Schlüssel (empfohlen).
 [.step]
 ** Man erzeugt sich ein Schlüsselpaar, bestehend aus einem öffentlichen und einem privaten Schlüssel mit dem Befehl `ssh-keygen` => die Dateien `id_rsa` (privat) und `id_rsa.pub` (öffentlich) im Verzeichnis `~/.ssh/`.
 ** Den privaten Schlüssel muss man geheim halten (Berechtigung 0700 für das Verzeichnis und 0600 für die Datei) und man sollte ihn mit einer _Passphrase_ sichern.
@@ -2104,7 +2111,7 @@ WantedBy=timers.target
 * Software wird zu einem Paket zusammengefasst (ausführbare Programme, Bibliotheken, Skripte, Konfigurationsdateien) und ggf. für die Distribution angepasst (z. B. Dateipfade).
 * Für jedes Paket werden Abhängigkeiten definiert (welche Pakete zusätzlich benötigt werden), die automatisch mitinstalliert werden (können).
 * Es gibt ein (von der Distribution zur Verfügung gestelltes) _Repository_ mit allen verfügbaren Paketen (auf einem Installationsmedium wie CD / DVD / USB-Stick oder einem Server). Weitere Repositories (z. B. von Open-Source-Projekten oder Software-Herstellern) können hinzugefügt werden.
-* Auf jedem System existiert eine Datenbank mit allen installierten Paketen.
+* Auf jedem System existiert eine Datenbank mit allen installierten Paketen und ihren Versionen.
 * Alle installierten Pakete können mit einen Befehl aktualisiert werden, wobei Abhängigkeiten berücksichtigt werden (z. B. wenn eine bestimmte Software nicht mit der neuesten Version einer Bibliothek funktioniert).
 
 
@@ -2167,7 +2174,7 @@ $ du -h --max-depth 1 <directory> | sort -rh
 [.step]
 * Wer ist momentan eingeloggt? `who`
 * Historie der Logins eines Benutzers: `last <Benutzername>` (greift auf die binäre Datei `/var/log/wtmp` zu)
-* Welche Befehle hat ein Benutzer ausgeführt? Shell-Historie, die Dateien `.bash_history` bzw. `.zsh_history` in dem Heimatverzeichnis des Benutzers
+* Welche Befehle hat ein Benutzer ausgeführt? Shell-Historie, die Dateien `.bash_history` bzw. `.zsh_history` (mit Zeitstempeln) in dem Heimatverzeichnis des Benutzers
 * Welche Dateien / welche (Unter-)Verzeichnisse wurden zuletzt in einem bestimmten Verzeichnis geändert?
 +
 [source,sh]
@@ -2193,7 +2200,7 @@ head
 ** Informationen zur Hardware wie CPU und Speicher (`/proc/cpuinfo` und `/proc/meminfo`)
 ** Informationen zu den laufenden Prozessen (ein Unterverzeichnis pro Prozess) wie die Befehlszeile, mit der der Prozess gestartet wurde (`/proc/<PID>/cmdline`) und die gesetzen Umgebungsvariablen (`/proc/<PID>/environ`)
 ** zur Laufzeit des Systems änderbare Kernel-Parameter wie z. B. Netzwerk-Einstellungen (`/proc/sys/...`)
-* Dateien können mit `cat` gelesen und mit `echo ... > /proc/sys/...` verändert werden.
+* Dateien können mit `cat` (oder `less`, `head` / `tail`...) gelesen und mit `echo ... > /proc/sys/...` verändert werden.
 
 
 <<<
@@ -2208,7 +2215,7 @@ head
 <<<
 == Weitere Tools für die Administration
 [.step]
-* Grafische Oberflächen: https://webmin.com/[Webmin] oder https://cockpit-project.org/[Cockpit]
+* Grafische Oberflächen (eher geeignet für eine kleine Anzahl von Rechnern): https://webmin.com/[Webmin] oder https://cockpit-project.org/[Cockpit]
 * https://en.wikipedia.org/wiki/Infrastructure_as_code[_Infrastructure as Code_] (eher geeignet für eine grössere Anzahl gleichartiger Rechner): https://www.ansible.com/[Ansible], https://www.chef.io/[Chef], https://www.puppet.com/[Puppet]
 
 
@@ -2234,8 +2241,8 @@ head
 ** haben jeweils ein eigenes Dateisystem (dadurch sind unterschiedliche Distributionen möglich)
 ** haben jeweils einen eigenen _Namensraum_ für Prozesse (PIDs), Benutzer und das Netzwerk => Prozesse und Benutzer scheinen in einem Container "alleine" zu sein.
 * verwendete Ressourcen (CPU, Speicher, Plattenplatz) können limitiert werden
-* werden normalerweise mit Tools wie https://www.docker.com/[_Docker_], https://podman.io/[_Podman_] oder https://github.com/containerd/nerdctl[_nerdctl_] genutzt oder auch https://docs.docker.com/desktop/[_Docker Desktop_] oder https://podman-desktop.io/[_Podman Desktop_]
-* Tools zum Verwalten einer grösseren Anzahl von Containern: https://docs.docker.com/compose/[_Docker Compose_] (eher für eine kleinere Zahl auf einem einzelnen Rechner, z. B. für die Entwicklung) oder https://kubernetes.io/[_Kubernetes_] (eher für eine grössere Zahl auf Clustern von Rechnern)
+* werden normalerweise mit Tools wie https://www.docker.com/[_Docker_], https://podman.io/[_Podman_], https://docs.docker.com/desktop/[_Docker Desktop_] oder https://podman-desktop.io/[_Podman Desktop_] genutzt
+* Tools zum Verwalten von mehreren Containern: https://docs.docker.com/compose/[_Docker Compose_] (eher für eine kleinere Zahl auf einem einzelnen Rechner, z. B. für die Entwicklung) oder https://kubernetes.io/[_Kubernetes_] (eher für eine grössere Zahl auf Clustern von Rechnern)
 
 
 <<<
@@ -2305,11 +2312,6 @@ ENTRYPOINT ["sleep", "infinity"]
 
 <<<
 == Vielen Dank!
-**Unterlagen als PDF:**
-
-// QR code created with https://www.qrcode-monkey.com/
-image::download-link.de.svg[width=600, align="center"]
-Made with &#x2764;&#xFE0F;, https://asciidoc.org/[_AsciiDoc_], https://asciidoctor.org/[_Asciidoctor_], https://revealjs.com/[_reveal.js_], https://github.com/paxtonhare/demo-magic[_Demo Magic_] and lots of &#x2615;&#xFE0F;
 
 
 <<<
