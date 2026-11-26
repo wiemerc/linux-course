@@ -4,10 +4,10 @@
 // To turn off figure numbering
 :figure-caption!:
 :revealjsdir: https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.9.2
-:revealjs_theme: white
+:revealjs_customtheme: theme/itl.css
 :revealjs_width: 1800
 :revealjs_height: 1000
-:revealjs_margin: 0
+:revealjs_margin: 0.02
 :revealjs_hash: true
 :revealjs_center: false
 :revealjs_pdfseparatefragments: false
